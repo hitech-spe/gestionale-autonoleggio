@@ -1,0 +1,37 @@
+<div class="searchable-select-container">
+  <div class="select-input-wrapper">
+    <input type="text"
+           class="form-control select-search-input"
+           [placeholder]="placeholder"
+           [(ngModel)]="searchTerm"
+           (focus)="onFocus()"
+           (blur)="onBlur()"
+           autocomplete="off" />
+    <span class="chevron-icon" (click)="toggleDropdown($event)">
+      <i class="fa-solid" [class.fa-chevron-up]="isOpen" [class.fa-chevron-down]="!isOpen"></i>
+    </span>
+  </div>
+
+  @if (isOpen) {
+    <div class="dropdown-panel glass-card shadow-lg">
+      <div class="category-group">
+        @for (c of sortedCustomers; track c.id) {
+          <div class="dropdown-item"
+               [class.selected]="c.id === customerId"
+               (mousedown)="selectCustomer(c)">
+            <div class="customer-info">
+              <span class="customer-name">{{ c.firstName }} {{ c.lastName }}</span>
+              <span class="customer-details">
+                @if (c.phone) { Tel: {{ c.phone }} }
+                @if (c.phone && c.address) { | }
+                @if (c.address) { {{ c.address }} }
+              </span>
+            </div>
+          </div>
+        } @empty {
+          <div class="no-results">Nessun cliente trovato</div>
+        }
+      </div>
+    </div>
+  }
+</div>

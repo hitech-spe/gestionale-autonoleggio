@@ -1,0 +1,282 @@
+<!-- CONTENITORE PRINCIPALE: STILE PREMIUM SAAS -->
+<div class="verbali-container fade-in">
+    
+    <!-- BANNER METRICHE KPI: CRUSCOTTO ANALITICO -->
+    <div class="kpi-grid">
+        <div class="kpi-card gradient-slate">
+            <div class="kpi-icon-box">
+                <i class="fa-solid fa-file-invoice"></i>
+            </div>
+            <div class="kpi-data">
+                <span class="kpi-value">{{ getTotaleMulte() }}</span>
+                <span class="kpi-label">Verbali Registrati</span>
+            </div>
+        </div>
+
+        <div class="kpi-card gradient-indigo">
+            <div class="kpi-icon-box">
+                <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div class="kpi-data">
+                <span class="kpi-value">{{ getNuoveMulte() }}</span>
+                <span class="kpi-label">In Attesa di PEC</span>
+            </div>
+        </div>
+
+        <div class="kpi-card gradient-emerald">
+            <div class="kpi-icon-box">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div class="kpi-data">
+                <span class="kpi-value">{{ getInviateMulte() }}</span>
+                <span class="kpi-label">Inviati via PEC</span>
+            </div>
+        </div>
+
+        <div class="kpi-card gradient-red">
+            <div class="kpi-icon-box">
+                <i class="fa-solid fa-euro-sign"></i>
+            </div>
+            <div class="kpi-data">
+                <span class="kpi-value">€ {{ getImportoMulte() | number:'1.2-2' }}</span>
+                <span class="kpi-label">Totale Sanzioni</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SEZIONE TABELLA PRINCIPALE -->
+    <div class="panel">
+        <div class="panel-header">
+            <div class="header-title">
+                <h2>Archivio Verbali e Multe</h2>
+                <p class="subtitle">Associa i verbali cartacei ai conducenti effettivi e rinotifica le violazioni al conducente via PEC</p>
+            </div>
+            <div class="panel-actions">
+                <!-- Search Input -->
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Cerca per targa, verbale, ente, cliente..." [(ngModel)]="searchTerm">
+                </div>
+
+                <!-- Filtro Stato PEC -->
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="statusFilter" class="filter-select">
+                        <option value="ALL">Tutti i verbali</option>
+                        <option value="Nuovo">Da Inviare (Nuovo)</option>
+                        <option value="Inviato">Inviati (PEC)</option>
+                    </select>
+                </div>
+
+                <!-- Ordinamento Field -->
+                <div class="filter-dropdown">
+                    <select [(ngModel)]="sortField" class="filter-select">
+                        <option value="violationDate">Ordina per: Data Infrazione</option>
+                        <option value="ticketNumber">Ordina per: Numero Verbale</option>
+                        <option value="fineAmount">Ordina per: Importo</option>
+                    </select>
+                </div>
+
+                <!-- Direzione Ordinamento -->
+                <button class="btn-sort-dir" (click)="toggleSortDirection()" [title]="sortDirection === 'desc' ? 'Ordinamento Decrescente' : 'Ordinamento Crescente'">
+                    @if (sortDirection === 'desc') {
+                        <i class="fa-solid fa-arrow-down-9-1"></i>
+                    } @else {
+                        <i class="fa-solid fa-arrow-up-1-9"></i>
+                    }
+                </button>
+
+                <button class="btn btn-primary animate-hover" (click)="openUploadModal()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Processa Verbale
+                </button>
+            </div>
+        </div>
+
+        <!-- TABELLA DATI VERBALI -->
+        <div class="table-responsive">
+            @if (getFilteredVerbali().length > 0) {
+                <table class="modern-table">
+                    <thead>
+                        <tr>
+                            <th>N. Verbale / Ente</th>
+                            <th>Targa Mezzo</th>
+                            <th>Data Infrazione</th>
+                            <th>Associazione Contratto</th>
+                            <th>Importo Sanzione</th>
+                            <th>Stato PEC</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (v of getFilteredVerbali(); track v.id) {
+                            <tr class="table-row-hover">
+                                <td>
+                                    <div class="ticket-info">
+                                        <span class="ticket-number"><i class="fa-solid fa-file-invoice"></i> {{ v.ticketNumber }}</span>
+                                        <span class="authority-name">{{ v.authorityName }}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge-plate"><i class="fa-solid fa-car-side"></i> {{ v.plate }}</span>
+                                </td>
+                                <td>
+                                    <div class="date-info">
+                                        <span class="date-val">{{ formatDate(v.violationDate) }}</span>
+                                        @if (v.violationTime) {
+                                            <span class="time-val"><i class="fa-regular fa-clock"></i> {{ v.violationTime }}</span>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (v.contractNumber) {
+                                        <div class="customer-info">
+                                            <span class="customer-name">{{ v.customerName }}</span>
+                                            <span class="contract-badge"><i class="fa-solid fa-file-contract"></i> Contr. {{ v.contractNumber }}</span>
+                                        </div>
+                                    } @else {
+                                        <span class="no-match-badge"><i class="fa-solid fa-triangle-exclamation"></i> Non Associato</span>
+                                    }
+                                </td>
+                                <td class="bold-text price-cell">
+                                    @if (v.fineAmount) {
+                                        € {{ v.fineAmount | number:'1.2-2' }}
+                                    } @else {
+                                        -
+                                    }
+                                </td>
+                                <td>
+                                    @if (v.status === 'Inviato') {
+                                        <div class="status-wrapper">
+                                            <span class="status-pill status-sent"><i class="fa-solid fa-circle-check"></i> Inviato</span>
+                                            @if (v.pecSentDate) {
+                                                <span class="sent-date">{{ formatDate(v.pecSentDate) }}</span>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <span class="status-pill status-new"><i class="fa-solid fa-clock"></i> Da Inviare</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        @if (v.status !== 'Inviato' && v.authorityPec) {
+                                            <button class="btn-action btn-send-pec" (click)="sendPec(v)" [disabled]="isSendingPec[v.id || '']" title="Invia dichiarazione dati conducente via PEC">
+                                                @if (isSendingPec[v.id || '']) {
+                                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                                } @else {
+                                                    <i class="fa-solid fa-paper-plane"></i> Trasmetti
+                                                }
+                                            </button>
+                                        }
+                                        <button class="btn-action btn-delete" (click)="deleteVerbale(v)" title="Elimina verbale">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            } @else {
+                <div class="empty-state">
+                    <i class="fa-solid fa-file-invoice-dollar empty-icon animate-bounce"></i>
+                    <h3>Nessun verbale presente</h3>
+                    <p>Non abbiamo trovato verbali attivi nel database. Clicca su "Processa Verbale" per scansionare il tuo primo PDF.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- MODALE CARICAMENTO VERBALI -->
+@if (isUploadModalOpen) {
+    <div class="modal-overlay">
+        <div class="modal-card wide-modal animate-scale-up" style="max-width: 600px;">
+            
+            <!-- HEADER MODALE -->
+            <div class="modal-header">
+                <div class="header-left">
+                    <i class="fa-solid fa-cloud-arrow-up modal-icon-magic" style="color: var(--primary);"></i>
+                    <div>
+                        <h2>Carica e Processa Verbali</h2>
+                        <p class="modal-subtitle">Carica uno o più file PDF dei verbali per l'invio e l'elaborazione automatica sul server</p>
+                    </div>
+                </div>
+                <button class="btn-close" (click)="closeUploadModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- CONTENUTO DEL CORPO MODALE -->
+            <div class="modal-body" style="padding: 1.5rem;">
+                <div class="step-content">
+                    <div class="upload-container" [class.has-file]="selectedFiles.length > 0" style="border: 2px dashed #cbd5e1; border-radius: 12px; transition: all 0.3s ease;">
+                        @if (!isOcrRunning) {
+                            <div class="dropzone-area" (click)="fileInput.click()" style="padding: 2.5rem; text-align: center; cursor: pointer;">
+                                <input #fileInput type="file" style="display: none" accept=".pdf" (change)="onFileSelected($event)" multiple>
+                                <div class="dropzone-glow-circle" style="width: 64px; height: 64px; background: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                                    <i class="fa-solid fa-cloud-arrow-up cloud-icon-animated" style="font-size: 24px; color: #2563eb;"></i>
+                                </div>
+                                <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem;">Seleziona i file PDF dei verbali</h3>
+                                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 0.5rem;">Clicca per sfogliare o trascina i file qui</p>
+                                <div class="file-badges-info" style="display: flex; gap: 8px; justify-content: center; margin-top: 0.5rem;">
+                                    <span class="file-info-pill" style="background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">PDF</span>
+                                    <span class="file-info-pill" style="background: #f1f5f9; color: #475569; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">MULTI-FILE</span>
+                                </div>
+                            </div>
+                        } @else {
+                            <div style="padding: 2.5rem; text-align: center;">
+                                <i class="fa-solid fa-spinner fa-spin" style="font-size: 40px; color: #2563eb; margin-bottom: 1rem;"></i>
+                                <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a;">Elaborazione in corso...</h3>
+                                <p style="color: #64748b; font-size: 0.9rem;">I verbali sono in fase di caricamento e analisi intelligente sul Back-End.</p>
+                            </div>
+                        }
+                    </div>
+
+                    @if (isOcrRunning) {
+                        <div class="ocr-progress-box" style="margin-top: 1.5rem;">
+                            <div class="progress-bar-container" style="background: #e2e8f0; border-radius: 6px; height: 10px; overflow: hidden; margin-bottom: 0.5rem;">
+                                <div class="progress-bar-fill" [style.width.%]="uploadProgress" style="background: #2563eb; height: 100%; transition: width 0.3s ease;"></div>
+                            </div>
+                            <span class="progress-percentage-label" style="font-size: 0.85rem; font-weight: 600; color: #475569;">Progresso Analisi: {{ uploadProgress }}%</span>
+                        </div>
+                    }
+
+                    @if (selectedFiles.length > 0 && !isOcrRunning) {
+                        <div class="selected-files-list" style="margin-top: 1.5rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                            <h4 style="font-size: 0.95rem; font-weight: 700; color: #334155; margin-bottom: 1rem; display: flex; justify-content: space-between;">
+                                <span>File pronti per l'invio ({{ selectedFiles.length }})</span>
+                                <span style="font-weight: 600; color: #64748b; font-size: 0.85rem;">{{ selectedFileSize }} totali</span>
+                            </h4>
+                            <div class="file-cards-grid" style="display: grid; gap: 10px; max-height: 220px; overflow-y: auto; padding-right: 4px;">
+                                @for (file of selectedFiles; track $index) {
+                                    <div class="file-card-mini" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 10px; overflow: hidden;">
+                                            <i class="fa-solid fa-file-pdf" style="font-size: 20px; color: #ef4444; flex-shrink: 0;"></i>
+                                            <div style="display: flex; flex-direction: column; overflow: hidden;">
+                                                <span style="font-size: 0.85rem; font-weight: 600; color: #1e293b; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;" [title]="file.name">{{ file.name }}</span>
+                                                <span style="font-size: 0.75rem; color: #64748b;">{{ (file.size / 1024).toFixed(0) }} KB</span>
+                                            </div>
+                                        </div>
+                                        <button (click)="removeFile($index)" style="background: transparent; border: none; color: #94a3b8; cursor: pointer; transition: color 0.2s;" onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'" title="Rimuovi file">
+                                            <i class="fa-solid fa-trash-can" style="font-size: 14px;"></i>
+                                        </button>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- FOOTER CON CONTROLLI DI NAVIGAZIONE -->
+            <div class="modal-footer-wizard" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; border-top: 1px solid #e2e8f0;">
+                <button class="btn btn-secondary" (click)="closeUploadModal()" [disabled]="isOcrRunning">Annulla</button>
+                <button class="btn btn-primary" (click)="processVerbali()" [disabled]="selectedFiles.length === 0 || isOcrRunning">
+                    @if (isOcrRunning) {
+                        <i class="fa-solid fa-spinner fa-spin"></i> Elaborazione...
+                    } @else {
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Processa Verbali
+                    }
+                </button>
+            </div>
+
+        </div>
+    </div>
+}

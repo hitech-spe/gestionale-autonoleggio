@@ -1,0 +1,116 @@
+.searchable-select-container {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.select-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  .select-search-input {
+    width: 100%;
+    padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    background: var(--bg-white);
+    color: var(--text-main);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    height: 38px;
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+    }
+  }
+
+  .chevron-icon {
+    position: absolute;
+    right: 0.75rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    user-select: none;
+
+    &:hover {
+      color: var(--accent);
+    }
+  }
+}
+
+.dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 0.25rem;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 1000;
+  background: var(--bg-white);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  &.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+.category-group {
+  padding: 0.25rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.75rem;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+
+  &:hover {
+    background-color: var(--bg-light);
+  }
+
+  &.selected {
+    background-color: rgba(220, 38, 38, 0.08);
+    font-weight: 600;
+    border-left: 3px solid var(--accent);
+    padding-left: calc(0.75rem - 3px);
+  }
+
+  .customer-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    .customer-name {
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    .customer-details {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+  }
+}
+
+.no-results {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}

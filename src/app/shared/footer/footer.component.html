@@ -1,0 +1,133 @@
+<footer class="site-footer">
+    <div class="container">
+
+        <div class="footer-top">
+
+            <div class="footer-col about-col">
+                <h3 class="footer-title">La Dolce Vita</h3>
+                <div class="red-line"></div>
+                <p [innerHTML]="'FOOTER.ABOUT_TEXT' | translate"></p>
+                <div class="social-links mt-4">
+                    <a href="https://www.facebook.com/NoleggioAutoMottola/" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/noleggioauto_dolcevita/" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="mailto:ladolcevitarent@gmail.com" aria-label="Email"><i class="fa-regular fa-envelope"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col links-col">
+                <h3 class="footer-title">{{ 'FOOTER.QUICK_LINKS' | translate }}</h3>
+                <div class="red-line"></div>
+                <ul>
+                    <li><a routerLink="/"><i class="fa-solid fa-chevron-right"></i> Home</a></li>
+                    <li><a routerLink="/services/autonoleggio"><i class="fa-solid fa-chevron-right"></i> Autonoleggio</a></li>
+                    <li><a routerLink="/services/veicoli-commerciali"><i class="fa-solid fa-chevron-right"></i> Veicoli Commerciali</a></li>
+                    <li><a routerLink="/services/lungo-termine"><i class="fa-solid fa-chevron-right"></i> Lungo Termine</a></li>
+                    <li><a routerLink="/services/parco-auto"><i class="fa-solid fa-chevron-right"></i> Parco Auto</a></li>
+                    <li><a routerLink="/contatti"><i class="fa-solid fa-chevron-right"></i> Contatti</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col contact-col">
+                <h3 class="footer-title">{{ 'FOOTER.CONTACTS_TITLE' | translate }}</h3>
+                <div class="red-line"></div>
+
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <strong>SEDE DI MOTTOLA (TA)</strong><br>
+                        Via Salvador Allende, 3 - Zona artigianale
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <a href="tel:+393428315325">+39 342 831 5325</a>
+                </div>
+
+                <div class="contact-item mt-3">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <div>
+                        <strong>SEDE DI MASSAFRA (TA)</strong><br>
+                        Strada Statale Appia 26
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <a href="tel:+393938622366">+39 393 862 2366</a>
+                </div>
+
+                <div class="contact-item mt-3">
+                    <i class="fa-solid fa-briefcase"></i>
+                    <div>
+                        <strong>COMMERCIALE / ALTRE SEDI</strong><br>
+                        Sede di Grottaglie<br>
+                        Tel: <a href="tel:+393896829038">+39 342 831 5325</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-col hours-col">
+                <h3 class="footer-title">{{ 'FOOTER.HOURS_TITLE' | translate }}</h3>
+                <div class="red-line"></div>
+                <ul class="hours-list">
+                    <li>
+                        <span>{{ 'CONTACTS.WASH_HOURS.MANUAL' | translate }}</span>
+                        <span>
+                            {{ 'CONTACTS.WASH_HOURS.MANUAL_DAYS' | translate }}: {{ 'CONTACTS.WASH_HOURS.MANUAL_TIME' | translate }}<br>
+                            {{ 'CONTACTS.WASH_HOURS.MANUAL_SAT_DAYS' | translate }}: {{ 'CONTACTS.WASH_HOURS.MANUAL_SAT_TIME' | translate }}
+                        </span>
+                    </li>
+                    <li>
+                        <span>{{ 'CONTACTS.WASH_HOURS.SELF' | translate }}</span>
+                        <span>{{ 'CONTACTS.WASH_HOURS.SELF_DAYS' | translate }}: {{ 'CONTACTS.WASH_HOURS.SELF_TIME' | translate }}</span>
+                    </li>
+                    <li class="mt-3 pt-2">
+                        <span>Uffici Lun - Ven</span>
+                        <span>08:30 - 13:00<br>14:00 - 19:00</span>
+                    </li>
+                    <li>
+                        <span>Uffici Sabato</span>
+                        <span>08:30 - 13:00</span>
+                    </li>
+                    <li>
+                        <span>Domenica</span>
+                        <span class="text-accent">Chiuso</span>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <div class="container flex-bottom">
+            <div class="copyright">
+                &copy; {{ currentYear }} La Dolce Vita S.r.l. - P.IVA 02933790731
+            </div>
+            <div class="legal-links">
+                <a routerLink="/informativa-privacy">Privacy Policy</a>
+                <span class="separator">|</span>
+                <a href="javascript:Cookiebot.renew()">Cookie Policy</a>
+                <span class="separator">|</span>
+                <a href="/informazioni-legali">Informazioni Legali</a>
+            </div>
+        </div>
+
+        <div class="container credits-bar">
+            <span>Designed by</span>
+            <a href="https://hitechsrls.com/" target="_blank" aria-label="HI-TECH">
+                <img ngSrc="assets/images/logo-hitech.png" alt="HI-TECH" class="logo-agency" height="154" width="338">
+            </a>
+            <span class="separator">|</span>
+            <span>Questa azienda è presente anche su</span>
+            <a href="https://www.paginegialle.it/" target="_blank" aria-label="Pagine Gialle">
+                <img ngSrc="/assets/images/pagineGialle.png" alt="Pagine Gialle" class="logo-pg" height="27"
+                     width="60">
+            </a>
+            <span>e</span>
+            <a href="https://www.paginebianche.it/" target="_blank" aria-label="Pagine Bianche">
+                <img ngSrc="/assets/images/pagineBianche.png" alt="Pagine Bianche" class="logo-pb" height="27"
+                     width="65">
+            </a>
+        </div>
+    </div>
+</footer>

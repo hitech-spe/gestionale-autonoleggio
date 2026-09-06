@@ -1,0 +1,39 @@
+<div class="searchable-select-container">
+  <div class="select-input-wrapper">
+    <input type="text"
+           class="form-control select-search-input"
+           [placeholder]="placeholder"
+           [(ngModel)]="searchTerm"
+           (focus)="onFocus()"
+           (blur)="onBlur()"
+           autocomplete="off" />
+    <span class="chevron-icon" (click)="toggleDropdown($event)">
+      <i class="fa-solid" [class.fa-chevron-up]="isOpen" [class.fa-chevron-down]="!isOpen"></i>
+    </span>
+  </div>
+
+  @if (isOpen) {
+    <div class="dropdown-panel glass-card shadow-lg">
+      @for (group of groupedVehicles; track group.category) {
+        <div class="category-group">
+          <div class="category-header">{{ group.category }}</div>
+          @for (v of group.items; track v.id) {
+            <div class="dropdown-item"
+                 [class.selected]="v.id === vehicleId"
+                 (mousedown)="selectVehicle(v)">
+              <div class="vehicle-info">
+                <span class="vehicle-name">{{ v.brand }} {{ v.model }}</span>
+                <span class="vehicle-plate">{{ v.plate }}</span>
+              </div>
+              <span class="vehicle-status badge" [ngClass]="getStatusClass(v.status)">
+                {{ v.status }}
+              </span>
+            </div>
+          }
+        </div>
+      } @empty {
+        <div class="no-results">Nessun veicolo trovato</div>
+      }
+    </div>
+  }
+</div>

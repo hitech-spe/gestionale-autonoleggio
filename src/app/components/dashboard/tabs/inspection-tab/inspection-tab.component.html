@@ -1,0 +1,127 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Revisioni Veicoli</h2>
+        <div class="panel-actions">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Cerca per veicolo o targa...">
+            </div>
+            <div class="sort-box">
+                <i class="fa-solid fa-sort"></i>
+                <select [(ngModel)]="sortOrder" class="sort-select">
+                    <option value="newest">Più recenti</option>
+                    <option value="oldest">Meno recenti</option>
+                    <option value="expiryDate">Scadenza</option>
+                </select>
+            </div>
+            <button class="btn btn-accent" (click)="openModal()">+ Aggiungi</button>
+        </div>
+    </div>
+    <div class="table-responsive shadow-sm hide-mobile">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Veicolo</th>
+                    <th>Prossima Scadenza</th>
+                    <th>Note</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (insp of getFiltered(inspections$ | async); track insp.id) {
+                    <tr [class.highlighted-item]="insp.id === highlightedId">
+                        <td class="fw-bold">
+                            @let vName = getVehicleName(insp.vehicleId);
+                            @if (vName) {
+                                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                                    <span style="font-size: 0.95rem; color: #1e293b; font-weight: 700;">{{ vName }}</span>
+                                    <span class="plate-badge" style="font-size: 0.75rem; padding: 2px 6px; width: fit-content; text-transform: uppercase;">{{ getVehiclePlate(insp) }}</span>
+                                </div>
+                            } @else {
+                                {{ insp.vehiclePlate }}
+                            }
+                        </td>
+                        <td>{{ formatDate(insp.expiryDate) }}</td>
+                        <td>{{ insp.notes }}</td>
+                        <td>
+                            <div class="d-flex gap-3">
+                                <button class="btn-edit" (click)="openModal(insp)" title="Modifica Revisione">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn-delete" (click)="deleteInspection(insp.id!)" title="Elimina Revisione">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr><td colspan="4" class="text-center py-4">Nessuna revisione trovata.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Layout Mobile: Card -->
+    <div class="mobile-cards show-mobile">
+        @for (insp of getFiltered(inspections$ | async); track insp.id) {
+            @let vName = getVehicleName(insp.vehicleId);
+            <div class="rental-card-mobile" [class.highlighted-item]="insp.id === highlightedId">
+                <div class="card-header">
+                    <span class="customer-name">
+                        @if (vName) {
+                            {{ vName }}
+                        } @else {
+                            {{ insp.vehiclePlate }}
+                        }
+                    </span>
+                    <div class="d-flex gap-3">
+                        <button class="btn-edit" (click)="openModal(insp)" title="Modifica Revisione">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn-delete" (click)="deleteInspection(insp.id!)" title="Elimina Revisione">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (vName) {
+                        <div class="info-row">
+                            <i class="fa-solid fa-rectangle-ad" title="Targa"></i>
+                            <span class="plate-badge" style="font-size: 0.8rem; padding: 2px 6px; text-transform: uppercase;">{{ getVehiclePlate(insp) }}</span>
+                        </div>
+                    }
+                    <div class="info-row">
+                        <i class="fa-solid fa-calendar-check" title="Scadenza"></i>
+                        <span>Scadenza: {{ formatDate(insp.expiryDate) }}</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-note-sticky" title="Note"></i>
+                        <span>{{ insp.notes }}</span>
+                    </div>
+                </div>
+            </div>
+        } @empty {
+            <div class="text-center py-4">Nessuna revisione trovata.</div>
+        }
+    </div>
+</div>
+
+@if (isModalOpen) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3>{{ isEditMode ? 'Modifica Revisione' : 'Nuova Revisione' }}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Veicolo</label>
+                    <app-vehicle-select [(vehicleId)]="newInspection.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+                    <input type="hidden" [(ngModel)]="newInspection.vehicleId" name="vehicleId" required />
+                </div>
+                <div class="form-group"><label>Scadenza Revisione</label><input type="date" [(ngModel)]="newInspection.expiryDate"></div>
+                <div class="form-group"><label>Note</label><input type="text" [(ngModel)]="newInspection.notes"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" (click)="closeModal()">Annulla</button>
+                <button class="btn btn-accent" (click)="saveInspection()">{{ isEditMode ? 'Aggiorna' : 'Salva' }}</button>
+            </div>
+        </div>
+    </div>
+}

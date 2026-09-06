@@ -1,0 +1,356 @@
+{
+  "HEADER": {
+    "HOME": "Home",
+    "ABOUT": "Chi Siamo",
+    "SERVICES": "Servizi",
+    "QUOTE_AI": "Preventivo AI",
+    "QUOTES": "I miei Preventivi",
+    "CONTACT": "Contatti",
+    "LOGIN": "Accedi",
+    "ANNOUNCEMENTS": "Annunci",
+    "BOOK_NOW": "Prenota Ora",
+    "DROPDOWN": {
+      "RENTAL": "Autonoleggio",
+      "COMMERCIAL": "Veicoli Commerciali",
+      "LONG_TERM": "Lungo Termine",
+      "FLEET": "Parco Auto",
+      "USED_CARS": "Auto Usate",
+      "WASH": "Lavaggio Auto"
+    }
+  },
+  "SERVICES": {
+    "KICKER": "I NOSTRI SERVIZI",
+    "TITLE": "Soluzioni di Mobilità",
+    "SUBTITLE": "su misura per te",
+    "INTRO": "Scopri tutti i servizi offerti da La Dolce Vita SRL. Dalla vacanza spensierata alle esigenze di lavoro più complesse, abbiamo il veicolo perfetto per ogni tua necessità.",
+
+    "RENTAL": {
+      "TITLE": "Autonoleggio",
+      "DESC": "Vivi la Puglia in totale libertà. Auto moderne, sicure e dotate di ogni comfort per rendere il tuo viaggio indimenticabile, anche senza carta di credito.",
+      "MORE": "Scopri le tariffe"
+    },
+    "COMMERCIAL": {
+      "TITLE": "Veicoli Commerciali",
+      "DESC": "Furgoni e van spaziosi per il tuo business o per i tuoi traslochi. Massima affidabilità, capienza e resistenza al servizio del tuo lavoro quotidiano.",
+      "MORE": "Vedi i mezzi"
+    },
+    "LONG_TERM": {
+      "TITLE": "Noleggio Lungo Termine",
+      "DESC": "La comodità di un'auto sempre nuova senza i pensieri dell'acquisto. Manutenzione, bollo e assicurazione inclusi in un unico canone fisso mensile.",
+      "MORE": "Richiedi preventivo"
+    },
+    "FLEET": {
+      "TITLE": "Il Nostro Parco Auto",
+      "DESC": "Oltre 150 veicoli tra city car, eleganti berline, SUV spaziosi e cabriolet sportive. Una flotta in continuo aggiornamento per offrirti sempre il meglio.",
+      "MORE": "Esplora la flotta"
+    },
+    "USED_CARS": {
+      "TITLE": "Vendita Auto Usate",
+      "DESC": "Usato sicuro e garantito al 100%. Selezioniamo, tagliandiamo e revisioniamo rigorosamente ogni singolo veicolo prima di proporlo in vendita ai nostri clienti.",
+      "MORE": "Guarda gli annunci"
+    },
+    "WASH": {
+      "TITLE": "Lavaggio e Sanificazione",
+      "DESC": "Cura maniacale per i dettagli. Offriamo servizi di lavaggio manuale accurato, pulizia profonda della tappezzeria e sanificazione ad ozono per la tua vettura.",
+      "MORE": "Prenota lavaggio"
+    }
+  },
+  "CONTACTS": {
+    "HERO_TITLE": "Contatti",
+    "HERO_SUBTITLE": "Siamo qui per aiutarti a trovare l'auto perfetta",
+    "FORM_TITLE": "Compila il Form",
+    "INTRO_TEXT": "La Dolce Vita è un'agenzia di autonoleggio di Mottola, in provincia di Taranto, che mette a disposizione della clientela un ampio parco mezzi per qualsiasi esigenza.<br><br>Che si tratti di trasporto persone o merci, di singoli o gruppi, la società tarantina propone soluzioni personalizzate garantendo massima flessibilità e tariffe sempre convenienti.",
+    "LBL_NAME": "Nome e Cognome",
+    "LBL_EMAIL": "Indirizzo E-mail",
+    "LBL_PHONE": "Telefono",
+    "LBL_MESSAGE": "Messaggio",
+    "BTN_SEND": "Invia Richiesta",
+    "MSG_SUCCESS": "Grazie! La tua richiesta è stata inviata con successo. Ti ricontatteremo al più presto.",
+    "MSG_ERROR": "Si è verificato un errore durante l'invio. Riprova più tardi o contattaci telefonicamente.",
+    "INFO_TITLE": "Sedi e Recapiti",
+    "HOURS_TITLE": "Orari di Apertura",
+    "WASH_HOURS": {
+      "TITLE": "Orari Lavaggio",
+      "MANUAL": "Lavaggio a Mano",
+      "SELF": "Self Service 24/7",
+      "MANUAL_DAYS": "Lun - Ven",
+      "MANUAL_TIME": "07:30 - 16:30",
+      "MANUAL_SAT_DAYS": "Sabato",
+      "MANUAL_SAT_TIME": "07:30 - 13:00",
+      "MANUAL_SUN_DAYS": "Domenica",
+      "MANUAL_SUN_TIME": "Chiuso",
+      "SELF_DAYS": "Tutti i giorni",
+      "SELF_TIME": "07:30 - 00:00"
+    }
+  },
+  "HOME": {
+    "HERO": {
+      "TITLE": "HAI BISOGNO DI UN'AUTO O FURGONE?",
+      "SUBTITLE": "NOLEGGIAMI ANCHE SENZA CARTA DI CREDITO",
+      "DESC": "BOCCONI SRL opera a Massafra con esposizione veicoli e officina specializzata, offrendo soluzioni complete per privati e aziende.",
+      "CTA_SERVICES": "Scopri i servizi",
+      "CTA_CONTACT": "Richiedi informazioni",
+      "HIGHLIGHTS": {
+        "FAST": {
+          "TITLE": "Interventi rapidi",
+          "DESC": "Diagnosi e riparazioni per mezzi commerciali e industriali"
+        },
+        "FLEET": {
+          "TITLE": "Flotta noleggio",
+          "DESC": "Veicoli e attrezzature disponibili con formule flessibili"
+        },
+        "SUPPORT": {
+          "TITLE": "Supporto dedicato",
+          "DESC": "Consulenza tecnica e assistenza programmata"
+        }
+      },
+      "METRICS": {
+        "SUPPORT": "Supporto operativo",
+        "SERVICES": "Servizi specializzati",
+        "CUSTOMER": "Orientamento al cliente"
+      }
+    },
+    "PROMO": {
+      "TITLE_BLACK": "Servizi di",
+      "TITLE_RED": "Autonoleggio",
+      "TEXT_1": "E' possibile richiedere formule di <strong>noleggio</strong> personalizzate <strong>a breve o lungo termine</strong>, ideali per poter disporre di un'auto nuova ed efficiente a seconda dei propri bisogni.",
+      "TEXT_2": "Contattate gli uffici telefonicamente chiamando il <a href=\"tel:+390996418339\" class=\"tel-link\">+39 099 6418339</a>, oppure numero commerciale: <a href=\"tel:+393428315325\" class=\"tel-link\">+39 3428315325</a> per ricevere ogni dettaglio sul noleggio e fissare un appuntamento oppure ad inviare un messaggio tramite l'apposito modulo di contatto per richiedere informazioni dettagliati e preventivi: un addetto vi seguirà per trovare la tipologia di noleggio auto più adatta a voi.",
+      "BTN_TEXT": "Chiama per un preventivo"
+    },
+    "FEATURES": {
+      "FAST": {
+        "TAG": "Officina",
+        "TITLE": "Due sedi operative",
+        "DESC": "Esposizione veicoli in Contrada Sandergio snc e officina in Via Chiatona 26, Massafra."
+      },
+      "CUTTING": {
+        "TAG": "Noleggio",
+        "TITLE": "Servizi completi",
+        "DESC": "Dalla meccanica alla carrozzeria, fino a revisioni, ricambi e allestimenti."
+      },
+      "SECURE": {
+        "TAG": "Affidabilità",
+        "TITLE": "Affidabilità professionale",
+        "DESC": "Assistenza qualificata per auto, furgoni, moto, caravan e veicoli industriali."
+      }
+    },
+    "STATS": {
+      "PROJECTS": "Progetti Completati",
+      "CLIENTS": "Clienti Felici",
+      "EXPERIENCE": "Anni di Esperienza",
+      "TEAM": "Esperti nel Team"
+    },
+    "TESTIMONIALS": {
+      "TITLE": "Cosa dicono i",
+      "SUBTITLE": "Nostri Clienti",
+      "1": {
+        "NAME": "Marco Rossi",
+        "ROLE": "CEO, TechStart",
+        "TEXT": "Un team eccezionale. Hanno trasformato la nostra idea in un'app di successo in tempi record."
+      },
+      "2": {
+        "NAME": "Laura Bianchi",
+        "ROLE": "Product Manager, E-Shop Pro",
+        "TEXT": "Professionalità e competenza tecnica incredibili. Consigliatissimi per progetti complessi."
+      },
+      "3": {
+        "NAME": "Giulia Verdi",
+        "ROLE": "Founder, GreenApp",
+        "TEXT": "Sanno ascoltare le esigenze del cliente e trovare sempre la soluzione tecnica migliore."
+      }
+    }
+  },
+  "ABOUT": {
+    "TITLE": "La Dolce Vita",
+    "SUBTITLE": "L'eccellenza del noleggio in Puglia",
+    "INTRO_P1": "Siamo un'azienda con sedi a <strong>Mottola</strong>, <strong>Massafra</strong> e <strong>Grottaglie</strong> con oltre 10 anni di esperienza. Il nostro parco con <strong>oltre 150 veicoli</strong> ci rende leader nel sud Italia.",
+    "FEATURES_TITLE": "Perché Sceglierci",
+    "F1_TITLE": "Alta Qualità",
+    "F1_DESC": "Proponiamo solo veicoli in ottime condizioni a prezzi competitivi.",
+    "F2_TITLE": "Trasparenza",
+    "F2_DESC": "Presentiamo sempre preventivi e contratti chiari e completi.",
+    "F3_TITLE": "Personalizzazione",
+    "F3_DESC": "Abbiamo un servizio di noleggio giornaliero flessibile e personalizzabile.",
+    "F4_TITLE": "Vasta Scelta e Comfort",
+    "F4_DESC": "Le nostre vetture sono tutte in ottime condizioni per un viaggio piacevole."
+  },
+  "FOOTER": {
+    "QUICK_LINKS": "Link Rapidi",
+    "CONTACTS_TITLE": "Sedi e Recapiti",
+    "HOURS_TITLE": "Orari di Apertura",
+    "ABOUT_TEXT": "La Dolce Vita è una società di autonoleggio che mette a disposizione dei propri clienti un vasto parco macchine, completo di mezzi adatti a qualsiasi esigenza, suddivisi per categoria e fasce di costo diverse. Dalle utilitarie ai SUV, dai minivan ai furgoni, qualunque siano le necessità di trasporto, l'autonoleggio La Dolce Vita propone soluzioni su misura sotto ogni punto di vista."
+  },
+  "LEGAL_INFO": {
+    "HERO_TITLE": "Informazioni Legali",
+    "BACK_BUTTON": "Torna Indietro",
+    "DISCLAIMER_TEXT": "I testi, le informazioni e gli altri dati pubblicati in questo sito nonché i link ad altri siti presenti sul web hanno esclusivamente scopo informativo e non assumono alcun carattere di ufficialità.<br><br>La Dolce Vita S.r.l. non assume alcuna responsabilità per eventuali errori od omissioni di qualsiasi tipo e per qualunque tipo di danno diretto, indiretto o accidentale derivante dalla lettura o dall'impiego delle informazioni pubblicate, o di qualsiasi forma di contenuto presente nel sito o per l'accesso o l'uso del materiale contenuto in altri siti."
+  },
+  "SERVICE_DETAIL": {
+    "BACK_BUTTON": "Torna ai Servizi",
+    "autonoleggio": {
+      "HERO_TITLE": "Noleggio Auto in Puglia",
+      "HERO_SUBTITLE": "Autonoleggio Senza Conducente",
+      "INTRO_TITLE": "Noleggio a Breve Termine",
+      "INTRO_TEXT": "La Dolce Vita è l'agenzia di autonoleggio di riferimento a Mottola e in provincia di Taranto, una società attenta e professionale in grado di rispondere a qualsiasi richiesta della clientela con la massima accuratezza. Disponendo di un ampio parco auto, la società riesce a venire incontro alle diverse esigenze proponendo mezzi adatti a singoli viaggiatori e famiglie, gruppi turistici e aziende, sempre garantendo i massimi standard qualitativi del servizio. Non mancano inoltre auto per noleggio a breve termine, dai modelli più classici alle auto sportive e di lusso, ideali per rendere ancora più indimenticabili i vostri momenti più importanti.",
+      "SPLIT_TITLE_BLACK": "Autonoleggio ",
+      "SPLIT_TITLE_RED": "Senza Conducente",
+      "BUTTON_TEXT": "Richiedi Preventivo",
+      "SPLIT_TEXT": "Se desiderate noleggiare un automobile a breve termine o piuttosto, volete disporre di un veicolo esclusivo per una serata di gala o un addio al nubilato o al celibato, La Dolce Vita è l'operatore giusto a cui affidarvi. La società di autonoleggio di Mottola, in provincia di Taranto, vanta un ampio parco di auto di lusso, sportive e classiche, pronte a esaltare il vostro carattere e la vostra personalità durante le occasioni più importanti.\n\nPer conoscere l'intero parco di auto per eventi, non esitate a contattare il personale in sede e a richiedere un preventivo dettagliato, ritagliato su misura per voi. Nell'ambito del noleggio auto a breve termine, La Dolce Vita propone una vasta gamma di modelli sia classici, come le ammiraglie delle case automobilistiche più prestigiose, che sportive. In base allo stile del vostro evento e alla vostra personalità, potrete dunque scegliere la tipologia di veicolo più adatta e sorprendere così tutti mostrandovi a bordo di un veicolo unico ed esclusivo."
+    },
+    "veicoli_commerciali": {
+      "HERO_TITLE": "Van e Veicoli Commerciali",
+      "HERO_SUBTITLE": "Soluzioni di trasporto per il tuo business",
+      "INTRO_TITLE": "Noleggio a Breve e Lungo Termine di Van e veicoli commerciali per Consegne Merci",
+      "INTRO_TEXT": "Oltre al noleggio di autovetture di qualsiasi genere, l'agenzia La Dolce Vita di Mottola mette a disposizione anche servizi di noleggio van e veicoli commerciali, ideali per effettuare consegne di merci rapide e complete. La società di autonoleggio tarantina è partner di numerose realtà aziendali che hanno scelto di ottimizzare i propri costi avvalendosi della possibilità di usufruire di un veicolo a noleggio per la propria attività. In questo modo, infatti, è possibile tagliare numerosi costi fissi, legati all'acquisto e alla gestione del parco mezzi aziendale, usufruendo al contempo di sgravi fiscali per l'attività commerciale. A breve, l'agenzia aggiungerà ai propri servizi anche quello di noleggio mezzi industriali. Veicoli commerciali a noleggio per <strong>trasporto merci</strong>, scegli il più adatto alla tua attività commerciale.\n\nFurgoni disponibili per tutte le necessità di trasporto <strong>L1 H1 - L1 H2 - L2 H2 - L2 H3 - L3 H3 - L4 H4</strong> e anche <strong>veicoli refrigerati e veicoli con sponda idraulica</strong>",
+      "ADVANTAGES_TITLE": "Vantaggio del Noleggio per le Aziende",
+      "ADVANTAGES_TEXT": "Il noleggio auto è un'opportunità particolarmente vantaggiosa per le aziende, in quanto consente di disporre di mezzi sempre efficienti senza dover sopportare costi elevati per l'acquisto e la gestione degli stessi. Con le formule di noleggio veicoli commerciali, è infatti possibile stipulare contratti a breve termine su auto, furgoni, van e ogni altra tipologia di veicolo, a condizioni estremamente vantaggiose e flessibili.",
+      "PICKUP_TITLE_RED": "Ritiro Immediato",
+      "PICKUP_TITLE_BLACK": "in Sede",
+      "BUTTON_TEXT": "Richiedi Preventivo Aziendale",
+      "PICKUP_TEXT": "Per venire incontro alle esigenze dei propri clienti, la società di autonoleggio La Dolce Vita di Mottola ha predisposto formule di noleggio studiate per le diverse necessità dei richiedenti. Dal noleggio van per attività commerciali al noleggio di auto di rappresentanza per le aziende, la società tarantina garantisce numerosi vantaggi, come la possibilità di ritiro immediato del veicolo in sede e la prenotazione online: chiamate la sede per conoscere tutti i dettagli della proposta."
+    },
+    "lungo_termine": {
+      "HERO_TITLE": "Lungo Termine",
+      "HERO_SUBTITLE": "La tua mobilità senza pensieri",
+      "INTRO_TITLE": "MOBILITÀ SICURA E SENZA STRESS",
+      "INTRO_TEXT": "Auonoleggio La Dolce Vita è un'azienda specializzata nel noleggio a lungo termine di veicoli, offrendo soluzioni personalizzate per privati e aziende. Con una vasta gamma di auto di lusso, SUV, berline e veicoli commerciali, La Dolce Vita si distingue per la qualità del servizio e l'attenzione al cliente. Ogni veicolo è mantenuto in perfette condizioni, garantendo sicurezza e comfort per tutta la durata del noleggio.",
+      "ADVANTAGES_TITLE": "I Vantaggi del Lungo Termine",
+      "ADVANTAGES_TEXT": "Il noleggio a lungo termine con Auonoleggio La Dolce Vita consente ai clienti di godere di un'auto nuova senza le preoccupazioni legate alla proprietà, come la manutenzione, l'assicurazione e la svalutazione del veicolo. Con contratti flessibili e tariffe competitive, l'azienda rende il processo semplice e conveniente. I clienti possono scegliere il veicolo più adatto alle loro esigenze e beneficiare di servizi aggiuntivi come l'assistenza stradale 24/7 e il cambio pneumatici stagionale.",
+      "INCLUDED_TITLE_RED": "COMFORT E CONVENIENZA",
+      "INCLUDED_TEXT": "Autonoleggio La Dolce Vita si impegna a fornire un'esperienza di noleggio senza stress, con un servizio clienti dedicato e professionale. La loro missione è quella di offrire un modo elegante e pratico per muoversi, permettendo ai clienti di concentrarsi sulle loro attività quotidiane senza doversi preoccupare del proprio mezzo di trasporto.",
+      "CTA_BUTTON": "Richiedi un Preventivo"
+    },
+    "parco_auto": {
+      "HERO_TITLE": "Parco Mezzi",
+      "HERO_SUBTITLE": "L'auto perfetta per ogni tua esigenza",
+      "INTRO_TITLE": "Parco auto",
+      "BUTTON_TEXT": "Richiedi Preventivo",
+      "INTRO_TEXT": "Desiderate disporre di un'auto nuova e confortevole per un periodo di tempo più o meno lungo?<br> Siete in vacanza nel tarantino e volete usufruire di una vettura per tutti i vostri spostamenti?<br> La Dolce Vita Noleggio Auto è l'operatore giusto a cui rivolgervi per prenotare un mezzo nuovo e in ottime condizioni a tariffe estremamente vantaggiose. Con un'offerta ampia e variegata, la società di affitto di veicoli con sede a Mottola è pronta a soddisfare ogni vostra necessità con la massima attenzione e professionalità: non esitate a chiamare per un preventivo."
+    },
+    "auto_usate": {
+      "HERO_TITLE": "Auto Usate",
+      "HERO_SUBTITLE": "Il tuo prossimo veicolo, garantito e sicuro",
+      "INTRO_TITLE": "Auto Sicure e Garantite",
+      "INTRO_TEXT": "Autonoleggio La Dolce Vita è un'azienda leader nella vendita di auto usate, offrendo ai clienti una selezione accurata di veicoli di alta qualità. Ogni auto nel nostro inventario viene sottoposta a rigorosi controlli e manutenzione per garantire che rispetti gli standard più elevati di sicurezza e affidabilità. Con una gamma diversificata che include berline, SUV, utilitarie e auto di lusso, ci impegniamo a soddisfare le esigenze di tutti i tipi di acquirenti.",
+      "ADVANTAGES_TITLE": "Auto Usate Garantite",
+      "ADVANTAGES_TEXT": "La trasparenza è uno dei valori fondamentali dell'azienda: ogni veicolo viene fornito con una storia completa e dettagliata, inclusi i chilometri percorsi, le manutenzioni effettuate e qualsiasi incidente pregresso. Questo approccio permette ai clienti di acquistare con fiducia, sapendo esattamente cosa stanno comprando.\n\nAutonoleggio La Dolce Vita offre anche soluzioni di finanziamento flessibili, rendendo l'acquisto di un'auto usata accessibile a una vasta gamma di budget.",
+      "CONSULTATION_TITLE_RED": "Consulenze",
+      "CONSULTATION_TITLE_BLACK": "Personalizzate",
+      "CONSULTATION_TEXT": " Il team di professionisti dell'azienda è sempre disponibile per fornire consulenza personalizzata e aiutare i clienti a trovare il veicolo perfetto per le loro esigenze.\n\nCon un impegno costante verso la soddisfazione del cliente e un'attenzione particolare alla qualità, Auonoleggio La Dolce Vita rappresenta una scelta eccellente per chi cerca un'auto usata affidabile e conveniente.",
+      "IMG_ALT": "Auto Usate Selezionate",
+      "CTA_BUTTON": "Contattaci per un preventivo",
+      "SOCIAL_TITLE": "Scopri le occasioni in Tempo Reale",
+      "SOCIAL_DESC": "Pubblichiamo i nuovi arrivi e le offerte speciali direttamente sulla nostra pagina. Unisciti alla nostra community!",
+      "SOCIAL_BTN": "Seguici su Facebook"
+    },
+    "lavaggio": {
+      "HERO_TITLE": "Lavaggio Auto",
+      "HERO_SUBTITLE": "L'attenzione al dettaglio che la tua auto merita",
+      "INTRO_TITLE": "Pulizia Auto Impeccabile",
+      "INTRO_TEXT": "Autonoleggio La Dolce Vita è un'azienda leader nel settore del noleggio auto e dei servizi di pulizia accurata per veicoli. Situata in una posizione strategica, offre una vasta gamma di veicoli per soddisfare ogni esigenza, dal noleggio per brevi periodi a soluzioni a lungo termine. Oltre al noleggio, La Dolce Vita è rinomata per i suoi servizi di pulizia auto, garantendo che ogni veicolo sia sempre impeccabile.",
+      "QUALITY_TITLE": "Qualità e Cura Meticolosa degli Interni",
+      "QUALITY_TEXT": "Il servizio di pulizia esterna comprende un lavaggio approfondito per rimuovere sporco e detriti, donando alla carrozzeria una brillantezza come nuova. L'attenzione al dettaglio prosegue con la pulizia degli interni, dove ogni angolo dell'abitacolo viene trattato con cura. Il lavaggio dei tappeti e dei sedili viene effettuato utilizzando prodotti di alta qualità per garantire la rimozione di macchie e odori, restituendo l'aspetto originale e la freschezza dell'interno dell'auto.",
+      "CLEAN_TITLE_RED": "Pulizia Auto",
+      "CLEAN_TITLE_BLACK": "Completa",
+      "CLEAN_TEXT": "Grazie a tecniche avanzate e all'impiego di detergenti specifici, La Dolce Vita è in grado di rimuovere anche le macchie più ostinate, assicurando un risultato impeccabile. Il team di professionisti esperti è dedicato a offrire un servizio eccellente, rendendo ogni esperienza di noleggio o pulizia un vero piacere per i clienti. Affidarsi ad Autonoleggio La Dolce Vita significa scegliere qualità, cura e professionalità.\n\n",
+      "CTA_BUTTON": "Prenota il tuo lavaggio",
+      "IMG_ALT": "Prezzi Lavaggio Auto",
+      "SOCIAL_TITLE": "Le nostre ultime lavorazioni",
+      "SOCIAL_DESC": "Segui la nostra pagina per vedere i risultati dei nostri trattamenti e restare aggiornato sulle promozioni.",
+      "SOCIAL_BTN": "Seguici su Facebook"
+    }
+  },
+  "PRIVACY_POLICY": {
+    "HERO_TITLE": "Informativa Privacy",
+    "BACK_BUTTON": "Torna Indietro",
+    "INTRO_TEXT": "<strong>La dolce vita S.r.l. - Informativa sulla Protezione dei Dati Personali</strong><br>La dolce vita S.r.l. prima di acquisire i Suoi dati personali per la visualizzazione e la fruizione del servizio La Dolce Vita Rent, delle relative piattaforme e delle app, la invita a leggere attentamente la presente informativa, resa ai sensi dell’art. 13 del Regolamento Europeo n. 679/2016 relativo alla protezione dei dati personali (\"GDPR\"), per permetterle di comprendere come le Sue informazioni personali vengano gestite quando Lei utilizza i nostri servizi, per consentirle, ove necessario, di prestare un consenso espresso e consapevole al trattamento dei Suoi dati personali, e per conoscere (e se del caso) esercitare i Suoi diritti, quale “Interessato” al trattamento.",
+
+    "SEC1_TITLE": "1. Titolare del Trattamento e DPO",
+    "SEC1_DESC": "In questa sezione le indichiamo quali sono i nostri riferimenti",
+    "SEC1_TH1": "Titolare",
+    "SEC1_TH2": "DPO - Responsabile della protezione dei dati",
+    "SEC1_TD1": "La dolce vita S.r.l., rappresentata dall'Amministratore Delegato pro tempore con sede legale in Via S. Allende 1, 74017 Mottola-Italia, contattabile all'indirizzo mail ladolcevitarent@gmail.com",
+    "SEC1_TD2": "basilestudio94@gmail.com",
+
+    "SEC2_TITLE": "2. Tipologie di dati personali",
+    "SEC2_DESC": "In questa sezione le indichiamo quali tipologie di dati le chiediamo",
+    "SEC2_TH1": "Tipologie di dati",
+    "SEC2_TH2": "Dettaglio dati",
+    "SEC2_TD1_1": "<strong>Dati acquisiti direttamente dall'interessato</strong>",
+    "SEC2_TD1_2": "Nome cognome, indirizzo mail, numero di telefono targa o identificativo veicolo, codice fiscale, partita iva, indirizzo di residenza, luogo e data di nascita, documento identificativo (es. patente), dati della patente, dati di pagamento, (carte di credito) preferenze di viaggio, fotografia.",
+    "SEC2_TD2_1": "<strong>Dati acquisiti in modo automatico durante la navigazione</strong>",
+    "SEC2_TD2_2": "Indirizzo IP, tipo di browser, ISP, sistema operativo e versione, log di autentificazione (user ID, di navigazione), log di pagamento, log di finalizzazione la navigazione con emissione di prenotazione o dei titoli, log di modifiche, geolocalizzazione, modalità di guida. App: Device ID, sistema operativo e versione.",
+    "SEC2_POST": "I predetti dati saranno trattati con supporti informatici e cartacei in modo da garantire idonee misure di sicurezza e riservatezza.",
+
+    "SEC3_TITLE": "3. Finalità e base giuridica del Trattamento",
+    "SEC3_DESC": "In questa sezione le indichiamo lo scopo (e il fondamento legale) del trattamento dei Suoi dati personali",
+    "SEC3_TH1": "Finalità",
+    "SEC3_TH2": "Base giuridica",
+    "SEC3_R1_C1": "Adempimento di obblighi derivanti da disposizioni di legge nazionale o comunitaria, ad esempio in materia di obblighi tributari, contabili, amministrativi e fiscali, ivi compresa la verifica della patente di guida, anche trattamento attraverso l’interconnessione con il database della Motorizzazione Civile. I Suoi dati personali potranno inoltre essere trattati per adempiere a richieste da parte delle competenti autorità amministrative o giudiziarie, ad esempio in tema di identificazione e successiva notifica al trasgressore dei verbali di contestazione di sanzioni amministrative pecuniarie del Codice della Strada, o di accertamenti relativi a sinistri stradali.",
+    "SEC3_R1_C2": "Obbligo di legge a cui è soggetto il titolare del trattamento",
+    "SEC3_R2_C1": "Esecuzione di quanto previsto dalle Condizioni Generali di Contratto, dai Regolamenti, e l’erogazione dei servizi accessori e/o connessi. A tale fine saranno trattati anche i dati relativi alla registrazione del Suo profilo sul sito e/o sulla App, ivi inclusa la raccolta, conservazione ed elaborazione finalizzata alla gestione operativa, tecnica ed amministrativa del rapporto, nonché i dati relativi ai pagamenti (ivi comprese penali, sanzioni e altri oneri accessori), compresi i dati della Sua carta di credito (o altro strumento di pagamento), e i dati relativi alla geolocalizzazione anche del Suo dispositivo mobile, nei limiti di quanto strettamente necessario per l’apertura del veicolo, la fruizione del servizio e la rilevazione di illeciti contrattuali. I Suoi dati potranno altresì essere trattati, in fase precontrattuale, per adempiere a Sue specifiche richieste.",
+    "SEC3_R2_C2": "Trattamento necessario all'esecuzione di un contratto di cui l'interessato è parte o all'esecuzione di misure precontrattuali adottate su richiesta dello stesso",
+    "SEC3_R3_C1": "Adozione di misure volte alla tutela contro il rischio di credito, incluse le attività finalizzate alla Sua corretta identificazione, e all’accertamento della Sua affidabilità economica e/o solvibilità.",
+    "SEC3_R3_C2": "Legittimo interesse del titolare",
+    "SEC3_R4_C1": "Analisi dell'utilizzo dei servizi fruiti, al fine del miglioramento degli stessi, ovvero per soddisfare specifiche esigenze titolare.",
+    "SEC3_R4_C2": "Legittimo interesse del titolare",
+    "SEC3_R5_C1": "Predisposizione di un sistema di geolocalizzazione sui veicoli utilizzati, e altre eventuali misure a tutela degli stessi, al fine di prevenire e/o reprimere eventuali atti illeciti e/o fraudolenti.",
+    "SEC3_R5_C2": "Legittimo interesse del titolare",
+    "SEC3_R6_C1": "Trattamenti necessari alle attività prodromiche e conseguenti alle operazioni di fusione, cessione o trasferimento di ramo d’azienda.",
+    "SEC3_R6_C2": "Legittimo interesse del titolare",
+    "SEC3_R7_C1": "Commercializzazione dei servizi di LA DOLCE VITA S.R.L. e /o invio di materiale pubblicitario/informativo/promozionale e di partecipazione ad iniziative ed offerte a premi.",
+    "SEC3_R7_C2": "Consenso dell'interessato",
+    "SEC3_R8_C1": "Rilevazione del grado di soddisfazione sulla qualità dei servizi offerti, attraverso il telefono, la posta elettronica o altri sistemi di rilevazione.",
+    "SEC3_R8_C2": "Consenso dell'interessato",
+    "SEC3_POST": "Il conferimento dei dati necessari al perseguimento delle finalità di cui ai punti precedenti ha natura “obbligatoria” e un Suo eventuale rifiuto potrebbe comportare l’impossibilità per LA DOLCE VITA S.R.L. di consentire e garantirle di essere riconosciuto univocamente in fase di accesso, di navigare l’applicazione, di effettuare ricerche di percorso, di emettere il titolo di viaggio e/o del servizio e l’emissione della relativa fattura. Il conferimento dei dati necessari per finalità commerciali è facoltativo ed è soggetto al Suo consenso espresso.",
+
+    "SEC4_TITLE": "4. Soggetti destinatari dei dati",
+    "SEC4_DESC": "In questa sezione le indichiamo chi tratterà i Suoi dati e a chi verranno comunicati. Per il perseguimento delle finalità suddette, i dati personali saranno trattati dei seguenti soggetti:",
+    "SEC4_TH1": "Soggetti riconducibili a LA DOLCE VITA S.R.L.",
+    "SEC4_TH2": "Soggetti non direttamente riconducibili a LA DOLCE VITA S.R.L.",
+    "SEC4_R1_C1": "Comune di Mottola, Autorità Giudiziarie",
+    "SEC4_R1_C2": "Autorità di pubblica sicurezza, Imprese di assicurazione competenti per la gestione e liquidazione di sinistri; Società di recupero crediti e società specializzate nella gestione di informazioni commerciali o relative al credito;",
+    "SEC4_POST": "I Suoi dati verranno trattati soltanto da dipendenti e preposti del Titolare, che sono adeguatamente istruiti e formati, o da altri soggetti che agiscono in qualità di Responsabili del Trattamento. I dati oggetto di trattamento non saranno mai diffusi.",
+
+    "SEC5_TITLE": "5. Conservazione dei dati",
+    "SEC5_DESC": "In questa sezione le indichiamo per quanto tempo conserveremo i Suoi dati. I dati personali che ci ha fornito saranno conservati per un periodo di tempo non superiore a quello necessario a soddisfare gli scopi per i quali sono stati raccolti.",
+    "SEC5_TH1": "Natura del conferimento",
+    "SEC5_TH2": "Periodo di conservazione",
+    "SEC5_R1_C1": "<strong>Finalità il cui conferimento ha natura obbligatoria</strong>",
+    "SEC5_R1_C2": "Per un periodo di dieci anni che decorrono: 1) Dalla cessazione del rapporto contrattuale; 2) dall'ultimo atto obbligatorio interruttivo della prescrizione dei diritti; 3) dal ventiquattresimo mese dall'ultimo accesso, in caso di mancato utilizzo.",
+    "SEC5_R2_C1": "<strong>Finalità il cui conferimento ha natura facoltativa</strong>",
+    "SEC5_R2_C2": "Fino alla revoca del consenso o decorsi 24 mesi dalla cancellazione dell'account.",
+    "SEC5_POST": "I dati personali, una volta anonimizzati, potranno essere utilizzati e riusati senza limitazione in considerazione della perdita della qualità di dato personale.",
+
+    "SEC6_TITLE": "6. Trasferimento dei dati al di fuori dell’Unione Europea e processo decisionale automatizzato",
+    "SEC6_TEXT": "I Suoi dati personali potranno essere trasferiti fuori dalla UE. Laddove tale trasferimento dovesse avvenire, il Titolare adotterà ogni misura idonea per garantire un adeguato livello di protezione, nel rispetto di una decisione di adeguatezza, ovvero previa sottoscrizione di Clausole Contrattuali Standard. I Suoi dati personali non saranno sottoposti ad alcun processo decisionale automatizzato.",
+
+    "SEC7_TITLE": "7. Diritti degli Interessati",
+    "SEC7_TEXT": "Il Regolamento UE 2016/679 (artt. da 15 a 23) conferisce agli interessati l’esercizio di specifici diritti. In particolare, ha diritto di chiedere a LA DOLCE VITA S.R.L. l’accesso, la rettifica, la cancellazione, la limitazione, l’opposizione. L’interessato ha diritto a richiedere la portabilità dei Suoi dati personali. Se ha prestato il Suo consenso, può revocarlo in qualsiasi momento.<br><br>Lei inoltre ha diritto di proporre reclamo all’Autorità di Controllo (Garante per la Protezione dei Dati Personali). In qualsiasi momento, potrà chiedere di esercitare i Suoi diritti contattando <strong>ladolcevitarent@gmail.com</strong> ovvero il DPO all’indirizzo <strong>basilestudio94@gmail.com</strong>.",
+
+    "SEC8_TITLE": "8. Modifiche all’informativa",
+    "SEC8_TEXT": "La presente Informativa potrebbe richiedere periodici aggiornamenti. LA DOLCE VITA S.R.L. si riserva il diritto di modificarla o integrarla in qualsiasi momento. Lei sarà informato delle modifiche attraverso il sito o la app, ovvero anche via e-mail."
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Bentornato",
+    "REGISTER_TITLE": "Crea Account",
+    "LOGIN_SUBTITLE": "Accedi al tuo account",
+    "REGISTER_SUBTITLE": "Unisciti a BOCCONI SRL",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Conferma Password",
+    "FIRST_NAME": "Nome",
+    "LAST_NAME": "Cognome",
+    "FIRST_NAME_PLACEHOLDER": "Inserisci il tuo nome",
+    "LAST_NAME_PLACEHOLDER": "Inserisci il tuo cognome",
+    "LOGIN_BTN": "Accedi",
+    "REGISTER_BTN": "Registrati",
+    "LOGOUT": "Esci",
+    "GO_TO_REGISTER": "Non hai un account? Registrati",
+    "GO_TO_LOGIN": "Hai già un account? Accedi",
+    "ERROR_MATCH": "Le password non corrispondono",
+    "ERROR_REQUIRED_FIELDS": "Nome e cognome sono obbligatori",
+    "ERROR_GENERIC": "Si è verificato un errore. Riprova.",
+    "SUCCESS_REGISTER": "Account creato con successo! Ora puoi accedere."
+  }
+}

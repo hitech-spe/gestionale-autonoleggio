@@ -1,0 +1,197 @@
+<div class="settings-tab fade-in">
+  <div class="tab-header-section">
+    <h2>Impostazioni Gestionale</h2>
+    <p class="subtitle">Personalizza il brand dell'interfaccia, gestisci le intestazioni dei contratti e configura le credenziali delle integrazioni esterne.</p>
+  </div>
+
+  <form (ngSubmit)="saveSettings()" #settingsForm="ngForm" class="settings-grid">
+    
+    <!-- LEFT COLUMN: Profilo & Brand -->
+    <div class="settings-col flex-col gap-6">
+      
+      <!-- Profilo e Intestazione Contratti -->
+      <div class="glass-card settings-card">
+        <div class="card-title">
+          <i class="fa-solid fa-briefcase text-accent"></i>
+          <h3>Profilo e Intestazione Contratti</h3>
+        </div>
+        <p class="card-desc">Questi dati verranno stampati automaticamente come intestazione in alto a destra su tutti i contratti di noleggio PDF generati.</p>
+        
+        <div class="form-grid mt-4">
+          <div class="form-group span-2">
+            <label for="compName">Ragione Sociale / Nome Azienda</label>
+            <input type="text" id="compName" name="compName" [(ngModel)]="settings.name" required placeholder="Es. Dolce Vita Rent S.r.l.">
+          </div>
+
+          <div class="form-group">
+            <label for="piva">Partita IVA / VAT</label>
+            <input type="text" id="piva" name="piva" [(ngModel)]="settings.piva" placeholder="Es. IT01234567890">
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Telefono Contatto</label>
+            <input type="text" id="phone" name="phone" [(ngModel)]="settings.contactPhone" placeholder="Es. +39 342 831 5325">
+          </div>
+
+          <div class="form-group span-2">
+            <label for="email">Email Contatto</label>
+            <input type="email" id="email" name="email" [(ngModel)]="settings.contactEmail" placeholder="Es. info@ladolcevitarent.com">
+          </div>
+
+          <div class="form-group span-2">
+            <label for="address">Indirizzo Sede Legale</label>
+            <input type="text" id="address" name="address" [(ngModel)]="settings.contactAddress" placeholder="Es. Via Salvador Allende, 3 - Mottola (TA)">
+          </div>
+        </div>
+      </div>
+
+      <!-- Personalizzazione Grafica (White-Labeling) -->
+      <div class="glass-card settings-card">
+        <div class="card-title">
+          <i class="fa-solid fa-palette text-accent"></i>
+          <h3>Personalizzazione Grafica (White-Label)</h3>
+        </div>
+        <p class="card-desc">Carica il tuo logo aziendale e scegli i colori sociali. La dashboard applicherà i colori in tempo reale.</p>
+
+        <div class="branding-settings-box mt-4">
+          <!-- Logo Uploader -->
+          <div class="logo-upload-section">
+            <label class="section-label">Logo Aziendale</label>
+            <div class="logo-uploader-box">
+              @if (logoPreview) {
+                <div class="logo-preview-container">
+                  <img [src]="logoPreview" alt="Anteprima Logo" class="uploaded-logo-preview">
+                  <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Rimuovi Logo">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              } @else {
+                <div class="logo-placeholder-box" (click)="logoInput.click()">
+                  <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+                  <span>Trascina o clicca per caricare</span>
+                  <span class="file-limits">PNG, JPG o WEBP (Max 300KB)</span>
+                </div>
+              }
+              <input type="file" #logoInput accept="image/png, image/jpeg, image/webp" (change)="onLogoSelected($event)" style="display: none;">
+            </div>
+          </div>
+
+          <!-- Color Pickers -->
+          <div class="color-pickers-section">
+            <label class="section-label">Colori dell'interfaccia</label>
+            <div class="color-picker-grid">
+              <div class="color-picker-item">
+                <div class="picker-wrapper">
+                  <input type="color" id="primaryColor" name="primaryColor" [(ngModel)]="settings.primaryColor">
+                  <label for="primaryColor">Colore Principale</label>
+                </div>
+                <span class="color-hex-val">{{ settings.primaryColor }}</span>
+              </div>
+              <div class="color-picker-item">
+                <div class="picker-wrapper">
+                  <input type="color" id="secondaryColor" name="secondaryColor" [(ngModel)]="settings.secondaryColor">
+                  <label for="secondaryColor">Colore di Hover</label>
+                </div>
+                <span class="color-hex-val">{{ settings.secondaryColor }}</span>
+              </div>
+            </div>
+            <p class="color-help mt-3"><i class="fa-solid fa-circle-info"></i> I colori scelti verranno applicati istantaneamente a pulsanti, menu attivi, allarmi visivi e dettagli grafici del tuo spazio di lavoro.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gestione Sedi Operative -->
+      <div class="glass-card settings-card">
+        <div class="card-title">
+          <i class="fa-solid fa-map-location-dot text-accent"></i>
+          <h3>Gestione Sedi Operative</h3>
+        </div>
+        <p class="card-desc">Aggiungi o rimuovi le sedi fisiche della tua attività. I filtri della dashboard e i campi di noleggio si aggiorneranno automaticamente.</p>
+        
+        <div class="location-management-box mt-4">
+          <div class="add-location-form" style="display: flex; gap: 0.5rem; align-items: center;">
+            <input type="text" [(ngModel)]="newLocationName" name="newLoc" placeholder="Es. Milano, Roma, Sede Centrale..." style="flex-grow: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
+            <button type="button" class="btn btn-accent btn-sm" (click)="addLocation()" style="padding: 0.5rem 1rem; border-radius: 8px;">Aggiungi</button>
+          </div>
+
+          <div class="locations-list mt-3" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            @for (loc of settings.locations; track loc) {
+              <div class="location-badge-item" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.15); padding: 0.35rem 0.75rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--accent);">
+                <span>{{ loc }}</span>
+                <button type="button" class="btn-delete-badge" (click)="removeLocation(loc)" title="Elimina sede" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; padding: 0;">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            } @empty {
+              <p class="empty-locations-text text-muted" style="font-size: 0.8rem; margin: 0;"><i class="fa-solid fa-circle-info"></i> Nessuna sede configurata. Verranno usate le sedi di default.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: Integrazioni & Azioni -->
+    <div class="settings-col flex-col gap-6">
+      
+      <!-- Integrazione Polizia di Stato Cargos -->
+      <div class="glass-card settings-card">
+        <div class="card-title">
+          <i class="fa-solid fa-shield-halved text-accent"></i>
+          <h3>Integrazione Polizia di Stato (Cargos)</h3>
+        </div>
+        <p class="card-desc">Inserisci le credenziali fornite dalla Questura per abilitare la trasmissione automatica e l'invio in 1-click delle schede alloggiati degli autisti.</p>
+
+        <div class="form-grid mt-4">
+          <div class="form-group span-2">
+            <label for="cUsername">Nome Utente (Username Cargos)</label>
+            <input type="text" id="cUsername" name="cUsername" [(ngModel)]="settings.cargosUsername" placeholder="Es. TAW_TA00123">
+          </div>
+
+          <div class="form-group span-2">
+            <label for="cPassword">Password Web Service</label>
+            <input type="password" id="cPassword" name="cPassword" [(ngModel)]="settings.cargosPassword" placeholder="Inserisci per aggiornare la password">
+          </div>
+
+          <div class="form-group span-2">
+            <label for="cApiKey">Chiave API Privata (API Key)</label>
+            <input type="text" id="cApiKey" name="cApiKey" [(ngModel)]="settings.cargosApiKey" placeholder="Es. key_prod_987654321abc">
+          </div>
+        </div>
+        
+        <div class="cargos-status-info mt-4">
+          <div class="status-badge" [class.enabled]="settings.cargosUsername && settings.cargosApiKey">
+            <span class="status-dot"></span>
+            <span>{{ (settings.cargosUsername && settings.cargosApiKey) ? 'Modulo Integrazione Attivo' : 'Modulo Non Configurato' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Panel -->
+      <div class="glass-card settings-card action-card flex-col gap-4">
+        <h3>Salvataggio Configurazione</h3>
+        <p>Assicurati che tutti i dati dell'intestazione siano corretti poiché compariranno nei contratti legali stampati per i clienti.</p>
+
+        @if (saveSuccess) {
+          <div class="settings-alert success fade-in">
+            <i class="fa-solid fa-circle-check"></i>
+            <span>Configurazione salvata ed applicata con successo!</span>
+          </div>
+        }
+
+        @if (saveError) {
+          <div class="settings-alert error fade-in">
+            <i class="fa-solid fa-circle-xmark"></i>
+            <span>{{ saveError }}</span>
+          </div>
+        }
+
+        <div class="action-buttons-box mt-2">
+          <button type="submit" class="btn btn-accent w-100" style="height: 48px; border-radius: 8px;">
+            <i class="fa-solid fa-floppy-disk mr-2"></i> Salva Impostazioni
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</div>

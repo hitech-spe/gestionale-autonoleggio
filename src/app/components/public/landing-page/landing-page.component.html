@@ -1,0 +1,532 @@
+<!-- Navbar Sticky -->
+<header class="navbar">
+  <div class="container navbar-content">
+    <div class="logo">
+      <!-- Product custom SVG logo -->
+      <svg class="product-logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="url(#logo-grad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="60 30" />
+        <path d="M8 18H24V21C24 21.5 23.5 22 23 22H21C20.5 22 20 21.5 20 21V20.5H12V21C12 21.5 11.5 22 11 22H9C8.5 22 8 21.5 8 21V18Z" fill="url(#logo-grad)" />
+        <path d="M9.5 18L11.5 13.5C11.8 12.6 12.7 12 13.7 12H18.3C19.3 12 20.2 12.6 20.5 13.5L22.5 18H9.5Z" fill="url(#logo-grad)" opacity="0.85" />
+        <circle cx="11.5" cy="19.5" r="1" fill="white" />
+        <circle cx="20.5" cy="19.5" r="1" fill="white" />
+        <defs>
+          <linearGradient id="logo-grad" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#1d4ed8" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-text">Rent<span class="text-gradient">Smart</span></span>
+    </div>
+    
+    <nav class="nav-links hide-mobile">
+      <a href="#features" class="nav-link">Funzionalità</a>
+      <a href="#dashboard" class="nav-link">La Piattaforma</a>
+      <a href="#pricing" class="nav-link">Prezzi</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="#contact" class="nav-link">Contatti</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a routerLink="/auth/login" class="btn btn-outline btn-sm font-semibold">Accedi</a>
+      <a routerLink="/auth/register" class="btn btn-accent btn-sm hide-mobile">Prova Gratis</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero-section">
+  <!-- Interactive Background Glows -->
+  <div class="glow-bg-1"></div>
+  <div class="glow-bg-2"></div>
+
+  <div class="container hero-grid">
+    <div class="hero-text fade-in">
+      <div class="badge-promo">
+        <span class="badge-new">PRODOTTO PREMIUM</span>
+        <p>Sviluppato da HI-TECH srls</p>
+      </div>
+      <h1>Il gestionale intelligente per la tua flotta di <span class="text-gradient">Autonoleggio</span></h1>
+      <p class="hero-desc">
+        Ottimizza le prenotazioni con un calendario visivo avanzato, genera contratti in PDF pronti per la firma e gestisci scadenze, manutenzioni e multe via PEC in un'unica piattaforma SaaS scalabile ad alte prestazioni.
+      </p>
+      <div class="hero-ctas">
+        <a routerLink="/auth/register" class="btn btn-accent pulse-effect">Inizia Prova Gratuita</a>
+        <a href="#features" class="btn btn-outline">Scopri i Moduli</a>
+      </div>
+      <div class="hero-trust">
+        <p>Progettato con tecnologie Cloud di ultima generazione per garantire sicurezza e velocità</p>
+      </div>
+    </div>
+
+    <!-- Mockup Dashboard Illustrativo (HTML/CSS premium) -->
+    <div class="hero-mockup fade-in">
+      <div class="mockup-frame">
+        <div class="mockup-header">
+          <div class="window-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="mockup-search">hi-tech-rent.it/app/dashboard</div>
+        </div>
+        <div class="mockup-body">
+          <!-- Sidebar -->
+          <div class="mockup-sidebar">
+            <div class="sidebar-item active">
+              <span class="sidebar-icon">📅</span> Calendario
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">🚗</span> Veicoli
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">📄</span> Contratti
+            </div>
+            <div class="sidebar-item font-bold text-accent">
+              <span class="sidebar-icon">⚖️</span> Verbali PEC
+            </div>
+            <div class="sidebar-item">
+              <span class="sidebar-icon">👥</span> Clienti
+            </div>
+          </div>
+          <!-- Main Area -->
+          <div class="mockup-main">
+            <div class="main-header">
+              <div class="main-title">Pannello di Controllo</div>
+              <div class="main-user">HI-TECH S.r.l.s.</div>
+            </div>
+            
+            <!-- Cards Row -->
+            <div class="mockup-cards">
+              <div class="mini-card">
+                <span class="card-label">Flotta Attiva</span>
+                <span class="card-val">42 Mezzi</span>
+              </div>
+              <div class="mini-card alert">
+                <span class="card-label">Scadenze Tecniche</span>
+                <span class="card-val">2 Alert</span>
+              </div>
+              <div class="mini-card success">
+                <span class="card-label">Tasso Occupazione</span>
+                <span class="card-val">94%</span>
+              </div>
+            </div>
+
+            <!-- Calendar Schedule Mock -->
+            <div class="mockup-calendar">
+              <div class="calendar-days">
+                <span>LUN</span><span>MAR</span><span>MER</span><span>GIO</span><span>VEN</span><span>SAB</span><span>DOM</span>
+              </div>
+              <div class="calendar-timeline">
+                <div class="timeline-row">
+                  <span class="car-tag">FIAT PANDA (AB123CD)</span>
+                  <div class="booking-bar bg-accent-glow" style="grid-column: 2 / span 3;">Mario Rossi</div>
+                </div>
+                <div class="timeline-row">
+                  <span class="car-tag">JEEP RENEGADE (EF456GH)</span>
+                  <div class="booking-bar bg-green-glow" style="grid-column: 4 / span 4;">Luigi Bianchi</div>
+                </div>
+                <div class="timeline-row">
+                  <span class="car-tag">DUCATO MAXI (XY789ZW)</span>
+                  <div class="booking-bar bg-yellow-glow" style="grid-column: 1 / span 2;">Manutenzione</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SaaS Cloud Trust Section -->
+<section class="trust-cloud-section">
+  <div class="container">
+    <div class="grid-2 align-items-center">
+      <div class="cloud-visual-mockup fade-in">
+        <div class="cloud-card-glow">
+          <div class="cloud-badge"><i class="fa-solid fa-shield-halved"></i> Cloud Sicuro 100%</div>
+          <h3>Infrastruttura Enterprise</h3>
+          <div class="db-sync-animation">
+            <div class="node server">
+              <i class="fa-solid fa-server"></i>
+              <span>Server SaaS</span>
+            </div>
+            <div class="sync-arrows">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </div>
+            <div class="node db">
+              <i class="fa-solid fa-database"></i>
+              <span>Cloud Backup</span>
+            </div>
+          </div>
+          <ul class="cloud-bullet-specs">
+            <li><span class="spec-dot"></span> Backup automatici ogni 4 ore</li>
+            <li><span class="spec-dot"></span> Piena conformità GDPR e crittografia SSL</li>
+            <li><span class="spec-dot"></span> SLA di disponibilità del 99.9%</li>
+          </ul>
+        </div>
+      </div>
+      <div class="cloud-text-details">
+        <div class="badge-promo">
+          <span class="badge-new">SICUREZZA</span>
+          <p>Garanzia di Affidabilità</p>
+        </div>
+        <h2>La tua attività al sicuro, sempre online</h2>
+        <p class="section-desc">
+          Il gestionale <strong>RentSmart</strong> è ospitato su server cloud europei ad altissime prestazioni gestiti direttamente dai tecnici di <strong>HI-TECH srls</strong>. Non dovrai preoccuparti di installazioni, configurazioni o perdite di dati.
+        </p>
+        <div class="cloud-features-small-grid">
+          <div class="small-feature-item">
+            <i class="fa-solid fa-bolt-lightning text-accent"></i>
+            <div>
+              <h4>Velocità Ultra-Rapida</h4>
+              <p>Caricamento istantaneo del calendario e dei dati anagrafici.</p>
+            </div>
+          </div>
+          <div class="small-feature-item">
+            <i class="fa-solid fa-clock text-accent"></i>
+            <div>
+              <h4>Assistenza Tecnica 24/7</h4>
+              <p>Il team di HI-TECH srls è sempre al tuo fianco per ogni esigenza.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="features-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2>Una suite completa per la gestione dell'Autonoleggio</h2>
+      <p class="section-subtitle">Tutti gli strumenti necessari per far crescere il tuo business in un unico software cloud accessibile da desktop, tablet e smartphone.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature 1 -->
+      <div class="feature-card">
+        <div class="feature-icon calendar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+        </div>
+        <h3>Calendario Grafico & Timeline</h3>
+        <p>Una visualizzazione orizzontale intuitiva dello stato della tua flotta. Rileva i conflitti di prenotazione e organizza i noleggi con la massima agilità tra le sedi aziendali.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div class="feature-card">
+        <div class="feature-icon fleet">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
+            <circle cx="7" cy="17" r="2" />
+            <path d="M9 17h6" />
+            <circle cx="17" cy="17" r="2" />
+          </svg>
+        </div>
+        <h3>Scadenze & Allarmi Automatici</h3>
+        <p>Mai più sanzioni per assicurazioni scadute o revisioni saltate. Ricevi notifiche popup immediate all'accesso e promemoria visivi fino a 30 giorni prima della scadenza.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div class="feature-card">
+        <div class="feature-icon contract">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+            <polyline points="14 2 14 8 20 8" />
+            <line x1="16" y1="13" x2="8" y2="13" />
+            <line x1="16" y1="17" x2="8" y2="17" />
+            <polyline points="10 9 9 9 8 9" />
+          </svg>
+        </div>
+        <h3>Generatore Contratti PDF</h3>
+        <p>Crea contratti professionali in un solo clic. Il sistema compila automaticamente targa, dati cliente, tariffe, depositi cauzionali e genera il file PDF pronto da stampare o inviare.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div class="feature-card">
+        <div class="feature-icon verbali">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <h3>Modulo Verbali PEC Intelligente</h3>
+        <p>La vera rivoluzione per il tuo back-office. Carica il PDF di una multa: il sistema compila i dati, rintraccia il noleggio attivo in quel momento e prepara la notifica PEC all'autorità emittente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Preview Dashboard / Interactive Section -->
+<section id="dashboard" class="dashboard-preview-section">
+  <div class="container grid-2">
+    <div class="preview-text">
+      <h2>Semplifica l'operatività quotidiana con il controllo multi-sede</h2>
+      <div class="divider-left"></div>
+      <p>Che tu abbia un unico ufficio o molteplici sedi dislocate sul territorio (es. Milano, Roma, Torino, Bari), il sistema sincronizza in tempo reale ogni movimento e disponibilità.</p>
+      
+      <ul class="preview-bullets">
+        <li>
+          <span class="bullet-check">✓</span>
+          <div>
+            <strong>Gestione Rientri Flessibile:</strong> Modifica al volo la sede di rientro di un veicolo, aggiornando in tempo reale il calendario e la disponibilità per la sede di destinazione.
+          </div>
+        </li>
+        <li>
+          <span class="bullet-check">✓</span>
+          <div>
+            <strong>Storico Manutenzioni & Costi:</strong> Tieni traccia di ogni tagliando, cambio gomme o intervento straordinario monitorando chilometri e spese sostenute per ciascun mezzo.
+          </div>
+        </li>
+        <li>
+          <span class="bullet-check">✓</span>
+          <div>
+            <strong>Filtri di Ricerca Istantanei:</strong> Ricerca contratti per numero, clienti per cognome o veicoli per targa velocizzando ogni operazione di front-office.
+          </div>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="preview-image-container">
+      <div class="postit-wall">
+        <!-- Post-it promemoria interattivo -->
+        <div class="postit-mock yellow">
+          <div class="postit-header">📌 Promemoria</div>
+          <p>Tagliando Jeep Renegade programmato per domani ore 9:00 presso l'officina convenzionata.</p>
+          <span class="postit-footer font-semibold text-accent">Scade domani</span>
+        </div>
+        <div class="postit-mock red">
+          <div class="postit-header">⚠️ Scadenza Critica</div>
+          <p>Assicurazione Fiat Panda (AB123CD) scade tra 5 giorni! Rinnovare polizza flotta.</p>
+          <span class="postit-footer">Rinnovare subito</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing Section -->
+<section id="pricing" class="pricing-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2>Piani di abbonamento chiari, senza sorprese</h2>
+      <p class="section-subtitle">Scegli il piano ideale per le dimensioni della tua flotta. Flessibilità totale: puoi disdire o modificare il tuo piano quando desideri.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Plan 1: Starter -->
+      <div class="pricing-card">
+        <div class="card-tier">Starter</div>
+        <div class="card-price">
+          <span class="currency">€</span>
+          <span class="amount">29</span>
+          <span class="period">/mese</span>
+        </div>
+        <p class="card-desc">Perfetto per piccole agenzie o parchi auto emergenti.</p>
+        
+        <div class="plan-limits border-t border-b py-4 my-4">
+          <strong>Fino a 5 auto gestite</strong>
+        </div>
+
+        <ul class="plan-features">
+          <li><span>✓</span> Calendario Prenotazioni</li>
+          <li><span>✓</span> Gestione Anagrafica Clienti</li>
+          <li><span>✓</span> Allarmi Scadenze Tecniche</li>
+          <li><span>✓</span> Gestione Multi-Sede</li>
+          <li class="disabled"><span>✗</span> Generatore Contratti PDF</li>
+          <li class="disabled"><span>✗</span> Integrazione Polizia Cargos</li>
+          <li class="disabled"><span>✗</span> Modulo Verbali PEC</li>
+        </ul>
+
+        <a routerLink="/auth/register" [queryParams]="{plan: 'starter'}" class="btn btn-outline w-100 mt-auto">Inizia Prova</a>
+      </div>
+
+      <!-- Plan 2: Pro (Popular) -->
+      <div class="pricing-card popular">
+        <div class="popular-ribbon">Più Scelto</div>
+        <div class="card-tier">Pro</div>
+        <div class="card-price">
+          <span class="currency">€</span>
+          <span class="amount">59</span>
+          <span class="period">/mese</span>
+        </div>
+        <p class="card-desc">Il perfetto connubio per agenzie in crescita attiva.</p>
+
+        <div class="plan-limits border-t border-b py-4 my-4">
+          <strong>Fino a 20 auto gestite</strong>
+        </div>
+
+        <ul class="plan-features">
+          <li><span>✓</span> <strong>Tutte le funzioni Starter</strong></li>
+          <li><span>✓</span> <strong>Generatore Contratti PDF</strong></li>
+          <li><span>✓</span> <strong>Integrazione Cargos (1-click)</strong></li>
+          <li><span>✓</span> Storico Manutenzioni & Spese</li>
+          <li><span>✓</span> Gestione Promemoria Avanzata</li>
+          <li class="disabled"><span>✗</span> Modulo Verbali PEC</li>
+        </ul>
+
+        <a routerLink="/auth/register" [queryParams]="{plan: 'pro'}" class="btn btn-accent w-100 mt-auto">Prova Gratis 14gg</a>
+      </div>
+
+      <!-- Plan 3: Enterprise -->
+      <div class="pricing-card">
+        <div class="card-tier">Enterprise</div>
+        <div class="card-price">
+          <span class="currency">€</span>
+          <span class="amount">129</span>
+          <span class="period">/mese</span>
+        </div>
+        <p class="card-desc">Per grandi parchi auto e gestioni automatizzate complesse.</p>
+
+        <div class="plan-limits border-t border-b py-4 my-4">
+          <strong>Auto e Mezzi Illimitati</strong>
+        </div>
+
+        <ul class="plan-features">
+          <li><span>✓</span> <strong>Tutte le funzioni Pro</strong></li>
+          <li><span>✓</span> <strong>Modulo Verbali PEC Intelligente</strong></li>
+          <li><span>✓</span> Caricamento Allegati Illimitato</li>
+          <li><span>✓</span> Supporto Tecnico Prioritario 24/7</li>
+          <li><span>✓</span> Assistenza Migrazione Dati Iniziale</li>
+          <li><span>✓</span> Backup ad alta frequenza</li>
+        </ul>
+
+        <a routerLink="/auth/register" [queryParams]="{plan: 'enterprise'}" class="btn btn-outline w-100 mt-auto">Contattaci</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ Section -->
+<section id="faq" class="faq-section">
+  <div class="container">
+    <div class="section-header text-center">
+      <h2>Domande Frequenti</h2>
+      <p class="section-subtitle">Tutto quello che c'è da sapere sulla nostra piattaforma di gestione autonoleggio firmata HI-TECH srls.</p>
+    </div>
+
+    <div class="faq-accordion-list">
+      <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.open]="faq.open" (click)="toggleFaq(i)">
+        <div class="faq-question">
+          <span>{{ faq.question }}</span>
+          <span class="faq-arrow">▼</span>
+        </div>
+        <div class="faq-answer" [style.display]="faq.open ? 'block' : 'none'">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact" class="contact-section">
+  <div class="container grid-2">
+    <div class="contact-info">
+      <h2>Pronto a semplificare il tuo lavoro?</h2>
+      <p>I nostri tecnici esperti e programmatori di <strong>HI-TECH srls</strong> sono a tua completa disposizione per mostrarti una demo personalizzata o guidarti nella scelta del pacchetto migliore.</p>
+      
+      <div class="contact-details-box">
+        <div class="detail-item">
+          <span class="icon">✉</span>
+          <div>
+            <strong>Invia una Email</strong>
+            <p>infoammhitech&#64;gmail.com</p>
+          </div>
+        </div>
+        <div class="detail-item">
+          <span class="icon">📞</span>
+          <div>
+            <strong>Supporto Clienti (Lun-Ven 9:00 - 18:00)</strong>
+            <p>+39 080 1234567</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-container">
+      <form class="contact-form" (ngSubmit)="onSubmitContact()">
+        <h3>Richiedi Informazioni</h3>
+        
+        <div class="status-message success" *ngIf="formSubmitted">
+          Grazie! Un consulente HI-TECH srls ti risponderà entro 2 ore lavorative.
+        </div>
+
+        <div class="form-group">
+          <label for="name">Nome Completo</label>
+          <input type="text" id="name" name="name" [(ngModel)]="contactData.name" required placeholder="Mario Rossi">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Indirizzo Email</label>
+          <input type="email" id="email" name="email" [(ngModel)]="contactData.email" required placeholder="mario.rossi&#64;azienda.it">
+        </div>
+
+        <div class="form-group">
+          <label for="company">Nome Azienda Autonoleggio</label>
+          <input type="text" id="company" name="company" [(ngModel)]="contactData.company" placeholder="Autonoleggio S.r.l.">
+        </div>
+
+        <div class="form-group">
+          <label for="message">Come possiamo aiutarti?</label>
+          <textarea id="message" name="message" [(ngModel)]="contactData.message" required rows="4" placeholder="Vorrei richiedere una demo o ricevere maggiori informazioni su..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-accent w-100">Invia Richiesta</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer-landing">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="logo footer-logo-margin">
+        <!-- Product custom SVG logo -->
+        <svg class="product-logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 38px; width: auto;">
+          <circle cx="16" cy="16" r="14" stroke="url(#logo-grad-footer)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="60 30" />
+          <path d="M8 18H24V21C24 21.5 23.5 22 23 22H21C20.5 22 20 21.5 20 21V20.5H12V21C12 21.5 11.5 22 11 22H9C8.5 22 8 21.5 8 21V18Z" fill="url(#logo-grad-footer)" />
+          <path d="M9.5 18L11.5 13.5C11.8 12.6 12.7 12 13.7 12H18.3C19.3 12 20.2 12.6 20.5 13.5L22.5 18H9.5Z" fill="url(#logo-grad-footer)" opacity="0.85" />
+          <circle cx="11.5" cy="19.5" r="1" fill="white" />
+          <circle cx="20.5" cy="19.5" r="1" fill="white" />
+          <defs>
+            <linearGradient id="logo-grad-footer" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#2563eb" />
+              <stop offset="100%" stop-color="#1d4ed8" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="logo-text">Rent<span class="text-gradient">Smart</span></span>
+      </div>
+      <p class="footer-desc-text">La piattaforma SaaS all-in-one per il noleggio moderno.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Software</h4>
+      <a href="#features">Funzionalità</a>
+      <a href="#dashboard">La Piattaforma</a>
+      <a href="#pricing">Prezzi</a>
+    </div>
+    <div class="footer-company-logo-section">
+      <h4>Sviluppato con orgoglio da</h4>
+      <div class="footer-company-card dark-theme-card">
+        <img src="/assets/images/logo-trasp.png" alt="HI-TECH srls Logo" class="footer-company-img white-logo">
+        <div class="footer-company-info">
+          <strong>HI-TECH srls</strong>
+          <span class="company-subtext white-text">Sviluppo Software Premium</span>
+          <span class="company-subtext white-text">C.da Marinara n.12, Mottola (TA)</span>
+          <span class="company-subtext white-text">P.IVA 03483000737</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <p>&copy; 2026 HI-TECH srls. Tutti i diritti riservati. P.IVA 03483000737. Licenza d'uso software autonoleggio.</p>
+  </div>
+</footer>

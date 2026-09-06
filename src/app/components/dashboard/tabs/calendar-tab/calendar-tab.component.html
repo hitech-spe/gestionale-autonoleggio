@@ -1,0 +1,817 @@
+<div class="calendar-container glass-card">
+  <div class="calendar-header">
+    <div class="title-actions">
+      <h2 style="display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 0;">
+        Timeline Occupazione Veicoli
+        @if (selectedVehicleId) {
+          <span style="font-size: 0.78rem; background: #fff5e6; color: #b8962d; border: 1px solid #f4e8cb; padding: 4px 10px; border-radius: 4px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+            <i class="fa-solid fa-circle-check" style="color: #28a745;"></i> 
+            Cella Selezionata (Usa Freccette)
+          </span>
+        }
+      </h2>
+      <div class="action-buttons">
+        <button class="btn-primary" (click)="openRentalModal()">
+          <i class="fa-solid fa-plus"></i> Nuovo Noleggio
+        </button>
+        <button class="btn-secondary" (click)="openMaintenanceModal()">
+          <i class="fa-solid fa-wrench"></i> Manutenzione
+        </button>
+        <button class="btn-utility" (click)="openTransferModal()">
+          <i class="fa-solid fa-exchange-alt"></i> Passaggio Sede
+        </button>
+        <button class="btn-danger" (click)="openSaleModal()">
+          <i class="fa-solid fa-tags"></i> Vendita Auto
+        </button>
+      </div>
+    </div>
+
+    <div class="calendar-controls">
+      <div class="search-filter">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" [(ngModel)]="searchTerm" (ngModelChange)="onSearchChange()" placeholder="Cerca veicolo (marca, modello, targa, categoria)...">
+          @if (searchTerm) {
+            <button class="clear-search" (click)="clearSearch()" title="Cancella ricerca">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          }
+        </div>
+        <div class="sort-box">
+          <label>Ordina per:</label>
+          <select [(ngModel)]="sortBy" (ngModelChange)="onSortChange()">
+            <option value="category">Categoria</option>
+            <option value="brand">Marca</option>
+            <option value="plate">Targa</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="navigation-controls">
+        <button class="btn-nav" (click)="prevMonth()" title="Mese Precedente">
+          <i class="fa-solid fa-angles-left"></i>
+        </button>
+        <button class="btn-nav" (click)="prevPeriod()" title="Settimana Precedente">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <button class="btn-today" (click)="goToToday()">Oggi</button>
+        <button class="btn-nav" (click)="nextPeriod()" title="Settimana Successiva">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+        <button class="btn-nav" (click)="nextMonth()" title="Mese Successivo">
+          <i class="fa-solid fa-angles-right"></i>
+        </button>
+
+        <div class="quick-jump-controls">
+          <select [ngModel]="getSelectedMonthValue()" (change)="onMonthSelect($event)" class="month-select" title="Vai al mese">
+            @for (opt of monthOptions; track opt.value) {
+              <option [value]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+          <input type="date" [ngModel]="getFormattedStartDate()" (ngModelChange)="onDateJump($event)" class="date-jump-input" title="Seleziona data di inizio precisa">
+        </div>
+
+        <span class="current-period">
+          @if (days.length > 0) {
+            {{ days[0].date | date:'dd MMM' }} - {{ days[days.length-1].date | date:'dd MMM yyyy' }}
+          }
+        </span>
+      </div>
+    </div>
+
+    <div class="keyboard-helper">
+      <span class="helper-title"><i class="fa-solid fa-keyboard"></i> Scorciatoie Excel (Tastiera):</span>
+      <div class="helper-keys-list">
+        <span class="helper-item"><span class="helper-key">Clic Cella</span> Seleziona</span>
+        <span class="helper-item"><span class="helper-key">◀</span>/<span class="helper-key">▶</span> (o <span class="helper-key">A</span>/<span class="helper-key">D</span>) Giorno Prec/Succ</span>
+        <span class="helper-item"><span class="helper-key">▲</span>/<span class="helper-key">▼</span> (o <span class="helper-key">W</span>/<span class="helper-key">S</span>) Veicolo Sopra/Sotto</span>
+        <span class="helper-item"><span class="helper-key">INVIO</span> Gestisci / Crea</span>
+        <span class="helper-item"><span class="helper-key">N</span> Nuovo Nol.</span>
+        <span class="helper-item"><span class="helper-key">M</span> Manut.</span>
+        <span class="helper-item"><span class="helper-key">P</span> Sede</span>
+        <span class="helper-item"><span class="helper-key">F</span> Cerca</span>
+        <span class="helper-item"><span class="helper-key">ESC</span> Deseleziona / Chiudi</span>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span class="legend-item"><span class="box loc-massafra"></span> Massafra</span>
+      <span class="legend-item"><span class="box loc-mottola"></span> Mottola</span>
+      <span class="legend-item"><span class="box loc-grottaglie"></span> Grottaglie</span>
+      <span class="legend-item"><span class="box maintenance-gray"></span> Manutenzione</span>
+      <span class="legend-item"><span class="box service-rental-purple"></span> Noleggio Servizi</span>
+      <span class="legend-item"><span class="box rental-start-day"></span> Inizio Noleggio (Verde)</span>
+      <span class="legend-item"><span class="box rental-end-day"></span> Rientro Noleggio (Rosso)</span>
+      <span class="legend-item"><span class="box rental-same-day"></span> In Giornata (Arancione)</span>
+      <span class="legend-item"><span class="box sold-red"></span> Venduto</span>
+    </div>
+  </div>
+
+  @if (selectedVehicleId && selectedDay) {
+    @let activeRow = getSelectedVehicleData();
+    @if (activeRow) {
+      <div class="excel-focus-bar">
+        <div class="focus-cell-address">
+          <i class="fa-solid fa-crosshairs"></i>
+          <span>Cella</span>
+        </div>
+        <div class="focus-vehicle-info">
+          <i class="fa-solid fa-car"></i>
+          <strong>{{ activeRow.vehicle.brand }} {{ activeRow.vehicle.model }}</strong>
+          <span class="plate-badge">{{ activeRow.vehicle.plate }}</span>
+          <span class="cat-badge">{{ activeRow.vehicle.category }}</span>
+          @if (activeRow.vehicle.dailyPrice) {
+            <span class="price-badge">
+              <i class="fa-solid fa-euro-sign"></i>
+              {{ activeRow.vehicle.dailyPrice | currency:'EUR':'symbol':'1.2-2' }} / giorno
+            </span>
+          }
+        </div>
+        <div class="focus-date-info">
+          <i class="fa-solid fa-calendar-day"></i>
+          <span>{{ selectedDay | date:'EEEE dd MMMM yyyy' }}</span>
+        </div>
+        <div class="focus-actions-hint">
+          <span class="hint-badge">INVIO</span> Gestisci | 
+          <span class="hint-badge">◀ ▲ ▼ ▶</span> Sposta
+        </div>
+      </div>
+    }
+  }
+
+  <div class="calendar-scroll">
+    <table class="calendar-table">
+      <thead>
+        <tr>
+          <th class="sticky-col">Veicolo</th>
+          @for (day of days; track day.dateStr) {
+            <th [class.is-today]="day.isToday">
+              <div class="day-num">{{ day.date | date:'dd' }}</div>
+              <div class="day-name">{{ day.date | date:'EEE' }}</div>
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of vehiclesData$ | async; track item.vehicle.id) {
+          <tr [class.is-selected-row]="selectedVehicleId === item.vehicle.id">
+            <td class="sticky-col vehicle-info">
+              <div class="vehicle-details">
+                <strong [ngClass]="getCurrentVehicleLocationClass(item)" [title]="item.vehicle.brand + ' ' + item.vehicle.model">{{ item.vehicle.brand }} {{ item.vehicle.model }}</strong>
+                <div class="plate-cat-row">
+                  <span class="plate">{{ item.vehicle.plate }}</span>
+                  <span class="category-badge" [title]="item.vehicle.category">{{ item.vehicle.category }}</span>
+                </div>
+                @if (item.vehicle.dailyPrice) {
+                  <div class="price-row">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>{{ item.vehicle.dailyPrice | currency:'EUR':'symbol':'1.2-2' }} / giorno</span>
+                  </div>
+                }
+              </div>
+            </td>
+            @for (day of days; track day.dateStr) {
+              @let status = getDayStatus(item, day.date);
+              <td [class.is-today]="day.isToday"
+                  [class.is-selected-cell]="isCellSelected(item, day)"
+                  [class.maintenance-gray-bg]="status.type === 'maintenance'"
+                  [class.sold-red-bg]="status.type === 'sold'"
+                  [class.loc-mottola-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Mottola'"
+                  [class.loc-massafra-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Massafra'"
+                  [class.loc-grottaglie-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Grottaglie'"
+                  (click)="onCellClick(item, day.date, status)"
+                  style="cursor: pointer;">
+                @if (status.type === 'rental') {
+                  <div class="calendar-bar rental-bar" 
+                       [ngClass]="getRentalBarClass(status.data, day.date, item.rentals)" 
+                       [title]="getFormattedTooltip('rental', status.data)"
+                       (click)="$event.stopPropagation(); selectCell(item, day.date); openRentalModal(status.data)">
+                    <span class="rental-day-label">{{ getRentalDayLabel(status.data, day.date, item.rentals) }}</span>
+                  </div>
+                } @else if (status.type === 'maintenance') {
+                  <div class="calendar-bar maintenance-bar" 
+                       title="In Manutenzione"
+                       [title]="getFormattedTooltip('maintenance', status.data)">
+                  </div>
+                } @else if (status.type === 'transfer') {
+                  <div class="calendar-bar transfer-bar" 
+                       [ngClass]="getLocationClass(status.data.location)"
+                       [title]="getFormattedTooltip('transfer', status.data)">
+                  </div>
+                } @else if (status.type === 'sold') {
+                  <div class="calendar-bar sold-bar"
+                       [title]="getFormattedTooltip('sold', status.data)">
+                  </div>
+                } @else {
+                  <div class="empty-cell-filler">&nbsp;</div>
+                }
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Modal Nuovo Noleggio (Copiata e adattata da rentals-tab) -->
+  @if (isRentalModalOpen) {
+    <div class="modal-overlay" (click)="closeModals()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>{{ isEditMode ? 'Modifica Noleggio' : 'Nuovo Noleggio' }}</h3>
+        <form (ngSubmit)="saveRental()" class="rental-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Veicolo</label>
+              <app-vehicle-select [(vehicleId)]="newRental.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+              <input type="hidden" [(ngModel)]="newRental.vehicleId" name="vehicleId" required />
+            </div>
+            <div class="form-group full-width" style="display: flex; flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.25rem;">
+              <input type="checkbox" id="isQuickCustomer" [(ngModel)]="isQuickCustomer" name="isQuickCustomer" style="width: auto; cursor: pointer; margin-bottom: 0;">
+              <label for="isQuickCustomer" style="cursor: pointer; margin-bottom: 0; font-weight: 600;">Nuovo Cliente (Registrazione Rapida)</label>
+            </div>
+
+            @if (isQuickCustomer) {
+              <div class="form-group">
+                <label>Nome Cliente</label>
+                <input type="text" [(ngModel)]="quickCustomer.firstName" name="quickFirstName" placeholder="Es. Mario" required>
+              </div>
+              <div class="form-group">
+                <label>Cognome Cliente</label>
+                <input type="text" [(ngModel)]="quickCustomer.lastName" name="quickLastName" placeholder="Es. Rossi" required>
+              </div>
+              <div class="form-group">
+                <label>Telefono</label>
+                <input type="text" [(ngModel)]="quickCustomer.phone" name="quickPhone" placeholder="Es. 3331234567">
+              </div>
+              <div class="form-group">
+                <label>Indirizzo di Residenza</label>
+                <input type="text" [(ngModel)]="quickCustomer.address" name="quickAddress" placeholder="Es. Via Roma 10, Mottola">
+              </div>
+            } @else {
+              <div class="form-group">
+                <label>Cliente</label>
+                <app-customer-select [(customerId)]="newRental.customerId" [customers]="availableCustomers" placeholder="Cerca o seleziona un cliente..."></app-customer-select>
+              </div>
+            }
+            <div class="form-group">
+              <label>Sede Ritiro</label>
+              <select [(ngModel)]="newRental.location" name="location">
+                <option value="Mottola">Mottola</option>
+                <option value="Massafra">Massafra</option>
+                <option value="Grottaglie">Grottaglie</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Sede Rientro</label>
+              <select [(ngModel)]="newRental.returnLocation" name="returnLocation">
+                <option value="Mottola">Mottola</option>
+                <option value="Massafra">Massafra</option>
+                <option value="Grottaglie">Grottaglie</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data Inizio</label>
+              <input type="date" [(ngModel)]="newRental.startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label>Fascia Oraria Inizio</label>
+              <select [(ngModel)]="newRental.startPeriod" name="startPeriod" required>
+                <option value="Mat">Mat</option>
+                <option value="Tarda mat">Tarda mat</option>
+                <option value="Pom">Pom</option>
+                <option value="Sera">Sera</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data Fine</label>
+              <input type="date" [(ngModel)]="newRental.endDate" name="endDate" required>
+            </div>
+            <div class="form-group">
+              <label>Fascia Oraria Fine</label>
+              <select [(ngModel)]="newRental.endPeriod" name="endPeriod" required>
+                <option value="Mat">Mat</option>
+                <option value="Tarda mat">Tarda mat</option>
+                <option value="Pom">Pom</option>
+                <option value="Sera">Sera</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Tipo Noleggio</label>
+              <select [(ngModel)]="newRental.isServiceRental" name="isServiceRental">
+                <option [ngValue]="false">Noleggio Standard</option>
+                <option [ngValue]="true">Noleggio per Servizi (Caselle Viola)</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Note</label>
+              <textarea [(ngModel)]="newRental.notes" name="notes" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            @if (isEditMode && editingRentalId) {
+              <button type="button" class="btn-accent" (click)="openContractModal(newRental)" style="margin-right: auto; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                <i class="fa-solid fa-file-pdf"></i> Stipula Contratto (PDF)
+              </button>
+              <button type="button" class="btn-danger" (click)="deleteRentalFromModal(editingRentalId)">
+                <i class="fa-regular fa-trash-can"></i> Elimina Noleggio
+              </button>
+            } @else {
+              <button type="button" class="btn-accent" (click)="saveAndStipulateContract()" style="margin-right: auto; padding: 0.5rem 1rem; font-size: 0.85rem;">
+                <i class="fa-solid fa-file-pdf"></i> Salva e Stipula Contratto (PDF)
+              </button>
+            }
+            <button type="button" class="btn-utility" (click)="closeModals()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva Noleggio</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Manutenzione -->
+  @if (isMaintenanceModalOpen) {
+    <div class="modal-overlay" (click)="closeModals()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Metti in Manutenzione</h3>
+        <form (ngSubmit)="saveMaintenance()" class="rental-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Veicolo</label>
+              <app-vehicle-select [(vehicleId)]="newMaintenance.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+              <input type="hidden" [(ngModel)]="newMaintenance.vehicleId" name="vehicleId" required />
+            </div>
+            <div class="form-group">
+              <label>Data Inizio</label>
+              <input type="date" [(ngModel)]="newMaintenance.startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label>Data Fine</label>
+              <input type="date" [(ngModel)]="newMaintenance.endDate" name="endDate" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Note</label>
+              <textarea [(ngModel)]="newMaintenance.notes" name="notes" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-utility" (click)="closeModals()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Trasferimento Sede -->
+  @if (isTransferModalOpen) {
+    <div class="modal-overlay" (click)="closeModals()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Passaggio Temporaneo di Sede</h3>
+        <form (ngSubmit)="saveTransfer()" class="rental-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Veicolo</label>
+              <app-vehicle-select [(vehicleId)]="newTransfer.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+              <input type="hidden" [(ngModel)]="newTransfer.vehicleId" name="vehicleId" required />
+            </div>
+            <div class="form-group">
+              <label>Nuova Sede (Temporanea)</label>
+              <select [(ngModel)]="newTransfer.location" name="location" required>
+                <option value="Mottola">Mottola</option>
+                <option value="Massafra">Massafra</option>
+                <option value="Grottaglie">Grottaglie</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Data Inizio</label>
+              <input type="date" [(ngModel)]="newTransfer.startDate" name="startDate" required>
+            </div>
+            <div class="form-group">
+              <label>Data Fine</label>
+              <input type="date" [(ngModel)]="newTransfer.endDate" name="endDate" required>
+            </div>
+            <div class="form-group full-width">
+              <label>Note</label>
+              <textarea [(ngModel)]="newTransfer.notes" name="notes" rows="2"></textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-utility" (click)="closeModals()">Annulla</button>
+            <button type="submit" class="btn-primary">Salva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Conferma/Modifica Stato -->
+  @if (isConfirmationModalOpen) {
+    <div class="modal-overlay">
+      <div class="modal-content confirmation-modal">
+        <div class="modal-header">
+          <h3>Gestione Periodo</h3>
+          <button class="close-btn" (click)="closeModals()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="status-detail" *ngIf="selectedStatusForAction">
+            @if (selectedStatusForAction.type === 'sold') {
+              <div class="detail-row">
+                <strong>Veicolo:</strong> <span>{{ selectedStatusForAction.data.brand }} {{ selectedStatusForAction.data.model }}</span>
+              </div>
+              <div class="detail-row">
+                <strong>Stato:</strong> <span class="text-danger fw-bold">VENDUTO</span>
+              </div>
+              <div class="detail-row" *ngIf="selectedStatusForAction.data.soldDate">
+                <strong>Data Vendita:</strong> <span>{{ selectedStatusForAction.data.soldDate.toDate() | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <p class="warning-text">L'operazione annullerà la vendita di questo veicolo, riattivandolo sul mercato.</p>
+            } @else {
+              <div class="detail-row">
+                <strong>Tipo:</strong> 
+                <span>{{ selectedStatusForAction.type === 'rental' ? 'Noleggio' : (selectedStatusForAction.type === 'maintenance' ? 'Manutenzione' : 'Trasferimento') }}</span>
+              </div>
+              <div class="detail-row" *ngIf="selectedStatusForAction.type === 'rental'">
+                <strong>Cliente:</strong> <span>{{ selectedStatusForAction.data.customerName }}</span>
+              </div>
+              <div class="detail-row" *ngIf="selectedStatusForAction.type === 'transfer'">
+                <strong>Sede:</strong> <span>{{ selectedStatusForAction.data.location }}</span>
+              </div>
+              <div class="detail-row">
+                <strong>Fine attuale:</strong> <span>{{ selectedStatusForAction.data.endDate.toDate() | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="detail-row highlight">
+                <strong>Data selezionata:</strong> <span>{{ selectedDayForAction | date:'dd/MM/yyyy' }}</span>
+              </div>
+              <div class="detail-row date-input-row">
+                <strong>Modifica fine:</strong>
+                <input type="date" [(ngModel)]="manualEndDate" name="manualEndDate" class="inline-date-input">
+              </div>
+              <p class="warning-text">L'operazione imposterà la data indicata come nuovo termine del periodo (puoi sia terminare che allungare).</p>
+
+              @if (selectedStatusForAction.type === 'maintenance') {
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #eee;">
+                  <h4 style="font-size: 0.95rem; color: #444; margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px; font-weight: bold;">
+                    <i class="fa-solid fa-file-invoice"></i> Scheda Lavori Manutenzione
+                  </h4>
+                  
+                  @let jobs = getAssociatedJobs();
+                  @if (jobs.length === 0) {
+                    <div style="background: #fdfdfd; border: 1px dashed #ddd; border-radius: 6px; padding: 15px; text-align: center; color: #777; font-size: 0.85rem;">
+                      <p style="margin: 0;">Nessun lavoro registrato in questa scheda.</p>
+                    </div>
+                  } @else {
+                    <div style="max-height: 160px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; margin-bottom: 15px;">
+                      <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead>
+                          <tr style="background: #f8f9fa; border-bottom: 1px solid #eee;">
+                            <th style="padding: 6px 10px; text-align: left; font-weight: 600; color: #555;">Descrizione</th>
+                            <th style="padding: 6px 10px; text-align: left; font-weight: 600; color: #555;">KM</th>
+                            <th style="padding: 6px 10px; text-align: left; font-weight: 600; color: #555;">Costo</th>
+                            <th style="padding: 6px 10px; text-align: left;"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          @for (job of jobs; track job.id) {
+                            <tr style="border-bottom: 1px solid #eee;">
+                              <td style="padding: 6px 10px; text-align: left; font-weight: 500;">{{ job.description }}</td>
+                              <td style="padding: 6px 10px; text-align: left;">{{ job.km || '-' }}</td>
+                              <td style="padding: 6px 10px; text-align: left; font-weight: bold; color: #333;">{{ job.cost | currency:'EUR' }}</td>
+                              <td style="padding: 6px 10px; text-align: right;">
+                                <button type="button" (click)="deleteAssociatedJob(job.id!)" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.85rem; padding: 0;" title="Elimina lavoro">
+                                  <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                              </td>
+                            </tr>
+                          }
+                          <tr style="background: #fafafa; font-weight: bold;">
+                            <td colspan="2" style="padding: 8px 10px; text-align: left;">Costo Totale Scheda:</td>
+                            <td colspan="2" style="padding: 8px 10px; text-align: left; color: #d4af37; font-size: 0.85rem;">{{ getAssociatedJobsTotalCost() | currency:'EUR' }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  }
+
+                  <div style="background: #f9f9f9; padding: 10px; border-radius: 6px; border: 1px solid #eee;">
+                    <h5 style="margin: 0 0 8px 0; font-size: 0.82rem; color: #666; font-weight: bold;"><i class="fa-solid fa-plus"></i> Aggiungi Voce alla Scheda</h5>
+                    <div style="display: flex; gap: 6px;">
+                      <input type="text" [(ngModel)]="newInlineJob.description" placeholder="Descrizione lavoro" style="flex: 1; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobDesc">
+                      <input type="number" [(ngModel)]="newInlineJob.km" placeholder="KM" style="width: 70px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobKm">
+                      <input type="number" [(ngModel)]="newInlineJob.cost" placeholder="Costo" style="width: 70px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobCost">
+                      <button type="button" class="btn-primary" (click)="addAssociatedJob()" style="padding: 6px 12px; font-size: 0.8rem;">Aggiungi</button>
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <div class="modal-footer">
+          @if (selectedStatusForAction?.type === 'sold') {
+            <button class="btn-danger-outline" (click)="cancelSale()">Annulla Vendita</button>
+            <div class="spacer"></div>
+            <button class="btn-secondary" (click)="closeModals()">Chiudi</button>
+          } @else {
+            <button class="btn-danger-outline" (click)="deleteStatus()">Elimina</button>
+            <div class="spacer"></div>
+            <button class="btn-secondary" (click)="closeModals()">Annulla</button>
+            <button class="btn-primary" (click)="confirmTermination()">Conferma</button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Registra Vendita Auto -->
+  @if (isSaleModalOpen) {
+    <div class="modal-overlay" (click)="closeModals()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>Registra Vendita Auto</h3>
+        <form (ngSubmit)="saveSale()" class="rental-form">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Veicolo</label>
+              <app-vehicle-select [(vehicleId)]="newSale.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+              <input type="hidden" [(ngModel)]="newSale.vehicleId" name="vehicleId" required />
+            </div>
+            <div class="form-group">
+              <label>Data Vendita</label>
+              <input type="date" [(ngModel)]="newSale.soldDate" name="soldDate" required>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-utility" (click)="closeModals()">Annulla</button>
+            <button type="submit" class="btn-danger">Registra Vendita</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Stipula Contratto (PDF Customizer) -->
+  @if (isContractModalOpen) {
+    <div class="modal-overlay" (click)="closeContractModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()" style="max-width: 700px; width: 95%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 1rem; margin-bottom: 1.5rem;">
+          <h3 style="margin: 0; color: #0f172a; font-weight: 800;"><i class="fa-solid fa-file-invoice text-gradient"></i> Stipula Contratto di Noleggio</h3>
+          <button type="button" (click)="closeContractModal()" style="background: none; border: none; font-size: 1.3rem; color: #64748b; cursor: pointer;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form (submit)="generateContract()" class="rental-form" style="max-height: 70vh; overflow-y: auto; padding-right: 5px;">
+          <!-- SECTION 1: DATI BASE CONTRATTO -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; border-left: 3px solid var(--accent); padding-left: 8px; margin-bottom: 1rem;">Dati Base Contratto</h4>
+          <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label>Codice Contratto *</label>
+              <input type="text" [(ngModel)]="contractDetails.contractNumber" name="contractNumber" required>
+            </div>
+            <div class="form-group">
+              <label>Km Uscita (Attuali)</label>
+              <input type="number" [(ngModel)]="contractDetails.kmOut" name="kmOut">
+            </div>
+            <div class="form-group">
+              <label>Chilometri Inclusi *</label>
+              <input type="text" [(ngModel)]="contractDetails.kmIncluded" name="kmIncluded" placeholder="Es. 2999 km totali o Senza Limiti" required>
+            </div>
+            <div class="form-group">
+              <label>Orario di Uscita *</label>
+              <input type="text" [(ngModel)]="contractDetails.timeOut" name="timeOut" placeholder="HH:MM" required>
+            </div>
+            <div class="form-group">
+              <label>Orario di Rientro *</label>
+              <input type="text" [(ngModel)]="contractDetails.timeIn" name="timeIn" placeholder="HH:MM" required>
+            </div>
+            <div class="form-group">
+              <label>Livello Carburante (Uscita) *</label>
+              <select [(ngModel)]="contractDetails.fuelLevel" name="fuelLevel" required>
+                <option value="12/12">12/12 (Pieno)</option>
+                <option value="10/12">10/12</option>
+                <option value="8/12">8/12</option>
+                <option value="6/12">6/12</option>
+                <option value="4/12">4/12</option>
+                <option value="2/12">2/12</option>
+                <option value="0/12">0/12 (Riserva)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Alimentazione Veicolo (Carburante) *</label>
+              <select [(ngModel)]="contractDetails.vehicleFuelType" name="vehicleFuelType" required>
+                <option value="Diesel">Diesel</option>
+                <option value="Benzina">Benzina</option>
+                <option value="Benzina/GPL">Benzina/GPL</option>
+                <option value="Ibrido">Ibrido</option>
+                <option value="GPL">GPL</option>
+                <option value="Metano">Metano</option>
+                <option value="Elettrico">Elettrico</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Deposito Cauzionale (€)</label>
+              <input type="number" [(ngModel)]="contractDetails.deposit" name="deposit" min="0" placeholder="Es. 500">
+            </div>
+            <div class="form-group">
+              <label>Tipologia Deposito</label>
+              <select [(ngModel)]="contractDetails.depositType" name="depositType">
+                <option value="">-- Seleziona --</option>
+                <option value="Contanti">Contanti</option>
+                <option value="Carta di Credito">Carta di Credito</option>
+                <option value="Pre-autorizzazione">Pre-autorizzazione</option>
+                <option value="Bonifico">Bonifico</option>
+                <option value="Altro">Altro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- SECTION 2: OPZIONE AZIENDA / CONDUCENTI -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; border-left: 3px solid var(--accent); padding-left: 8px; margin-bottom: 1rem;">Locatario & Conducenti</h4>
+          <div class="form-group full-width" style="display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem;">
+            <input type="checkbox" id="isCompanyCheckbox" [(ngModel)]="contractDetails.isCompany" name="isCompany" (change)="onCompanyCheckboxChange()" style="width: auto; cursor: pointer; margin-bottom: 0;">
+            <label for="isCompanyCheckbox" style="cursor: pointer; margin-bottom: 0; font-weight: 700; color: #1e293b;">Il Cliente è un'Azienda / Società (Locatario Persona Giuridica)</label>
+          </div>
+
+          @if (contractDetails.isCompany) {
+            <!-- Company fields -->
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 1.5rem; position: relative;">
+              <!-- Sezione Ricerca/Autocompletamento Aziende -->
+              <div class="form-group" style="margin-bottom: 1.25rem; position: relative; display: flex; flex-direction: column; gap: 0.4rem;">
+                <label style="font-weight: 700; color: var(--accent);">Cerca Azienda Registrata (per Nome o P.IVA)</label>
+                <div style="position: relative; display: flex; align-items: center;">
+                  <input type="text"
+                         [(ngModel)]="companySearchTerm"
+                         name="companySearchTerm"
+                         placeholder="Cerca per Ragione Sociale o Partita IVA..."
+                         (focus)="isCompanyDropdownOpen = true"
+                         (blur)="onCompanySearchBlur()"
+                         autocomplete="off"
+                         style="width: 100%; padding: 0.8rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; background: #fff;">
+                  @if (companySearchTerm) {
+                    <button type="button" (click)="clearCompanySearch()" style="position: absolute; right: 10px; background: none; border: none; color: #64748b; cursor: pointer; padding: 5px; display: flex; align-items: center; justify-content: center;">
+                      <i class="fa-solid fa-circle-xmark" style="font-size: 1.1rem;"></i>
+                    </button>
+                  }
+                </div>
+                
+                @if (isCompanyDropdownOpen && filteredCompanies.length > 0) {
+                  <div class="company-dropdown-panel">
+                    @for (comp of filteredCompanies; track comp.id) {
+                      <div class="company-dropdown-item" (mousedown)="selectCompany(comp)">
+                        <span style="font-weight: 600; color: #0f172a; font-size: 0.95rem;">{{ comp.name }}</span>
+                        <span style="font-size: 0.8rem; color: #64748b;">P.IVA: {{ comp.vat }} @if (comp.address) { | {{ comp.address }} }</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+
+              <div class="form-grid" style="margin-top: 1rem;">
+                <div class="form-group">
+                  <label>Ragione Sociale Azienda *</label>
+                  <input type="text" [(ngModel)]="contractDetails.companyName" name="companyName" placeholder="Denominazione S.r.l. / S.p.a." required>
+                </div>
+                <div class="form-group">
+                  <label>Partita IVA / Codice Fiscale *</label>
+                  <input type="text" [(ngModel)]="contractDetails.companyVat" name="companyVat" required>
+                </div>
+                <div class="form-group">
+                  <label>Indirizzo Sede Legale *</label>
+                  <input type="text" [(ngModel)]="contractDetails.companyAddress" name="companyAddress" placeholder="Via, Città, CAP" required>
+                </div>
+                <div class="form-group">
+                  <label>Telefono Azienda</label>
+                  <input type="text" [(ngModel)]="contractDetails.companyPhone" name="companyPhone">
+                </div>
+                <div class="form-group full-width">
+                  <label>PEC / Codice Univoco (Fatturazione)</label>
+                  <input type="text" [(ngModel)]="contractDetails.companyPec" name="companyPec" placeholder="Es. pec@pec.it o SDI 5EUO82D">
+                </div>
+              </div>
+            </div>
+
+            <!-- Primary Driver dropdown if Company is checked -->
+            <div class="form-grid" style="margin-bottom: 1.5rem;">
+              <div class="form-group">
+                <label>Conducente Principale *</label>
+                <app-customer-select [(customerId)]="contractDetails.mainDriverId" (customerIdChange)="onMainDriverChange()" [customers]="availableCustomers" placeholder="Cerca conducente principale..."></app-customer-select>
+              </div>
+            </div>
+          } @else {
+            <div style="background: rgba(16, 185, 129, 0.05); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; color: #065f46; font-size: 0.8rem; margin-bottom: 1.25rem;">
+              <i class="fa-solid fa-circle-info"></i> Il cliente privato <strong>{{ contractCustomer?.firstName }} {{ contractCustomer?.lastName }}</strong> viene impostato automaticamente come <strong>Conducente Principale</strong>.
+            </div>
+          }
+
+          <!-- Dati Anagrafici & Patente Conducente Principale -->
+          @if (contractDetails.mainDriverId) {
+            <div style="background: #f8fafc; padding: 1.2rem; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 1.5rem;">
+              <h5 style="font-size: 0.85rem; font-weight: 700; color: #1e293b; margin-top: 0; margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                <i class="fa-solid fa-address-card text-gradient"></i> Dati Anagrafici & Patente Conducente
+              </h5>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Luogo di Nascita *</label>
+                  <input type="text" [(ngModel)]="contractDetails.driverBirthPlace" name="driverBirthPlace" placeholder="Es. Mottola (TA)" required>
+                </div>
+                <div class="form-group">
+                  <label>Data di Nascita *</label>
+                  <input type="date" [(ngModel)]="contractDetails.driverBirthDate" name="driverBirthDate" required>
+                </div>
+                <div class="form-group">
+                  <label>Numero Patente *</label>
+                  <input type="text" [(ngModel)]="contractDetails.driverLicenseNumber" name="driverLicenseNumber" placeholder="Es. U1234567A" required>
+                </div>
+                <div class="form-group">
+                  <label>Data Rilascio Patente *</label>
+                  <input type="date" [(ngModel)]="contractDetails.driverLicenseIssueDate" name="driverLicenseIssueDate" required>
+                </div>
+                <div class="form-group">
+                  <label>Data Scadenza Patente *</label>
+                  <input type="date" [(ngModel)]="contractDetails.driverLicenseExpiry" name="driverLicenseExpiry" required>
+                </div>
+                <div class="form-group">
+                  <label>Comune Rilascio Patente *</label>
+                  <input type="text" [(ngModel)]="contractDetails.driverLicenseReleasedBy" name="driverLicenseReleasedBy" placeholder="Es. Mottola o Taranto" required>
+                </div>
+                <div class="form-group">
+                  <label>Paese Rilascio Patente *</label>
+                  <input type="text" [(ngModel)]="contractDetails.driverLicenseCountry" name="driverLicenseCountry" placeholder="Es. Italia" required>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Additional Drivers (Both options are available) -->
+          <div style="background: #f8fafc; padding: 1.2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+            <h5 style="margin: 0; font-size: 0.9rem; color: #1e293b; font-weight: 700;"><i class="fa-solid fa-users"></i> Conducenti Aggiuntivi (Opzionali)</h5>
+            
+            <div class="form-grid" style="margin-bottom: 0;">
+              <!-- Conducente Aggiuntivo 1 -->
+              <div class="form-group">
+                <label>Conducente Aggiuntivo 1</label>
+                <app-customer-select [(customerId)]="contractDetails.additionalDriver1Id" (customerIdChange)="onAdditionalDriver1Change()" [customers]="availableCustomers" placeholder="Cerca secondo conducente..."></app-customer-select>
+              </div>
+              
+              <!-- Conducente Aggiuntivo 2 -->
+              <div class="form-group">
+                <label>Conducente Aggiuntivo 2</label>
+                <app-customer-select [(customerId)]="contractDetails.additionalDriver2Id" (customerIdChange)="onAdditionalDriver2Change()" [customers]="availableCustomers" placeholder="Cerca terzo conducente..."></app-customer-select>
+              </div>
+            </div>
+
+            <!-- Dati Aggiuntivi Conducente 1 -->
+            @if (contractDetails.additionalDriver1Id) {
+              <div class="form-grid" style="background: white; padding: 0.8rem; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div class="form-group">
+                  <label>Residenza Conducente Aggiuntivo 1</label>
+                  <input type="text" [(ngModel)]="contractDetails.additionalDriver1Address" name="additionalDriver1Address" placeholder="Indirizzo di residenza">
+                </div>
+                <div class="form-group">
+                  <label>Telefono Conducente Aggiuntivo 1</label>
+                  <input type="text" [(ngModel)]="contractDetails.additionalDriver1Phone" name="additionalDriver1Phone" placeholder="Numero di telefono">
+                </div>
+              </div>
+            }
+
+            <!-- Dati Aggiuntivi Conducente 2 -->
+            @if (contractDetails.additionalDriver2Id) {
+              <div class="form-grid" style="background: white; padding: 0.8rem; border-radius: 6px; border: 1px solid #cbd5e1; margin-bottom: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                <div class="form-group">
+                  <label>Residenza Conducente Aggiuntivo 2</label>
+                  <input type="text" [(ngModel)]="contractDetails.additionalDriver2Address" name="additionalDriver2Address" placeholder="Indirizzo di residenza">
+                </div>
+                <div class="form-group">
+                  <label>Telefono Conducente Aggiuntivo 2</label>
+                  <input type="text" [(ngModel)]="contractDetails.additionalDriver2Phone" name="additionalDriver2Phone" placeholder="Numero di telefono">
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- SECTION 3: FRANCHIGIA -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; border-left: 3px solid var(--accent); padding-left: 8px; margin-top: 1.5rem; margin-bottom: 1rem;">Limitazione di Responsabilità (Franchigia)</h4>
+          <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label>Franchigia Selezionata (€) *</label>
+              <input type="number" [(ngModel)]="contractDetails.franchise" name="franchise" min="0" required>
+            </div>
+          </div>
+
+
+
+          <!-- SUBMIT ACTIONS -->
+          <div class="modal-actions" style="border-top: 1px solid #e2e8f0; padding-top: 1rem; margin-top: 2rem;">
+            <button type="button" class="btn-utility" (click)="closeContractModal()">Annulla</button>
+            <button type="submit" class="btn-accent" [disabled]="isGeneratingContract" style="min-width: 180px;">
+              @if (isGeneratingContract) {
+                <i class="fa-solid fa-spinner fa-spin"></i> Generazione in corso...
+              } @else {
+                <i class="fa-solid fa-file-invoice"></i> Genera Contratto (PDF)
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

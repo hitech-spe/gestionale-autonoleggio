@@ -1,0 +1,225 @@
+<div class="admin-dashboard fade-in">
+
+    <header class="dashboard-header glass-card">
+        <div class="header-content">
+            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+                <div>
+                    <h1>Gestionale Operativo</h1>
+                    <p class="subtitle">Amministrazione {{ (company$ | async)?.name || 'RentFlow' }}</p>
+                </div>
+
+                @if (activeAlertsCount > 0 || expiringInsurances.length > 0 || expiringInspections.length > 0) {
+                    <div class="global-alert-badge animate-pulse" (click)="onTabChange('reminders')" title="Ci sono promemoria urgenti o scadenze imminenti dei veicoli! Clicca per visualizzare i dettagli.">
+                        <i class="fa-solid fa-bell fa-bounce"></i>
+                        <span class="badge-count">{{ activeAlertsCount + expiringInsurances.length + expiringInspections.length }}</span>
+                        <span class="badge-text hide-mobile">Avvisi Attivi!</span>
+                    </div>
+                }
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                <div class="filter-group" style="margin-bottom: 0;">
+                    <label>Sede Attiva:</label>
+                    <select [ngModel]="selectedLocation$ | async" (ngModelChange)="changeLocationFilter($event)">
+                        @for (loc of locations; track loc) {
+                            <option [value]="loc">{{ loc }}</option>
+                        }
+                    </select>
+                </div>
+                
+                <button (click)="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem; text-transform: none; display: flex; align-items: center; gap: 0.5rem; height: 38px; font-size: 0.85rem;" title="Disconnetti ed esci">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
+                        <path fill-rule="evenodd" d="M16.5 3.75a.75.75 0 0 1 .75.75v14.5a.75.75 0 0 1-1.5 0V4.5a.75.75 0 0 1 .75-.75ZM2.22 11.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1-1.06 1.06L3.81 13.5H12a.75.75 0 0 1 0 1.5H3.81l2.66 2.66a.75.75 0 0 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>Esci</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button [class.active]="currentTab === 'calendar'" (click)="onTabChange('calendar')">
+                <i class="fa-solid fa-calendar-check"></i> Calendario
+            </button>
+            <button [class.active]="currentTab === 'fleet'" (click)="onTabChange('fleet')">
+                <i class="fa-solid fa-car"></i> Veicoli
+            </button>
+            <button [class.active]="currentTab === 'customers'" (click)="onTabChange('customers')">
+                <i class="fa-solid fa-users"></i> Clienti
+            </button>
+            <button [class.active]="currentTab === 'insurance'" (click)="onTabChange('insurance')">
+                <i class="fa-solid fa-shield-halved"></i> Assicurazioni
+            </button>
+            <button [class.active]="currentTab === 'inspection'" (click)="onTabChange('inspection')">
+                <i class="fa-solid fa-clipboard-check"></i> Revisioni
+            </button>
+            <button [class.active]="currentTab === 'maintenance'" (click)="onTabChange('maintenance')">
+                <i class="fa-solid fa-wrench"></i> Manutenzione
+            </button>
+            <button [class.active]="currentTab === 'reminders'" (click)="onTabChange('reminders')">
+                <i class="fa-solid fa-note-sticky"></i> Promemoria
+            </button>
+            <button [class.active]="currentTab === 'contracts'" (click)="onTabChange('contracts')">
+                <i class="fa-solid fa-file-contract"></i> Contratti
+            </button>
+            <button [class.active]="currentTab === 'settings'" (click)="onTabChange('settings')">
+                <i class="fa-solid fa-gears"></i> Impostazioni
+            </button>
+            <!--button [class.active]="currentTab === 'verbali'" (click)="onTabChange('verbali')">
+                <i class="fa-solid fa-file-invoice"></i> Verbali
+            </button-->
+        </div>
+    </header>
+
+    @if (expiringInsurances.length > 0 || expiringInspections.length > 0) {
+        <div class="scadenze-alert-banner glass-card">
+            <div class="alert-banner-header" (click)="showScadenzeDetails = !showScadenzeDetails">
+                <div class="header-left">
+                    <i class="fa-solid fa-triangle-exclamation alert-warn-icon"></i>
+                    <span><strong>Attenzione!</strong> Ci sono <strong>{{ expiringInsurances.length + expiringInspections.length }}</strong> scadenze imminenti (entro 30 giorni) o già superate:</span>
+                </div>
+                <button class="btn-toggle-scadenze">
+                    {{ showScadenzeDetails ? 'Nascondi' : 'Mostra Dettagli' }}
+                    <i class="fa-solid" [class.fa-chevron-up]="showScadenzeDetails" [class.fa-chevron-down]="!showScadenzeDetails"></i>
+                </button>
+            </div>
+            @if (showScadenzeDetails) {
+                <div class="alert-banner-body">
+                    <div class="scadenze-grid">
+                        @for (ins of expiringInsurances; track ins.id) {
+                            <div class="scadenza-item insurance" (click)="navigateToInsurance(ins)" title="Vai alla scheda Assicurazioni">
+                                <span class="badge badge-ins">Assicurazione</span>
+                                <span class="vehicle-name">{{ ins.vehiclePlate }}</span>
+                                <span class="expiry-date" [class.expired]="isPastDate(ins.expiryDate)">
+                                    Scade il: {{ formatDate(ins.expiryDate) }} 
+                                    <strong class="days-remaining">({{ getDaysLeftText(ins.expiryDate) }})</strong>
+                                </span>
+                            </div>
+                        }
+                        @for (insp of expiringInspections; track insp.id) {
+                            <div class="scadenza-item inspection" (click)="navigateToInspection(insp)" title="Vai alla scheda Revisioni">
+                                <span class="badge badge-insp">Revisione</span>
+                                <span class="vehicle-name">{{ insp.vehiclePlate }}</span>
+                                <span class="expiry-date" [class.expired]="isPastDate(insp.expiryDate)">
+                                    Scade il: {{ formatDate(insp.expiryDate) }} 
+                                    <strong class="days-remaining">({{ getDaysLeftText(insp.expiryDate) }})</strong>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    <main class="dashboard-content">
+        @if (currentTab === 'calendar') {
+            <app-calendar-tab [selectedLocation$]="selectedLocation$" />
+        }
+        @if (currentTab === 'fleet') {
+            <app-fleet-tab [selectedLocation$]="selectedLocation$" />
+        }
+        @if (currentTab === 'customers') {
+            <app-customers-tab />
+        }
+        @if (currentTab === 'insurance') {
+            <app-insurance-tab [searchTerm]="insuranceSearchTerm" [highlightedId]="insuranceHighlightedId" />
+        }
+        @if (currentTab === 'inspection') {
+            <app-inspection-tab [searchTerm]="inspectionSearchTerm" [highlightedId]="inspectionHighlightedId" />
+        }
+        @if (currentTab === 'maintenance') {
+            <app-maintenance-tab />
+        }
+        @if (currentTab === 'reminders') {
+            <app-reminders-tab />
+        }
+        @if (currentTab === 'contracts') {
+            <app-contracts-tab />
+        }
+        @if (currentTab === 'verbali') {
+            <app-verbali-tab />
+        }
+        @if (currentTab === 'settings') {
+            <app-settings-tab />
+        }
+    </main>
+
+    <!-- High-Impact Early Alert Popup Modal -->
+    @if (currentPopupAlert) {
+        <div class="alert-popup-overlay">
+            <div class="alert-popup-card animate-scale-up">
+                <div class="alert-popup-header">
+                    <i class="fa-solid fa-triangle-exclamation fa-bounce alert-warn-icon"></i>
+                    <h2>PROMEMORIA IN SCADENZA!</h2>
+                </div>
+                <div class="alert-popup-body">
+                    <div class="alert-info-box">
+                        <p class="alert-text">"{{ currentPopupAlert.text }}"</p>
+                        <div class="alert-time-detail">
+                            <i class="fa-regular fa-clock"></i> Scadenza: <strong>{{ formatAlertDate(currentPopupAlert.date) }}</strong>
+                        </div>
+                    </div>
+                    <p class="alert-helper-text">Questo avviso compare in base al preavviso di {{ currentPopupAlert.alertBeforeValue }} {{ currentPopupAlert.alertBeforeUnit === 'minutes' ? 'minuti' : currentPopupAlert.alertBeforeUnit === 'hours' ? 'ore' : 'giorni' }} impostato.</p>
+                </div>
+                <div class="alert-popup-footer">
+                    <button class="btn-popup-dismiss" (click)="dismissPopupAlert()">Nascondi Avviso</button>
+                    <button class="btn-popup-complete" (click)="completePopupAlert(currentPopupAlert)">
+                        <i class="fa-solid fa-check"></i> Segna come Completato
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Blocco Abbonamento Scaduto / Sospeso (SaaS Paywall Modal) -->
+    @if (isTrialExpired || isCompanySuspended) {
+        <div class="paywall-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
+            <div class="paywall-card animate-scale-up" style="background: white; max-width: 750px; width: 100%; padding: 3rem; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); text-align: center;">
+                <div class="paywall-header">
+                    <div class="paywall-icon-badge" style="width: 80px; height: 80px; background: rgba(37, 99, 235, 0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
+                        <i class="fa-solid fa-gem text-accent" style="font-size: 2.5rem;"></i>
+                    </div>
+                    @if (isCompanySuspended) {
+                        <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">ABBONAMENTO SOSPESO</h2>
+                        <p class="paywall-desc" style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">Il tuo account è stato sospeso a causa del mancato rinnovo o di un pagamento rifiutato su Stripe. Riattiva subito il servizio selezionando un piano per continuare ad accedere ai tuoi dati.</p>
+                    } @else {
+                        <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">PERIODO DI PROVA TERMINATO</h2>
+                        <p class="paywall-desc" style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">I tuoi 14 giorni di prova gratuita su <strong>RentSmart</strong> sono scaduti. La tua flotta e i contratti salvati sono al sicuro, ma per continuare a operare devi selezionare un piano di abbonamento attivo.</p>
+                    }
+                </div>
+
+                <div class="paywall-pricing-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+                    <!-- Starter Plan -->
+                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: #f8fafc;">
+                        <h4 style="font-size: 1rem; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">Starter</h4>
+                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€29<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
+                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Fino a 5 auto</span>
+                        <a routerLink="/auth/login" class="btn btn-outline w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    </div>
+
+                    <!-- Pro Plan -->
+                    <div class="paywall-plan-card popular" style="border: 2px solid var(--accent); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: white; position: relative; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1);">
+                        <span class="ribbon" style="position: absolute; top: -10px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em;">Scelto</span>
+                        <h4 style="font-size: 1rem; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; margin-top: 0.25rem;">Pro</h4>
+                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€59<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
+                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Fino a 20 auto</span>
+                        <a routerLink="/auth/login" class="btn btn-accent w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    </div>
+
+                    <!-- Enterprise Plan -->
+                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: #f8fafc;">
+                        <h4 style="font-size: 1rem; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">Enterprise</h4>
+                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€129<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
+                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Auto Illimitate</span>
+                        <a routerLink="/auth/login" class="btn btn-outline w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    </div>
+                </div>
+
+                <div class="paywall-footer" style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <p class="developed-by" style="font-size: 0.85rem; color: #64748b; margin: 0;">Gestionale cloud ospitato e supportato con orgoglio da <strong>HI-TECH srls</strong>.</p>
+                    <button (click)="logout()" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.8rem; text-transform: none; display: flex; align-items: center; gap: 0.5rem; height: 36px; margin-top: 0.5rem;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Esci dall'Account</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>

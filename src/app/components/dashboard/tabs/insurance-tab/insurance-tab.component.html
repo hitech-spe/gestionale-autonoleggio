@@ -1,0 +1,135 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Assicurazioni Veicoli</h2>
+        <div class="panel-actions">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Cerca targa o compagnia...">
+            </div>
+            <div class="sort-box">
+                <i class="fa-solid fa-sort"></i>
+                <select [(ngModel)]="sortOrder" class="sort-select">
+                    <option value="newest">Più recenti</option>
+                    <option value="oldest">Meno recenti</option>
+                    <option value="expiryDate">Scadenza</option>
+                </select>
+            </div>
+            <button class="btn btn-accent" (click)="openModal()">+ Aggiungi</button>
+        </div>
+    </div>
+    <div class="table-responsive shadow-sm hide-mobile">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Veicolo</th>
+                    <th>Compagnia</th>
+                    <th>Polizza</th>
+                    <th>Scadenza</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (ins of getFiltered(insurances$ | async); track ins.id) {
+                    <tr [class.highlighted-item]="ins.id === highlightedId">
+                        <td class="fw-bold">
+                            @let vName = getVehicleName(ins.vehicleId);
+                            @if (vName) {
+                                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                                    <span style="font-size: 0.95rem; color: #1e293b; font-weight: 700;">{{ vName }}</span>
+                                    <span class="plate-badge" style="font-size: 0.75rem; padding: 2px 6px; width: fit-content; text-transform: uppercase;">{{ getVehiclePlate(ins) }}</span>
+                                </div>
+                            } @else {
+                                {{ ins.vehiclePlate }}
+                            }
+                        </td>
+                        <td>{{ ins.company }}</td>
+                        <td>{{ ins.policyNumber }}</td>
+                        <td>{{ formatDate(ins.expiryDate) }}</td>
+                        <td>
+                            <div class="d-flex gap-3">
+                                <button class="btn-edit" (click)="openModal(ins)" title="Modifica Assicurazione">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn-delete" (click)="deleteInsurance(ins.id!)" title="Elimina Assicurazione">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr><td colspan="5" class="text-center py-4">Nessuna assicurazione trovata.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Layout Mobile: Card -->
+    <div class="mobile-cards show-mobile">
+        @for (ins of getFiltered(insurances$ | async); track ins.id) {
+            @let vName = getVehicleName(ins.vehicleId);
+            <div class="rental-card-mobile" [class.highlighted-item]="ins.id === highlightedId">
+                <div class="card-header">
+                    <span class="customer-name">
+                        @if (vName) {
+                            {{ vName }}
+                        } @else {
+                            {{ ins.vehiclePlate }}
+                        }
+                    </span>
+                    <div class="d-flex gap-3">
+                        <button class="btn-edit" (click)="openModal(ins)" title="Modifica Assicurazione">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn-delete" (click)="deleteInsurance(ins.id!)" title="Elimina Assicurazione">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (vName) {
+                        <div class="info-row">
+                            <i class="fa-solid fa-rectangle-ad" title="Targa"></i>
+                            <span class="plate-badge" style="font-size: 0.8rem; padding: 2px 6px; text-transform: uppercase;">{{ getVehiclePlate(ins) }}</span>
+                        </div>
+                    }
+                    <div class="info-row">
+                        <i class="fa-solid fa-building-shield" title="Compagnia"></i>
+                        <span>{{ ins.company }}</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-file-contract" title="Polizza"></i>
+                        <span>Polizza: {{ ins.policyNumber }}</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-calendar-xmark" title="Scadenza"></i>
+                        <span>Scadenza: {{ formatDate(ins.expiryDate) }}</span>
+                    </div>
+                </div>
+            </div>
+        } @empty {
+            <div class="text-center py-4">Nessuna assicurazione trovata.</div>
+        }
+    </div>
+</div>
+
+@if (isModalOpen) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3>{{ isEditMode ? 'Modifica Assicurazione' : 'Nuova Assicurazione' }}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Veicolo</label>
+                    <app-vehicle-select [(vehicleId)]="newInsurance.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+                    <input type="hidden" [(ngModel)]="newInsurance.vehicleId" name="vehicleId" required />
+                </div>
+                <div class="form-group"><label>Compagnia</label><input type="text" [(ngModel)]="newInsurance.company"></div>
+                <div class="form-group"><label>Numero Polizza</label><input type="text" [(ngModel)]="newInsurance.policyNumber"></div>
+                <div class="form-group"><label>Scadenza</label><input type="date" [(ngModel)]="newInsurance.expiryDate"></div>
+                <div class="form-group"><label>Note</label><input type="text" [(ngModel)]="newInsurance.notes"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" (click)="closeModal()">Annulla</button>
+                <button class="btn btn-accent" (click)="saveInsurance()">{{ isEditMode ? 'Aggiorna' : 'Salva' }}</button>
+            </div>
+        </div>
+    </div>
+}

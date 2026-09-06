@@ -1,0 +1,347 @@
+{
+  "HEADER": {
+    "HOME": "Home",
+    "ABOUT": "About Us",
+    "SERVICES": "Services",
+    "QUOTE_AI": "AI Quote",
+    "QUOTES": "My Quotes",
+    "CONTACT": "Contact Us",
+    "LOGIN": "Login",
+    "ANNOUNCEMENTS": "Listings",
+    "BOOK_NOW": "Book Now",
+    "DROPDOWN": {
+      "RENTAL": "Car Rental",
+      "COMMERCIAL": "Commercial Vehicles",
+      "LONG_TERM": "Long Term",
+      "FLEET": "Our Fleet",
+      "USED_CARS": "Used Cars",
+      "WASH": "Car Wash"
+    }
+  },
+  "SERVICES": {
+    "KICKER": "OUR SERVICES",
+    "TITLE": "Mobility Solutions",
+    "SUBTITLE": "tailored for you",
+    "INTRO": "Discover all the services offered by La Dolce Vita SRL. From a carefree holiday to the most complex business needs, we have the perfect vehicle for every requirement.",
+    "RENTAL": {
+      "TITLE": "Car Rental",
+      "DESC": "Experience Puglia in total freedom. Modern, safe cars equipped with every comfort to make your trip unforgettable, even without a credit card.",
+      "MORE": "Discover rates"
+    },
+    "COMMERCIAL": {
+      "TITLE": "Commercial Vehicles",
+      "DESC": "Spacious vans and trucks for your business or moving needs. Maximum reliability, capacity, and durability at the service of your daily work.",
+      "MORE": "View vehicles"
+    },
+    "LONG_TERM": {
+      "TITLE": "Long-Term Rental",
+      "DESC": "The convenience of a new car without the worries of buying. Maintenance, road tax, and insurance included in a single fixed monthly fee.",
+      "MORE": "Request a quote"
+    },
+    "FLEET": {
+      "TITLE": "Our Fleet",
+      "DESC": "Over 150 vehicles including city cars, elegant sedans, spacious SUVs, and sporty convertibles. A constantly updated fleet to always offer you the best.",
+      "MORE": "Explore the fleet"
+    },
+    "USED_CARS": {
+      "TITLE": "Used Car Sales",
+      "DESC": "100% safe and guaranteed used cars. We rigorously select, service, and inspect every single vehicle before offering it for sale to our clients.",
+      "MORE": "View listings"
+    },
+    "WASH": {
+      "TITLE": "Washing and Sanitization",
+      "DESC": "Meticulous attention to detail. We offer thorough manual washing, deep upholstery cleaning, and ozone sanitization for your vehicle.",
+      "MORE": "Book a wash"
+    }
+  },
+  "CONTACTS": {
+    "HERO_TITLE": "Contact Us",
+    "HERO_SUBTITLE": "We are here to help you find the perfect car",
+    "FORM_TITLE": "Fill out the Form",
+    "INTRO_TEXT": "La Dolce Vita is a car rental agency in Mottola, in the province of Taranto, providing its customers with a large fleet of vehicles for any need.<br><br>Whether it's for transporting people or goods, individuals or groups, the Taranto-based company offers customized solutions ensuring maximum flexibility and always affordable rates.",
+    "LBL_NAME": "Full Name",
+    "LBL_EMAIL": "Email Address",
+    "LBL_PHONE": "Phone Number",
+    "LBL_MESSAGE": "Message",
+    "BTN_SEND": "Send Request",
+    "MSG_SUCCESS": "Thank you! Your request has been sent successfully. We will get back to you as soon as possible.",
+    "MSG_ERROR": "An error occurred while sending. Please try again later or contact us by phone.",
+    "INFO_TITLE": "Locations and Contacts",
+    "HOURS_TITLE": "Opening Hours",
+    "WASH_HOURS": {
+      "TITLE": "Car Wash Hours",
+      "MANUAL": "Manual Wash",
+      "SELF": "Self Service 24/7",
+      "MANUAL_DAYS": "Mon - Fri",
+      "MANUAL_TIME": "07:30 AM - 04:30 PM",
+      "MANUAL_SAT_DAYS": "Saturday",
+      "MANUAL_SAT_TIME": "07:30 AM - 01:00 PM",
+      "MANUAL_SUN_DAYS": "Sunday",
+      "MANUAL_SUN_TIME": "Closed",
+      "SELF_DAYS": "Every day",
+      "SELF_TIME": "07:30 AM - 12:00 AM"
+    }
+  },
+  "HOME": {
+    "HERO": {
+      "TITLE": "DO YOU NEED A CAR OR VAN?",
+      "SUBTITLE": "RENT FROM US EVEN WITHOUT A CREDIT CARD",
+      "DESC": "BOCCONI SRL operates in Massafra with a vehicle showroom and specialized workshop, offering complete solutions for individuals and companies.",
+      "CTA_SERVICES": "Discover services",
+      "CTA_CONTACT": "Request information",
+      "HIGHLIGHTS": {
+        "FAST": {
+          "TITLE": "Quick interventions",
+          "DESC": "Diagnostics and repairs for commercial and industrial vehicles"
+        },
+        "FLEET": {
+          "TITLE": "Rental fleet",
+          "DESC": "Vehicles and equipment available with flexible formulas"
+        },
+        "SUPPORT": {
+          "TITLE": "Dedicated support",
+          "DESC": "Technical consulting and scheduled assistance"
+        }
+      },
+      "METRICS": {
+        "SUPPORT": "Operational support",
+        "SERVICES": "Specialized services",
+        "CUSTOMER": "Customer orientation"
+      }
+    },
+    "PROMO": {
+      "TITLE_BLACK": "Services of",
+      "TITLE_RED": "Car Rental",
+      "TEXT_1": "You can request personalized <strong>short or long-term rental</strong> formulas, ideal for having a new and efficient car depending on your needs.",
+      "TEXT_2": "Contact the offices by phone calling <a href=\"tel:+390996418339\" class=\"tel-link\">+39 099 6418339</a>, or commercial number: <a href=\"tel:+393428315325\" class=\"tel-link\">+39 3428315325</a> to receive every detail about the rental and set an appointment, or send a message through the contact form to request detailed information and quotes: a staff member will guide you to find the type of car rental that best suits you.",
+      "BTN_TEXT": "Call for a quote"
+    },
+    "FEATURES": {
+      "FAST": {
+        "TAG": "Workshop",
+        "TITLE": "Two operational headquarters",
+        "DESC": "Vehicle showroom in Contrada Sandergio snc and workshop in Via Chiatona 26, Massafra."
+      },
+      "CUTTING": {
+        "TAG": "Rental",
+        "TITLE": "Complete services",
+        "DESC": "From mechanics to bodywork, up to inspections, spare parts, and fittings."
+      },
+      "SECURE": {
+        "TAG": "Reliability",
+        "TITLE": "Professional reliability",
+        "DESC": "Qualified assistance for cars, vans, motorcycles, caravans, and industrial vehicles."
+      }
+    },
+    "STATS": {
+      "PROJECTS": "Completed Projects",
+      "CLIENTS": "Happy Clients",
+      "EXPERIENCE": "Years of Experience",
+      "TEAM": "Team Experts"
+    },
+    "TESTIMONIALS": {
+      "TITLE": "What Our",
+      "SUBTITLE": "Clients Say",
+      "1": {
+        "NAME": "Marco Rossi",
+        "ROLE": "CEO, TechStart",
+        "TEXT": "An exceptional team. They transformed our idea into a successful app in record time."
+      },
+      "2": {
+        "NAME": "Laura Bianchi",
+        "ROLE": "Product Manager, E-Shop Pro",
+        "TEXT": "Incredible professionalism and technical expertise. Highly recommended for complex projects."
+      },
+      "3": {
+        "NAME": "Giulia Verdi",
+        "ROLE": "Founder, GreenApp",
+        "TEXT": "They know how to listen to the client's needs and always find the best technical solution."
+      }
+    }
+  },
+  "ABOUT": {
+    "TITLE": "La Dolce Vita",
+    "SUBTITLE": "The excellence of car rental in Puglia",
+    "INTRO_P1": "We are a company with offices in <strong>Mottola</strong>, <strong>Massafra</strong> e <strong>Grottaglie</strong> with over 10 years of experience. Our fleet of <strong>over 150 vehicles</strong> makes us leaders in southern Italy.",
+    "FEATURES_TITLE": "Why Choose Us",
+    "F1_TITLE": "High Quality",
+    "F1_DESC": "We only offer vehicles in excellent condition at competitive prices.",
+    "F2_TITLE": "Transparency",
+    "F2_DESC": "We always present clear and complete quotes and contracts.",
+    "F3_TITLE": "Customization",
+    "F3_DESC": "We have a flexible and customizable daily rental service.",
+    "F4_TITLE": "Wide Choice and Comfort",
+    "F4_DESC": "Our cars are all in excellent condition for a pleasant journey."
+  },
+  "FOOTER": {
+    "QUICK_LINKS": "Quick Links",
+    "CONTACTS_TITLE": "Locations and Contacts",
+    "HOURS_TITLE": "Opening Hours",
+    "ABOUT_TEXT": "La Dolce Vita is a car rental company that provides its customers with a vast fleet of cars, complete with vehicles suitable for any need, divided by category and different price ranges. From city cars to SUVs, from minivans to vans, whatever the transport needs, La Dolce Vita car rental offers tailor-made solutions from every point of view."
+  },
+  "LEGAL_INFO": {
+    "HERO_TITLE": "Legal Information",
+    "BACK_BUTTON": "Go Back",
+    "DISCLAIMER_TEXT": "The texts, information, and other data published on this site as well as links to other sites on the web are for informational purposes only and do not assume any official character.<br><br>La Dolce Vita S.r.l. assumes no responsibility for any errors or omissions of any kind and for any type of direct, indirect, or incidental damage arising from reading or using the published information, or any form of content present on the site, or for accessing or using the material contained in other sites."
+  },
+  "SERVICE_DETAIL": {
+    "BACK_BUTTON": "Back to Services",
+    "autonoleggio": {
+      "HERO_TITLE": "Car Rental in Puglia",
+      "HERO_SUBTITLE": "Car Rental Without Driver",
+      "INTRO_TITLE": "Short-Term Rental",
+      "INTRO_TEXT": "La Dolce Vita is the reference car rental agency in Mottola and the province of Taranto, an attentive and professional company capable of responding to any customer request with the utmost accuracy. Having a large fleet of cars, the company meets different needs by offering vehicles suitable for single travelers and families, tourist groups, and companies, always guaranteeing the highest quality standards of service. There is also no shortage of cars for short-term rental, from classic models to sports and luxury cars, ideal for making your most important moments even more unforgettable.",
+      "SPLIT_TITLE_BLACK": "Car Rental ",
+      "SPLIT_TITLE_RED": "Without Driver",
+      "BUTTON_TEXT": "Request a Quote",
+      "SPLIT_TEXT": "If you wish to rent a car for a short term or rather, you want an exclusive vehicle for a gala evening or a bachelor/bachelorette party, La Dolce Vita is the right operator to rely on. The car rental company in Mottola, in the province of Taranto, boasts a large fleet of luxury, sports, and classic cars, ready to enhance your character and personality during the most important occasions.\n\nTo discover the entire fleet of cars for events, do not hesitate to contact the staff on-site and request a detailed quote, tailor-made for you. As part of short-term car rental, La Dolce Vita offers a wide range of models, both classic, such as the flagships of the most prestigious automakers, and sporty. Depending on the style of your event and your personality, you can choose the most suitable type of vehicle and surprise everyone by showing up in a unique and exclusive vehicle."
+    },
+    "veicoli_commerciali": {
+      "HERO_TITLE": "Van and Commercial Vehicles",
+      "HERO_SUBTITLE": "Transport solutions for your business",
+      "INTRO_TITLE": "Short and Long-Term Van and commercial vehicles Rental for Goods Delivery",
+      "INTRO_TEXT": "In addition to renting cars of all kinds, the La Dolce Vita agency in Mottola also provides van and commercial vehicle rental services, ideal for fast and complete goods deliveries. The Taranto-based car rental company partners with numerous businesses that have chosen to optimize their costs by taking advantage of a rental vehicle for their activities. In this way, it is possible to cut numerous fixed costs linked to purchasing and managing the company fleet, while benefiting from tax relief for commercial activities. Soon, the agency will also add industrial vehicle rental to its services. Commercial rental vehicles for <strong>freight transport</strong>, choose the most suitable for your business.\n\nVans available for all transport needs <strong>L1 H1 - L1 H2 - L2 H2 - L2 H3 - L3 H3 - L4 H4</strong>",
+      "ADVANTAGES_TITLE": "The Advantage of Renting for Companies",
+      "ADVANTAGES_TEXT": "Car rental is a particularly advantageous opportunity for companies, as it allows them to have always-efficient vehicles without having to bear the high costs of purchasing and managing them. With commercial vehicle rental formulas, it is possible to stipulate short-term contracts on cars, vans, trucks, and any other type of vehicle, under extremely advantageous and flexible conditions.",
+      "PICKUP_TITLE_RED": "Immediate Pickup",
+      "PICKUP_TITLE_BLACK": "on Site",
+      "BUTTON_TEXT": "Request a Corporate Quote",
+      "PICKUP_TEXT": "To meet the needs of its customers, the La Dolce Vita car rental company in Mottola has prepared rental formulas designed for the various needs of applicants. From van rental for commercial activities to the rental of representation cars for companies, the Taranto company guarantees numerous advantages, such as the possibility of immediate vehicle pickup on-site and online booking: call the office to learn all the details of the proposal."
+    },
+    "lungo_termine": {
+      "HERO_TITLE": "Long Term",
+      "HERO_SUBTITLE": "Your mobility without worries",
+      "INTRO_TITLE": "SAFE AND STRESS-FREE MOBILITY",
+      "INTRO_TEXT": "La Dolce Vita Car Rental is a company specializing in long-term vehicle rental, offering customized solutions for individuals and companies. With a wide range of luxury cars, SUVs, sedans, and commercial vehicles, La Dolce Vita stands out for the quality of its service and customer care. Every vehicle is kept in perfect condition, ensuring safety and comfort throughout the rental period.",
+      "ADVANTAGES_TITLE": "The Advantages of Long-Term",
+      "ADVANTAGES_TEXT": "Long-term rental with La Dolce Vita Car Rental allows customers to enjoy a new car without the worries tied to ownership, such as maintenance, insurance, and vehicle depreciation. With flexible contracts and competitive rates, the company makes the process simple and convenient. Customers can choose the vehicle that best suits their needs and benefit from additional services such as 24/7 roadside assistance and seasonal tire changes.",
+      "INCLUDED_TITLE_RED": "COMFORT AND CONVENIENCE",
+      "INCLUDED_TEXT": "La Dolce Vita Car Rental is committed to providing a stress-free rental experience, with dedicated and professional customer service. Their mission is to offer an elegant and practical way to get around, allowing customers to focus on their daily activities without worrying about their means of transportation.",
+      "CTA_BUTTON": "Request a Quote"
+    },
+    "parco_auto": {
+      "HERO_TITLE": "Our Fleet",
+      "HERO_SUBTITLE": "The perfect car for every need",
+      "INTRO_TITLE": "Fleet",
+      "BUTTON_TEXT": "Request a Quote",
+      "INTRO_TEXT": "Do you wish to have a new and comfortable car for a shorter or longer period?<br> Are you on vacation in the Taranto area and want to use a car for all your travels?<br> La Dolce Vita Car Rental is the right operator to contact to book a new vehicle in excellent condition at extremely advantageous rates. With a wide and varied offer, the vehicle rental company based in Mottola is ready to satisfy every need with the utmost attention and professionalism: do not hesitate to call for a quote."
+    },
+    "auto_usate": {
+      "HERO_TITLE": "Used Cars",
+      "HERO_SUBTITLE": "Your next vehicle, guaranteed and safe",
+      "INTRO_TITLE": "Safe and Guaranteed Cars",
+      "INTRO_TEXT": "La Dolce Vita Car Rental is a leading company in the sale of used cars, offering customers a careful selection of high-quality vehicles. Every car in our inventory undergoes rigorous checks and maintenance to ensure it meets the highest standards of safety and reliability. With a diverse range that includes sedans, SUVs, city cars, and luxury cars, we are committed to satisfying the needs of all types of buyers.",
+      "ADVANTAGES_TITLE": "Guaranteed Used Cars",
+      "ADVANTAGES_TEXT": "Transparency is one of the fundamental values of the company: every vehicle is provided with a complete and detailed history, including mileage, maintenance performed, and any previous accidents. This approach allows customers to buy with confidence, knowing exactly what they are getting.\n\nLa Dolce Vita Car Rental also offers flexible financing solutions, making the purchase of a used car accessible to a wide range of budgets.",
+      "CONSULTATION_TITLE_RED": "Personalized",
+      "CONSULTATION_TITLE_BLACK": "Consultations",
+      "CONSULTATION_TEXT": " The team of professionals at the company is always available to provide personalized advice and help customers find the perfect vehicle for their needs.\n\nWith a constant commitment to customer satisfaction and a special focus on quality, La Dolce Vita Car Rental represents an excellent choice for those looking for a reliable and affordable used car.",
+      "IMG_ALT": "Selected Used Cars",
+      "CTA_BUTTON": "Contact us for a quote",
+      "SOCIAL_TITLE": "Discover deals in Real Time",
+      "SOCIAL_DESC": "We post new arrivals and special offers directly on our page. Join our community!",
+      "SOCIAL_BTN": "Follow us on Facebook"
+    },
+    "lavaggio": {
+      "HERO_TITLE": "Car Wash",
+      "HERO_SUBTITLE": "The attention to detail your car deserves",
+      "INTRO_TITLE": "Impeccable Car Cleaning",
+      "INTRO_TEXT": "La Dolce Vita Car Rental is a leading company in the car rental sector and accurate vehicle cleaning services. Located in a strategic position, it offers a wide range of vehicles to meet every need, from short-term rentals to long-term solutions. In addition to renting, La Dolce Vita is renowned for its car cleaning services, ensuring that every vehicle is always spotless.",
+      "QUALITY_TITLE": "Quality and Meticulous Care of the Interior",
+      "QUALITY_TEXT": "The exterior cleaning service includes a thorough wash to remove dirt and debris, giving the bodywork a like-new shine. The attention to detail continues with the interior cleaning, where every corner of the cabin is carefully treated. Washing of carpets and seats is carried out using high-quality products to ensure the removal of stains and odors, restoring the original appearance and freshness of the car's interior.",
+      "CLEAN_TITLE_RED": "Complete",
+      "CLEAN_TITLE_BLACK": "Car Cleaning",
+      "CLEAN_TEXT": "Thanks to advanced techniques and the use of specific detergents, La Dolce Vita is able to remove even the most stubborn stains, ensuring flawless results. The team of experienced professionals is dedicated to offering excellent service, making every rental or cleaning experience a true pleasure for customers. Trusting La Dolce Vita Car Rental means choosing quality, care, and professionalism.\n\n",
+      "CTA_BUTTON": "Book your wash",
+      "IMG_ALT": "Car Wash Prices",
+      "SOCIAL_TITLE": "Our latest work",
+      "SOCIAL_DESC": "Follow our page to see the results of our treatments and stay updated on promotions.",
+      "SOCIAL_BTN": "Follow us on Facebook"
+    }
+  },
+  "PRIVACY_POLICY": {
+    "HERO_TITLE": "Privacy Policy",
+    "BACK_BUTTON": "Go Back",
+    "INTRO_TEXT": "<strong>La Dolce Vita S.r.l. - Personal Data Protection Information</strong><br>Before acquiring your personal data for the display and use of the La Dolce Vita Rent service, related platforms, and apps, La Dolce Vita S.r.l. invites you to carefully read this privacy policy, provided pursuant to art. 13 of the European Regulation No. 679/2016 regarding the protection of personal data (\"GDPR\"). This will allow you to understand how your personal information is managed when you use our services, to enable you, where necessary, to give express and conscious consent to the processing of your personal data, and to know (and if necessary) exercise your rights as a \"Data Subject\".",
+    "SEC1_TITLE": "1. Data Controller and DPO",
+    "SEC1_DESC": "In this section, we indicate our references.",
+    "SEC1_TH1": "Data Controller",
+    "SEC1_TH2": "DPO - Data Protection Officer",
+    "SEC1_TD1": "La Dolce Vita S.r.l., represented by the pro tempore CEO, registered office in Via S. Allende 1, 74017 Mottola - Italy, contactable at the email address ladolcevitarent@gmail.com",
+    "SEC1_TD2": "basilestudio94@gmail.com",
+    "SEC2_TITLE": "2. Types of personal data",
+    "SEC2_DESC": "In this section, we indicate what types of data we ask for.",
+    "SEC2_TH1": "Types of data",
+    "SEC2_TH2": "Data details",
+    "SEC2_TD1_1": "<strong>Data acquired directly from the interested party</strong>",
+    "SEC2_TD1_2": "Name, surname, email address, phone number, license plate or vehicle identifier, tax ID, VAT number, residential address, place and date of birth, identification document (e.g., driver's license), driver's license details, payment data (credit cards), travel preferences, photograph.",
+    "SEC2_TD2_1": "<strong>Data acquired automatically during navigation</strong>",
+    "SEC2_TD2_2": "IP address, browser type, ISP, operating system and version, authentication logs (user ID, navigation), payment logs, finalization logs for navigation with the issuance of bookings or tickets, modification logs, geolocation, driving mode. App: Device ID, operating system, and version.",
+    "SEC2_POST": "The aforementioned data will be processed with IT and paper tools in order to guarantee appropriate security and confidentiality measures.",
+    "SEC3_TITLE": "3. Purpose and legal basis of the Processing",
+    "SEC3_DESC": "In this section, we indicate the purpose (and legal basis) of processing your personal data.",
+    "SEC3_TH1": "Purpose",
+    "SEC3_TH2": "Legal basis",
+    "SEC3_R1_C1": "Fulfillment of obligations arising from national or EU legal provisions, for example concerning tax, accounting, and administrative obligations, including driver's license verification, also processed through interconnection with the Civil Motorization database. Your personal data may also be processed to comply with requests from competent administrative or judicial authorities, for example regarding the identification and subsequent notification to the offender of administrative fine contestations under the Highway Code, or investigations related to road accidents.",
+    "SEC3_R1_C2": "Legal obligation to which the data controller is subject",
+    "SEC3_R2_C1": "Execution of the provisions of the General Conditions of Contract, Regulations, and the provision of accessory and/or connected services. For this purpose, data related to the registration of your profile on the site and/or App will also be processed, including collection, storage, and processing aimed at the operational, technical, and administrative management of the relationship, as well as payment data (including penalties, fines, and other accessory charges), including your credit card data (or other payment instrument), and geolocation data, including your mobile device, within the limits of what is strictly necessary for opening the vehicle, using the service, and detecting contractual breaches. Your data may also be processed in the pre-contractual phase to fulfill your specific requests.",
+    "SEC3_R2_C2": "Processing necessary for the performance of a contract to which the data subject is party or in order to take steps at the request of the data subject prior to entering into a contract",
+    "SEC3_R3_C1": "Adoption of measures aimed at protection against credit risk, including activities aimed at your correct identification, and ascertaining your economic reliability and/or solvency.",
+    "SEC3_R3_C2": "Legitimate interest of the controller",
+    "SEC3_R4_C1": "Analysis of the use of services utilized, in order to improve them, or to satisfy specific needs of the controller.",
+    "SEC3_R4_C2": "Legitimate interest of the controller",
+    "SEC3_R5_C1": "Preparation of a geolocation system on the vehicles used, and any other measures to protect them, in order to prevent and/or repress any illegal and/or fraudulent acts.",
+    "SEC3_R5_C2": "Legitimate interest of the controller",
+    "SEC3_R6_C1": "Processing necessary for preparatory and subsequent activities for mergers, sales, or transfers of business branches.",
+    "SEC3_R6_C2": "Legitimate interest of the controller",
+    "SEC3_R7_C1": "Marketing of LA DOLCE VITA S.R.L. services and/or sending of advertising/informational/promotional material and participation in initiatives and prize offers.",
+    "SEC3_R7_C2": "Consent of the data subject",
+    "SEC3_R8_C1": "Detection of the degree of satisfaction with the quality of services offered, via phone, email, or other detection systems.",
+    "SEC3_R8_C2": "Consent of the data subject",
+    "SEC3_POST": "The provision of data necessary to pursue the purposes listed in the previous points is \"mandatory\" and your refusal could result in the impossibility for LA DOLCE VITA S.R.L. to allow and guarantee you to be uniquely identified during access, navigate the application, perform route searches, issue travel and/or service tickets, and issue the relevant invoice. The provision of data necessary for commercial purposes is optional and is subject to your express consent.",
+    "SEC4_TITLE": "4. Recipients of the data",
+    "SEC4_DESC": "In this section, we indicate who will process your data and to whom it will be communicated. To achieve the aforementioned purposes, personal data will be processed by the following subjects:",
+    "SEC4_TH1": "Subjects attributable to LA DOLCE VITA S.R.L.",
+    "SEC4_TH2": "Subjects not directly attributable to LA DOLCE VITA S.R.L.",
+    "SEC4_R1_C1": "Municipality of Mottola, Judicial Authorities",
+    "SEC4_R1_C2": "Public security authorities, Insurance companies competent for claims management and settlement; Debt collection companies and companies specialized in managing commercial or credit-related information;",
+    "SEC4_POST": "Your data will be processed only by employees and staff of the Data Controller, who are adequately instructed and trained, or by other subjects acting as Data Processors. The processed data will never be disseminated.",
+    "SEC5_TITLE": "5. Data retention",
+    "SEC5_DESC": "In this section, we indicate how long we will keep your data. The personal data you provided will be kept for a period no longer than necessary to fulfill the purposes for which it was collected.",
+    "SEC5_TH1": "Nature of provision",
+    "SEC5_TH2": "Retention period",
+    "SEC5_R1_C1": "<strong>Purposes for which provision is mandatory</strong>",
+    "SEC5_R1_C2": "For a period of ten years starting from: 1) The termination of the contractual relationship; 2) the last mandatory act interrupting the prescription of rights; 3) the twenty-fourth month from the last access, in case of non-use.",
+    "SEC5_R2_C1": "<strong>Purposes for which provision is optional</strong>",
+    "SEC5_R2_C2": "Until consent is revoked or 24 months after account cancellation.",
+    "SEC5_POST": "Personal data, once anonymized, may be used and reused without limitation considering the loss of personal data quality.",
+    "SEC6_TITLE": "6. Transfer of data outside the European Union and automated decision-making process",
+    "SEC6_TEXT": "Your personal data may be transferred outside the EU. Where such a transfer takes place, the Data Controller will adopt every suitable measure to ensure an adequate level of protection, in compliance with an adequacy decision, or prior subscription to Standard Contractual Clauses. Your personal data will not be subject to any automated decision-making process.",
+    "SEC7_TITLE": "7. Rights of Data Subjects",
+    "SEC7_TEXT": "EU Regulation 2016/679 (articles 15 to 23) gives data subjects the exercise of specific rights. In particular, you have the right to ask LA DOLCE VITA S.R.L. for access, rectification, cancellation, limitation, and opposition. The data subject has the right to request the portability of their personal data. If you have given consent, you can revoke it at any time.<br><br>You also have the right to lodge a complaint with the Supervisory Authority (Guarantor for the Protection of Personal Data). At any time, you can ask to exercise your rights by contacting <strong>ladolcevitarent@gmail.com</strong> or the DPO at the address <strong>basilestudio94@gmail.com</strong>.",
+    "SEC8_TITLE": "8. Changes to the privacy policy",
+    "SEC8_TEXT": "This Information Notice may require periodic updates. LA DOLCE VITA S.R.L. reserves the right to modify or supplement it at any time. You will be informed of the changes through the site or app, or also via email."
+  },
+  "AUTH": {
+    "LOGIN_TITLE": "Welcome Back",
+    "REGISTER_TITLE": "Create Account",
+    "LOGIN_SUBTITLE": "Login to your account",
+    "REGISTER_SUBTITLE": "Join BOCCONI SRL",
+    "EMAIL": "Email",
+    "PASSWORD": "Password",
+    "CONFIRM_PASSWORD": "Confirm Password",
+    "FIRST_NAME": "First Name",
+    "LAST_NAME": "Last Name",
+    "FIRST_NAME_PLACEHOLDER": "Enter your first name",
+    "LAST_NAME_PLACEHOLDER": "Enter your last name",
+    "LOGIN_BTN": "Login",
+    "REGISTER_BTN": "Register",
+    "LOGOUT": "Logout",
+    "GO_TO_REGISTER": "Don't have an account? Register",
+    "GO_TO_LOGIN": "Already have an account? Login",
+    "ERROR_MATCH": "Passwords do not match",
+    "ERROR_REQUIRED_FIELDS": "First and last name are required",
+    "ERROR_GENERIC": "An error occurred. Please try again.",
+    "SUCCESS_REGISTER": "Account created successfully! You can now login."
+  }
+}

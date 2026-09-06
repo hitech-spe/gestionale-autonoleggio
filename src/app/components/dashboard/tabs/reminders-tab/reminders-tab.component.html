@@ -1,0 +1,225 @@
+<div class="panel">
+    <div class="panel-header">
+        <div class="header-title">
+            <h2>Bacheca dei Promemoria</h2>
+            <p class="subtitle">Scadenze, note e avvisi rapidi dell'amministrazione</p>
+        </div>
+        
+        <div class="panel-actions">
+            <!-- Filter Tabs -->
+            <div class="filter-switch">
+                <button [class.active]="filter === 'all'" (click)="filter = 'all'">Tutti</button>
+                <button [class.active]="filter === 'active'" (click)="filter = 'active'">Attivi</button>
+                <button [class.active]="filter === 'completed'" (click)="filter = 'completed'">Completati</button>
+            </div>
+            
+            <button class="btn btn-accent" (click)="openModal()">
+                <i class="fa-solid fa-note-sticky"></i> + Nuovo Promemoria
+            </button>
+        </div>
+    </div>
+
+    <!-- Corkboard Container for Post-it Notes -->
+    <div class="corkboard-container">
+        <div class="post-it-grid">
+            @for (rem of getFilteredReminders(reminders$ | async); track rem.id; let i = $index) {
+                <div class="post-it-card" 
+                     [style.transform]="getTilt(i)"
+                     [ngClass]="{ 'completed': rem.completed, 'overdue': isPast(rem.date) && !rem.completed }"
+                     [ngStyle]="getColorStyle(rem.color || '#fef08a')">
+                    
+                    <!-- Sticky Tape Effect -->
+                    <div class="sticky-tape"></div>
+                    
+                    <!-- Card Header Actions -->
+                    <div class="post-it-header">
+                        <div class="header-left">
+                            <button class="btn-check" 
+                                    (click)="toggleComplete(rem, $event)" 
+                                    [title]="rem.completed ? 'Riapri Promemoria' : 'Segna come Completato'">
+                                @if (rem.completed) {
+                                    <i class="fa-solid fa-circle-check"></i>
+                                } @else {
+                                    <i class="fa-regular fa-circle"></i>
+                                }
+                            </button>
+                            
+                            @if (isAlertActive(rem)) {
+                                <i class="fa-solid fa-bell fa-bounce alert-bell-icon" [title]="getAlertDescription(rem)"></i>
+                            }
+
+                            @if (rem.repeat && rem.repeat !== 'none') {
+                                <i class="fa-solid fa-repeat alert-bell-icon" style="color: #64748b; margin-left: 0.5rem;" [title]="getRepeatDescription(rem.repeat)"></i>
+                            }
+                        </div>
+                        
+                        <div class="post-it-actions">
+                            <button class="btn-edit-note" (click)="openModal(rem)" title="Modifica">
+                                <i class="fa-solid fa-pen"></i>
+                            </button>
+                            <button class="btn-delete-note" (click)="deleteReminder(rem.id!, $event)" title="Elimina">
+                                <i class="fa-regular fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Card Content -->
+                    <div class="post-it-body">
+                        <p class="post-it-text">{{ rem.text }}</p>
+                    </div>
+
+                    <!-- Card Footer -->
+                    <div class="post-it-footer">
+                        <div class="post-it-date">
+                            <i class="fa-regular fa-clock"></i> {{ formatDate(rem.date) }}
+                        </div>
+                        
+                        <!-- Overdue and Relative Time Warnings -->
+                        @if (isPast(rem.date) && !rem.completed) {
+                            <div class="overdue-badge animate-pulse">
+                                <i class="fa-solid fa-triangle-exclamation"></i> {{ getRelativeTime(rem.date, rem.completed) }}
+                                </div>
+                        } @else if (!rem.completed) {
+                            <div class="relative-time-badge">
+                                {{ getRelativeTime(rem.date, rem.completed) }}
+                            </div>
+                        }
+
+                        <!-- Early Alert Setting indicator -->
+                        @if (rem.alertBeforeUnit && rem.alertBeforeUnit !== 'none' && !rem.completed) {
+                            <div class="alert-setup-badge" [class.alert-active]="isAlertActive(rem)" [title]="getAlertDescription(rem)">
+                                @if (isAlertActive(rem)) {
+                                    <i class="fa-solid fa-bell fa-shake"></i>
+                                } @else {
+                                    <i class="fa-regular fa-bell"></i>
+                                }
+                                Preavviso: {{ rem.alertBeforeValue }} {{ rem.alertBeforeUnit === 'minutes' ? 'min' : rem.alertBeforeUnit === 'hours' ? 'ore' : 'giorni' }}
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @empty {
+                <div class="no-reminders-card">
+                    <div class="empty-state-icon">
+                        <i class="fa-solid fa-clipboard"></i>
+                    </div>
+                    <h3>Nessun promemoria trovato</h3>
+                    <p>Non ci sono promemoria in questa sezione. Crea il tuo primo promemoria premendo il pulsante "+ Nuovo Promemoria".</p>
+                    <button class="btn btn-outline" (click)="openModal()">Crea ora</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Creation/Editing Modal -->
+    @if (isModalOpen) {
+        <div class="modal-overlay" (click)="closeModal()">
+            <div class="modal-card" (click)="$event.stopPropagation()">
+                <div class="modal-header">
+                    <h3>{{ isEditMode ? 'Modifica Promemoria' : 'Nuovo Promemoria' }}</h3>
+                    <button class="close-btn" (click)="closeModal()">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form (submit)="saveReminder()">
+                        <!-- Description/What -->
+                        <div class="form-field">
+                            <label for="reminderText">Cosa ricordare *</label>
+                            <textarea id="reminderText" 
+                                      [(ngModel)]="newReminderText" 
+                                      name="text" 
+                                      rows="4" 
+                                      placeholder="Scrivi qui il promemoria... (es. Scadenza bollo Fiat 500)" 
+                                      required></textarea>
+                        </div>
+
+                        <!-- Due Date/When -->
+                        <div class="form-field">
+                            <label for="reminderDate">Quando *</label>
+                            <input type="datetime-local" 
+                                   id="reminderDate" 
+                                   [(ngModel)]="newReminderDate" 
+                                   name="date" 
+                                   required />
+                        </div>
+
+                        <!-- Recurrence/Ripetizione -->
+                        <div class="form-field">
+                            <label for="reminderRepeat">Ripetizione (Stile Sveglia)</label>
+                            <select id="reminderRepeat" [(ngModel)]="newReminderRepeat" name="repeat" style="width: 100%; padding: 0.75rem; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; background-color: white;">
+                                <option value="none">Nessuna</option>
+                                <option value="hourly">Ogni ora</option>
+                                <option value="every_2_hours">Ogni 2 ore</option>
+                                <option value="every_4_hours">Ogni 4 ore</option>
+                                <option value="every_8_hours">Ogni 8 ore</option>
+                                <option value="every_12_hours">Ogni 12 ore</option>
+                                <option value="daily">Ogni giorno (Giornaliera)</option>
+                                <option value="weekly">Ogni settimana (Settimanale)</option>
+                                <option value="monthly">Ogni mese (Mensile)</option>
+                                <option value="yearly">Ogni anno (Annuale)</option>
+                            </select>
+                        </div>
+
+                        <!-- Early Alert (Avviso Anticipato) Configuration -->
+                        <div class="form-field checkbox-field">
+                            <label class="toggle-container">
+                                <input type="checkbox" [(ngModel)]="hasAlert" name="hasAlert" />
+                                <span class="checkmark"></span>
+                                Attiva Avviso Anticipato (Alert)
+                            </label>
+                        </div>
+
+                        @if (hasAlert) {
+                            <div class="form-row alert-config-row">
+                                <div class="form-field col-6">
+                                    <label for="alertValue">Preavviso</label>
+                                    <input type="number" 
+                                           id="alertValue" 
+                                           [(ngModel)]="alertValue" 
+                                           name="alertValue" 
+                                           min="1" 
+                                           required />
+                                </div>
+                                <div class="form-field col-6">
+                                    <label for="alertUnit">Unità</label>
+                                    <select id="alertUnit" [(ngModel)]="alertUnit" name="alertUnit">
+                                        <option value="minutes">Minuti prima</option>
+                                        <option value="hours">Ore prima</option>
+                                        <option value="days">Giorni prima</option>
+                                    </select>
+                                </div>
+                            </div>
+                        }
+
+                        <!-- Post-it Color Picker -->
+                        <div class="form-field">
+                            <label>Scegli un Colore</label>
+                            <div class="color-picker-grid">
+                                @for (color of colorOptions; track color.hex) {
+                                    <button type="button" 
+                                            class="color-btn" 
+                                            [ngStyle]="{ 'background-color': color.hex, 'border-color': newReminderColor === color.hex ? '#0f172a' : 'transparent' }"
+                                            [class.selected]="newReminderColor === color.hex"
+                                            (click)="newReminderColor = color.hex"
+                                            [title]="color.name">
+                                        @if (newReminderColor === color.hex) {
+                                            <i class="fa-solid fa-check" [style.color]="color.textHex"></i>
+                                        }
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="form-actions mt-4">
+                            <button type="button" class="btn btn-outline" (click)="closeModal()">Annulla</button>
+                            <button type="submit" class="btn btn-accent">{{ isEditMode ? 'Salva Modifiche' : 'Crea Promemoria' }}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

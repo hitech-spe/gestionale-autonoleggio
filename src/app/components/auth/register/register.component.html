@@ -1,0 +1,84 @@
+<div class="auth-wrapper">
+  <div class="auth-container">
+    <div class="auth-left">
+      <!-- Back to site -->
+      <a routerLink="/" class="back-link">
+        <span>←</span> Torna al sito web
+      </a>
+
+      <div class="auth-header">
+        <div class="logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="logo-icon">
+            <path d="M19 15v1a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-1H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1zm-1-8h-3v4h3V7zm-5 0H6v4h7V7z" />
+          </svg>
+          <span class="logo-text">Rent<span class="text-gradient">Flow</span></span>
+        </div>
+        <h1>Registra la tua Azienda</h1>
+        <p>Inizia oggi la tua prova gratuita di 14 giorni, senza impegno.</p>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="auth-form">
+        <!-- Error message -->
+        <div class="status-message error" *ngIf="error">
+          {{ error }}
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">Nome titolare</label>
+            <input type="text" id="firstName" name="firstName" [(ngModel)]="firstName" required placeholder="Mario">
+          </div>
+          <div class="form-group">
+            <label for="lastName">Cognome titolare</label>
+            <input type="text" id="lastName" name="lastName" [(ngModel)]="lastName" required placeholder="Rossi">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="companyName">Nome Azienda Autonoleggio</label>
+          <input type="text" id="companyName" name="companyName" [(ngModel)]="companyName" required placeholder="Rossi Autonoleggio S.r.l.">
+        </div>
+
+        <div class="form-group">
+          <label for="email">Indirizzo Email Aziendale</label>
+          <input type="email" id="email" name="email" [(ngModel)]="email" required placeholder="direzione&#64;azienda.it" autocomplete="email">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="selectedPlan">Piano Scelto</label>
+            <select id="selectedPlan" name="selectedPlan" [(ngModel)]="selectedPlan">
+              <option value="starter">Starter (€29/mese)</option>
+              <option value="pro">Pro (€59/mese)</option>
+              <option value="enterprise">Enterprise (€129/mese)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="password">Scegli una Password</label>
+            <input type="password" id="password" name="password" [(ngModel)]="password" required placeholder="Almeno 6 caratteri" autocomplete="new-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-accent w-100" [disabled]="isLoading">
+          {{ isLoading ? 'Creazione Account...' : 'Attiva Prova Gratuita' }}
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Hai già un account registrato? <a routerLink="/auth/login">Accedi qui</a>
+      </div>
+    </div>
+
+    <!-- Decorative Sidebar for Premium Feeling -->
+    <div class="auth-right">
+      <div class="promo-content">
+        <h2>Il software ideale per ogni taglia di flotta.</h2>
+        <p>Sia che tu stia partendo con sole 2 vetture o debba gestire un parco furgoni esteso, i nostri piani scalabili crescono con il tuo business.</p>
+        <div class="promo-quote">
+          <p>"Un software incredibilmente pulito, veloce e progettato su misura per il mercato dell'autonoleggio italiano."</p>
+          <span>— Alessandro B., Titolare di AutoSmart (by HI-TECH srls)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

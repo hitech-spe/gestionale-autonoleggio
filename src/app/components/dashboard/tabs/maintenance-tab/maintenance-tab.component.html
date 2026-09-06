@@ -1,0 +1,281 @@
+<div class="panel">
+    <div class="panel-header">
+        <h2>Manutenzioni Effettuate</h2>
+        <div class="panel-actions">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" [(ngModel)]="searchTerm" placeholder="Cerca targa o descrizione...">
+            </div>
+            <div class="sort-box">
+                <i class="fa-solid fa-sort"></i>
+                <select [(ngModel)]="sortOrder" class="sort-select">
+                    <option value="newest">Più recenti</option>
+                    <option value="oldest">Meno recenti</option>
+                    <option value="date">Data Intervento</option>
+                </select>
+            </div>
+            <button class="btn btn-accent" (click)="openModal()">+ Aggiungi</button>
+        </div>
+    </div>
+    <div class="table-responsive shadow-sm hide-mobile">
+        <table class="modern-table">
+            <thead>
+                <tr>
+                    <th>Veicolo</th>
+                    <th>Data</th>
+                    <th>Descrizione</th>
+                    <th>Officina</th>
+                    <th>Km</th>
+                    <th>Costo</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (m of getFiltered(maintenances$ | async); track m.id) {
+                    <tr>
+                        <td class="fw-bold">{{ getVehicleDisplayName(m.vehicleId) || m.vehiclePlate }}</td>
+                        <td>{{ formatDate(m.date) }}</td>
+                        <td>{{ m.description }}</td>
+                        <td>{{ m.workshop || '-' }}</td>
+                        <td>{{ m.km }}</td>
+                        <td>{{ m.cost | currency:'EUR' }}</td>
+                        <td>
+                            <div class="d-flex gap-3" style="align-items: center;">
+                                <button class="btn-edit" (click)="openJobSheet(m.vehicleId)" title="Foglio Lavori Veicolo" style="color: #28a745; background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0;">
+                                    <i class="fa-solid fa-file-invoice"></i>
+                                </button>
+                                <button class="btn-edit" (click)="openModal(m)" title="Modifica Manutenzione">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn-delete" (click)="deleteMaintenance(m.id!)" title="Elimina Manutenzione">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                } @empty {
+                    <tr><td colspan="6" class="text-center py-4">Nessuna manutenzione trovata.</td></tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- Layout Mobile: Card -->
+    <div class="mobile-cards show-mobile">
+        @for (m of getFiltered(maintenances$ | async); track m.id) {
+            <div class="rental-card-mobile">
+                <div class="card-header">
+                    <span class="customer-name">{{ getVehicleDisplayName(m.vehicleId) || m.vehiclePlate }}</span>
+                    <div class="d-flex gap-3" style="align-items: center;">
+                        <button class="btn-edit" (click)="openJobSheet(m.vehicleId)" title="Foglio Lavori Veicolo" style="color: #28a745; background: none; border: none; cursor: pointer; font-size: 1.1rem; padding: 0;">
+                            <i class="fa-solid fa-file-invoice"></i>
+                        </button>
+                        <button class="btn-edit" (click)="openModal(m)" title="Modifica Manutenzione">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn-delete" (click)="deleteMaintenance(m.id!)" title="Elimina Manutenzione">
+                            <i class="fa-regular fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="info-row">
+                        <i class="fa-solid fa-calendar-day" title="Data"></i>
+                        <span>{{ formatDate(m.date) }}</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-wrench" title="Descrizione"></i>
+                        <span>{{ m.description }}</span>
+                    </div>
+                    @if (m.workshop) {
+                        <div class="info-row">
+                            <i class="fa-solid fa-warehouse" title="Officina"></i>
+                            <span>{{ m.workshop }}</span>
+                        </div>
+                    }
+                    <div class="info-row">
+                        <i class="fa-solid fa-gauge-high" title="Km"></i>
+                        <span>{{ m.km }} km</span>
+                    </div>
+                    <div class="info-row">
+                        <i class="fa-solid fa-euro-sign" title="Costo"></i>
+                        <span class="fw-bold text-success">{{ m.cost | currency:'EUR' }}</span>
+                    </div>
+                </div>
+            </div>
+        } @empty {
+            <div class="text-center py-4">Nessuna manutenzione trovata.</div>
+        }
+    </div>
+</div>
+
+@if (isModalOpen) {
+    <div class="modal-overlay">
+        <div class="modal-card">
+            <h3>{{ isEditMode ? 'Modifica Manutenzione' : 'Nuova Manutenzione' }}</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Veicolo</label>
+                    <app-vehicle-select [(vehicleId)]="newMaintenance.vehicleId" [vehicles]="availableVehicles" placeholder="Cerca veicolo..."></app-vehicle-select>
+                    <input type="hidden" [(ngModel)]="newMaintenance.vehicleId" name="vehicleId" required />
+                </div>
+                <div class="form-group"><label>Data</label><input type="date" [(ngModel)]="newMaintenance.date"></div>
+                <div class="form-group"><label>Descrizione Intervento</label><input type="text" [(ngModel)]="newMaintenance.description"></div>
+                <div class="form-group"><label>Officina</label><input type="text" [(ngModel)]="newMaintenance.workshop" placeholder="Es. Officina Rossi"></div>
+                <div class="form-group"><label>Chilometraggio</label><input type="number" [(ngModel)]="newMaintenance.km"></div>
+                <div class="form-group"><label>Costo</label><input type="number" [(ngModel)]="newMaintenance.cost"></div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" (click)="closeModal()">Annulla</button>
+                <button class="btn btn-accent" (click)="saveMaintenance()">{{ isEditMode ? 'Aggiorna' : 'Salva' }}</button>
+            </div>
+        </div>
+    </div>
+}
+
+@if (isJobSheetOpen && selectedVehicleForSheet) {
+    <div class="modal-overlay">
+        <div class="modal-card" style="max-width: 650px; background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+            <div id="printable-job-sheet" style="font-family: inherit; color: #333;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #d4af37; padding-bottom: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <h2 style="margin: 0; color: #d4af37; font-size: 1.5rem; font-weight: bold; text-transform: uppercase;">Dolce Vita</h2>
+                        <span style="font-size: 0.75rem; color: #777; display: block;">Servizio Gestione Flotta</span>
+                    </div>
+                    <div style="text-align: right;">
+                        <h3 style="margin: 0; font-size: 1.1rem; text-transform: uppercase; color: #444; font-weight: bold;">FOGLIO LAVORI VEICOLO</h3>
+                        <span style="font-size: 0.72rem; color: #888; display: block;">Data Stampa: {{ todayDate | date:'dd/MM/yyyy HH:mm' }}</span>
+                    </div>
+                </div>
+
+                <div style="background: #fdfaf4; border: 1px solid #f5ebd0; border-radius: 6px; padding: 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 15px;">
+                    <div>
+                        <span style="font-size: 0.7rem; text-transform: uppercase; color: #888; font-weight: 600; display: block;">Marca e Modello:</span>
+                        <strong style="font-size: 1rem; color: #333;">{{ selectedVehicleForSheet.brand }} {{ selectedVehicleForSheet.model }}</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.7rem; text-transform: uppercase; color: #888; font-weight: 600; display: block;">Targa:</span>
+                        <strong style="font-size: 1rem; color: #333; background: #e9ecef; padding: 1px 5px; border-radius: 4px; font-family: monospace;">{{ selectedVehicleForSheet.plate }}</strong>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.7rem; text-transform: uppercase; color: #888; font-weight: 600; display: block;">Categoria:</span>
+                        <span style="font-size: 0.85rem; color: #555; font-weight: 500;">{{ selectedVehicleForSheet.category }}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.7rem; text-transform: uppercase; color: #888; font-weight: 600; display: block;">Sede Attuale:</span>
+                        <span style="font-size: 0.85rem; color: #555; font-weight: 500;">{{ selectedVehicleForSheet.location }}</span>
+                    </div>
+                </div>
+
+                <h4 style="font-size: 0.95rem; color: #444; margin: 0 0 8px 0; border-bottom: 1px solid #eee; padding-bottom: 4px; font-weight: bold;">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> Registro Storico Interventi
+                </h4>
+
+                @if (sheetMaintenances.length === 0) {
+                    <div style="background: #fafafa; border: 1px dashed #ccc; border-radius: 6px; padding: 1.5rem; text-align: center; color: #888; font-size: 0.8rem; margin-bottom: 1rem;">
+                        Nessun intervento registrato nella scheda tecnica di questo veicolo.
+                    </div>
+                } @else {
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-bottom: 1rem;">
+                        <thead>
+                            <tr style="background: #f4f4f4; border-bottom: 2px solid #ddd;">
+                                <th style="padding: 6px 8px; text-align: left; font-weight: 600; color: #555;">Data</th>
+                                <th style="padding: 6px 8px; text-align: left; font-weight: 600; color: #555;">Descrizione Intervento</th>
+                                <th style="padding: 6px 8px; text-align: left; font-weight: 600; color: #555;">Officina</th>
+                                <th style="padding: 6px 8px; text-align: left; font-weight: 600; color: #555;">KM</th>
+                                <th style="padding: 6px 8px; text-align: right; font-weight: 600; color: #555;">Costo</th>
+                                <th style="padding: 6px 8px; text-align: left;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (m of sheetMaintenances; track m.id) {
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td style="padding: 6px 8px; text-align: left; color: #666;">{{ formatDate(m.date) }}</td>
+                                    <td style="padding: 6px 8px; text-align: left; font-weight: 500; color: #333;">
+                                        @if (editingJobId === m.id) {
+                                            <input type="text" [(ngModel)]="tempEditingJob.description" style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem;">
+                                        } @else {
+                                            {{ m.description }}
+                                        }
+                                    </td>
+                                    <td style="padding: 6px 8px; text-align: left; color: #333;">
+                                        @if (editingJobId === m.id) {
+                                            <input type="text" [(ngModel)]="tempEditingJob.workshop" style="width: 100%; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem;">
+                                        } @else {
+                                            {{ m.workshop || '-' }}
+                                        }
+                                    </td>
+                                    <td style="padding: 6px 8px; text-align: left; color: #666;">
+                                        @if (editingJobId === m.id) {
+                                            <input type="number" [(ngModel)]="tempEditingJob.km" style="width: 70px; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem;">
+                                        } @else {
+                                            {{ m.km || '-' }}
+                                        }
+                                    </td>
+                                    <td style="padding: 6px 8px; text-align: right; font-weight: bold; color: #d4af37;">
+                                        @if (editingJobId === m.id) {
+                                            <input type="number" [(ngModel)]="tempEditingJob.cost" style="width: 70px; padding: 4px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem;">
+                                        } @else {
+                                            {{ m.cost ? (m.cost | currency:'EUR') : '-' }}
+                                        }
+                                    </td>
+                                    <td style="padding: 6px 8px; text-align: right; white-space: nowrap;">
+                                        @if (editingJobId === m.id) {
+                                            <button type="button" (click)="saveEditedJob()" style="background: none; border: none; color: #28a745; cursor: pointer; font-size: 0.85rem; padding: 0 4px;" title="Salva">
+                                                <i class="fa-solid fa-check"></i>
+                                            </button>
+                                            <button type="button" (click)="cancelEditJob()" style="background: none; border: none; color: #6c757d; cursor: pointer; font-size: 0.85rem; padding: 0 4px;" title="Annulla">
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </button>
+                                        } @else {
+                                            <button type="button" (click)="startEditJob(m)" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 0.85rem; padding: 0 4px;" title="Modifica">
+                                                <i class="fa-regular fa-pen-to-square"></i>
+                                            </button>
+                                            <button type="button" (click)="deleteMaintenance(m.id!)" style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 0.85rem; padding: 0 4px;" title="Elimina">
+                                                <i class="fa-regular fa-trash-can"></i>
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            <tr style="background: #fafafa; border-top: 2px solid #ddd; font-weight: bold; font-size: 0.82rem;">
+                                <td colspan="3" style="padding: 8px; text-align: left;">Totale Interventi: {{ sheetMaintenances.length }}</td>
+                                <td style="padding: 8px; text-align: left;">KM: {{ getMaxKm() }}</td>
+                                <td style="padding: 8px; text-align: right; color: #d4af37; font-size: 0.85rem;">{{ getSheetTotalCost() | currency:'EUR' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+
+                <div style="display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px dashed #ddd; font-size: 0.75rem; color: #777;">
+                    <div style="text-align: left; width: 180px;">
+                        <span style="display: block; border-bottom: 1px solid #bbb; height: 25px; margin-bottom: 3px;"></span>
+                        <span>Firma Officina</span>
+                    </div>
+                    <div style="text-align: right; width: 180px;">
+                        <span style="display: block; border-bottom: 1px solid #bbb; height: 25px; margin-bottom: 3px;"></span>
+                        <span>Firma Dolce Vita Noleggio</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 12px; border-radius: 6px; border: 1px solid #eee; margin-top: 15px; margin-bottom: 5px;">
+                <h5 style="margin: 0 0 8px 0; font-size: 0.8rem; color: #555; font-weight: bold;"><i class="fa-solid fa-plus-circle"></i> Aggiungi Nuova Lavorazione alla Scheda</h5>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                    <input type="text" [(ngModel)]="sheetInlineMaintenance.description" placeholder="Descrizione lavoro (es. Cambio gomme)" style="flex: 2; min-width: 150px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobDesc">
+                    <input type="text" [(ngModel)]="sheetInlineMaintenance.workshop" placeholder="Officina (es. Officina Rossi)" style="flex: 1; min-width: 110px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobWorkshop">
+                    <input type="date" [(ngModel)]="sheetInlineMaintenance.date" style="flex: 1; min-width: 110px; padding: 5px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobDate">
+                    <input type="number" [(ngModel)]="sheetInlineMaintenance.km" placeholder="KM" style="width: 70px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobKm">
+                    <input type="number" [(ngModel)]="sheetInlineMaintenance.cost" placeholder="Costo" style="width: 70px; padding: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.8rem; outline: none; background: white;" name="jobCost">
+                    <button type="button" class="btn btn-accent" (click)="addJobFromSheet()" style="padding: 6px 12px; font-size: 0.8rem; cursor: pointer;">Aggiungi</button>
+                </div>
+            </div>
+
+            <div class="modal-actions" style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 8px;">
+                <button class="btn btn-outline" (click)="closeJobSheet()" style="padding: 0.4rem 1rem; font-size: 0.85rem;">Chiudi</button>
+                <button class="btn btn-accent" (click)="printJobSheet()" style="padding: 0.4rem 1rem; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+                    <i class="fa-solid fa-print"></i> Stampa
+                </button>
+            </div>
+        </div>
+    </div>
+}
