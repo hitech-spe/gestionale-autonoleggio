@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import * as AOS from 'aos';
 
 @Component({
   selector: 'app-landing-page',
@@ -10,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
-export class LandingPageComponent {
+export class LandingPageComponent implements OnInit {
   contactData = {
     name: '',
     email: '',
@@ -19,6 +20,15 @@ export class LandingPageComponent {
   };
 
   formSubmitted = false;
+
+  ngOnInit() {
+    AOS.init({
+      duration: 1000,
+      easing: 'ease-out-quart',
+      once: true,
+      offset: 120
+    });
+  }
 
   faqs = [
     {

@@ -1,5 +1,5 @@
 [build]
-  publish = "dist/browser"
+  publish = "dist/gestionale-autonoleggio/browser"
   command = "npm run build"
 
 [[redirects]]
