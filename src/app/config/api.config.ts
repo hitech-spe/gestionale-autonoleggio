@@ -5,7 +5,7 @@
  */
 export const API_CONFIG = {
   localUrl: 'http://localhost:8080',
-  productionUrl: 'https://dolcevita-core.onrender.com', // Change this in production
+  productionUrl: 'https://rentsmart-core.onrender.com', // Change this in production
 
   get baseUrl(): string {
     const override = typeof window !== 'undefined' ? localStorage.getItem('API_BASE_URL') : null;

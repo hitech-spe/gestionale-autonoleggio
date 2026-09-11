@@ -329,33 +329,49 @@
 .btn-primary, .btn-secondary, .btn-danger, .btn-utility {
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .btn-primary {
-  background: #d4af37;
-  &:hover { background: #b8962d; }
+  background: linear-gradient(180deg, #d4af37 0%, #b8962d 100%);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  &:hover { background: linear-gradient(180deg, #dfba46 0%, #a48123 100%); }
 }
 
 .btn-secondary {
-  background: #444;
-  &:hover { background: #333; }
+  background: linear-gradient(180deg, #475569 0%, #334155 100%);
+  border: 1px solid rgba(71, 85, 105, 0.2);
+  &:hover { background: linear-gradient(180deg, #56677a 0%, #293543 100%); }
 }
 
 .btn-danger {
-  background: #dc3545;
-  &:hover { background: #bd2130; }
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  &:hover { background: linear-gradient(180deg, #f87171 0%, #b91c1c 100%); }
 }
 
 .btn-utility {
-  background: #333;
-  font-size: 0.85rem;
-  border-radius: 5px;
-  font-weight: normal;
-  &:hover { background: #555; }
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid rgba(30, 41, 59, 0.2);
+  &:hover { background: linear-gradient(180deg, #334155 0%, #020617 100%); }
 }
 
 .modal-overlay {
@@ -516,61 +532,71 @@
 
 .calendar-scroll {
   overflow: auto;
-  max-height: 65vh;
-  border: 1px solid #eee;
-  border-radius: 8px;
+  max-height: 70vh;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   -webkit-overflow-scrolling: touch;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
 }
 
 .calendar-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.82rem;
 
   th, td {
-    border: 1px solid #eee;
-    padding: 0.3rem 0.2rem;
+    border-bottom: 1px solid #f1f5f9;
+    border-right: 1px solid #f1f5f9;
+    padding: 0.35rem 0.25rem;
     text-align: center;
-    min-width: 32px;
-    height: 38px;
+    min-width: 36px;
+    height: 42px;
     box-sizing: border-box;
 
     @media (max-width: 768px) {
       padding: 0.2rem 0.1rem;
-      min-width: 26px;
-      height: 34px;
+      min-width: 28px;
+      height: 36px;
     }
   }
 
   td {
     cursor: pointer;
     user-select: none;
+    transition: background-color 0.15s ease;
     
     &:hover {
-      background-color: #fafafa;
+      background-color: #f8fafc;
     }
   }
 
   th {
     position: sticky;
     top: 0;
-    background: #f8f9fa;
+    background: #f8fafc;
+    color: #1e293b;
     z-index: 20;
     font-weight: 600;
-    box-shadow: 0 1px 0 #eee;
+    border-bottom: 2px solid #e2e8f0;
+    box-shadow: 0 1px 0 #e2e8f0;
 
     .day-num {
-      font-size: 0.85rem;
+      font-size: 0.88rem;
+      font-weight: 700;
     }
     .day-name {
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       text-transform: uppercase;
-      color: #777;
+      color: #64748b;
+      letter-spacing: 0.05em;
+      margin-top: 2px;
     }
     
     &.is-today {
-        background: #e3f2fd;
-        color: #1976d2;
+        background: #eff6ff;
+        color: #2563eb;
+        border-bottom-color: #3b82f6;
     }
   }
 
@@ -579,27 +605,29 @@
     left: 0;
     top: 0;
     z-index: 30;
-    background: #f8f9fa;
+    background: #f8fafc;
+    border-right: 2px solid #e2e8f0;
   }
 
   td.is-today {
-      background: #f1f8ff;
+      background: #f8fafc;
   }
 
   tbody {
     tr.is-selected-row {
-      background-color: rgba(212, 175, 55, 0.05) !important;
+      background-color: rgba(212, 175, 55, 0.03) !important;
       
       .sticky-col {
-        background-color: #fffbf0 !important;
+        background-color: #fffdf5 !important;
       }
     }
 
     tr td.is-selected-cell {
-      box-shadow: inset 0 0 0 3px #d4af37 !important;
+      outline: 2px solid #d4af37 !important;
+      outline-offset: -2px;
       z-index: 15 !important;
       position: relative !important;
-      background-color: rgba(212, 175, 55, 0.2) !important;
+      background-color: rgba(212, 175, 55, 0.15) !important;
     }
   }
 
@@ -608,40 +636,43 @@
     left: 0;
     background: white;
     z-index: 10;
-    min-width: 125px;
-    max-width: 125px;
+    min-width: 145px;
+    max-width: 145px;
     text-align: left;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    border-right: 2px solid #e2e8f0;
+    box-shadow: 4px 0 8px rgba(15, 23, 42, 0.03);
     overflow: hidden;
 
     @media (max-width: 768px) {
-      min-width: 95px;
-      max-width: 95px;
+      min-width: 105px;
+      max-width: 105px;
       font-size: 0.75rem;
     }
   }
 
   .vehicle-info {
-    padding: 0.2rem !important;
+    padding: 0.4rem !important;
   }
 }
 
 .rental-bar {
-  height: 20px;
+  height: 24px;
   width: 100%;
-  border-radius: 4px;
+  border-radius: 9999px;
   cursor: pointer;
-  transition: opacity 0.2s;
-  display: flex;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
+  padding: 0 8px;
   overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
 
   &:hover {
-    opacity: 0.8;
+    transform: scale(1.03);
+    box-shadow: 0 4px 8px rgba(15, 23, 42, 0.12);
+    opacity: 0.95;
   }
-
 }
 
 .loc-massafra {
@@ -665,15 +696,15 @@
 }
 
 .maintenance-gray-bg {
-  background-color: rgba(158, 158, 158, 0.2) !important;
+  background-color: rgba(100, 116, 139, 0.15) !important;
 }
 
 .sold-red-bg {
-  background-color: rgba(220, 53, 69, 0.15) !important;
+  background-color: rgba(15, 23, 42, 0.15) !important;
 }
 
 .sold-bar, .box.sold-red {
-  background-color: #dc3545 !important;
+  background-color: #0f172a !important;
 }
 
 .service-rental-purple, .box.service-rental-purple {
@@ -682,30 +713,29 @@
 }
 
 .rental-start-day, .box.rental-start-day {
-  background-color: #28a745 !important;
+  background-color: #10b981 !important;
   color: white !important;
 }
 
 .rental-end-day, .box.rental-end-day {
-  background-color: #dc3545 !important;
+  background-color: #ef4444 !important;
   color: white !important;
 }
 
 .rental-same-day, .box.rental-same-day {
-  background-color: #fd7e14 !important;
+  background-color: #f97316 !important;
   color: white !important;
 }
 
 .rental-day-label {
-  font-size: 0.52rem;
+  font-size: 0.58rem;
   font-weight: 700;
   color: white;
   pointer-events: none;
   text-align: center;
   width: 100%;
   display: block;
-  line-height: 16px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  line-height: 18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

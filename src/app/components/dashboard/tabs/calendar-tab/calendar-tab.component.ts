@@ -7,6 +7,7 @@ import { LoadingService } from '../../../../services/loading.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { VehicleSelectComponent } from "../../../../shared/vehicle-select/vehicle-select.component";
 import { CustomerSelectComponent } from "../../../../shared/customer-select/customer-select.component";
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   selector: 'app-calendar-tab',
@@ -20,6 +21,83 @@ export class CalendarTabComponent implements OnInit {
   
   private rentalService = inject(RentalService);
   private loadingService = inject(LoadingService);
+  private authService = inject(AuthService);
+
+  get locations(): string[] {
+    return this.authService.companyLocations;
+  }
+
+  // Premium dynamic hex-to-rgba converter for soft translucent cell background shading
+  getAlphaColor(hex: string, alpha: number): string {
+    if (!hex) return 'transparent';
+    hex = hex.replace('#', '');
+    let r = 0, g = 0, b = 0;
+    if (hex.length === 3) {
+      r = parseInt(hex.charAt(0) + hex.charAt(0), 16);
+      g = parseInt(hex.charAt(1) + hex.charAt(1), 16);
+      b = parseInt(hex.charAt(2) + hex.charAt(2), 16);
+    } else if (hex.length === 6) {
+      r = parseInt(hex.substring(0, 2), 16);
+      g = parseInt(hex.substring(2, 4), 16);
+      b = parseInt(hex.substring(4, 6), 16);
+    } else {
+      return hex;
+    }
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
+
+  // Fetch fully customized calendar feature colors from the active company profile with defaults fallback
+  getCalendarColor(type: 'maintenance' | 'service' | 'start' | 'end' | 'same' | 'sold'): string {
+    const comp = this.authService.getCompanyProfile() as any;
+    if (comp) {
+      if (type === 'maintenance' && comp.colorMaintenance) return comp.colorMaintenance;
+      if (type === 'service' && comp.colorService) return comp.colorService;
+      if (type === 'start' && comp.colorStart) return comp.colorStart;
+      if (type === 'end' && comp.colorEnd) return comp.colorEnd;
+      if (type === 'same' && comp.colorSameDay) return comp.colorSameDay;
+      if (type === 'sold' && comp.colorSold) return comp.colorSold;
+    }
+    
+    const defaults = {
+      maintenance: '#64748b',
+      service: '#a855f7',
+      start: '#10b981',
+      end: '#ef4444',
+      same: '#f97316',
+      sold: '#0f172a'
+    };
+    return defaults[type];
+  }
+
+  // Generate beautiful, vibrant, unique colors automatically for any tenant custom locations list
+  getLocationColor(idx: number): string {
+    const colors = ['#3b82f6', '#ec4899', '#06b6d4', '#eab308', '#8b5cf6', '#14b8a6', '#f43f5e'];
+    return colors[idx % colors.length];
+  }
+
+  getVehicleLocationColor(vehicle: Vehicle, date: Date): string {
+    const loc = this.getVehicleLocationAtDate(vehicle, date);
+    if (!loc) return '#cbd5e1';
+    const idx = this.locations.indexOf(loc);
+    if (idx === -1) return '#cbd5e1';
+    return this.getLocationColor(idx);
+  }
+
+  getRentalBarColor(rental: any, day: Date, allRentals: any[] = []): string {
+    const barClass = this.getRentalBarClass(rental, day, allRentals);
+    if (barClass === 'rental-same-day') return this.getCalendarColor('same');
+    if (barClass === 'rental-start-day') return this.getCalendarColor('start');
+    if (barClass === 'rental-end-day') return this.getCalendarColor('end');
+    if (barClass === 'service-rental-purple') return this.getCalendarColor('service');
+    
+    // Check if it's a dynamic location bar
+    const loc = rental.location;
+    if (loc) {
+      const idx = this.locations.indexOf(loc);
+      if (idx !== -1) return this.getLocationColor(idx);
+    }
+    return this.getCalendarColor('start');
+  }
   
   vehiclesData$!: Observable<{
     vehicle: Vehicle, 
@@ -59,9 +137,9 @@ export class CalendarTabComponent implements OnInit {
   editingRentalId?: string;
 
   // Form data
-  newRental: any = { location: 'Mottola', returnLocation: 'Mottola', status: 'Prenotato', isServiceRental: false };
+  newRental: any = { location: '', returnLocation: '', status: 'Prenotato', isServiceRental: false };
   newMaintenance: any = { vehicleId: '', startDate: '', endDate: '', notes: '' };
-  newTransfer: any = { vehicleId: '', startDate: '', endDate: '', location: 'Mottola', notes: '' };
+  newTransfer: any = { vehicleId: '', startDate: '', endDate: '', location: '', notes: '' };
   newSale: any = { vehicleId: '', soldDate: '' };
 
   isQuickCustomer = false;
@@ -836,8 +914,8 @@ export class CalendarTabComponent implements OnInit {
       this.newRental = { 
         vehicleId: this.selectedVehicleId || '',
         customerId: '',
-        location: 'Mottola', 
-        returnLocation: 'Mottola', 
+        location: this.locations[0] || '', 
+        returnLocation: this.locations[0] || '', 
         status: 'Prenotato', 
         isServiceRental: false,
         startDate: dateStr,
@@ -868,7 +946,7 @@ export class CalendarTabComponent implements OnInit {
       vehicleId: defaultVeh, 
       startDate: dateStr, 
       endDate: dateStr, 
-      location: 'Mottola', 
+      location: this.locations[0] || '', 
       notes: '' 
     };
     this.isTransferModalOpen = true;
@@ -1175,6 +1253,13 @@ export class CalendarTabComponent implements OnInit {
     this.companySearchTerm = '';
     this.isCompanyDropdownOpen = false;
 
+    const start = typeof rental.startDate?.toDate === 'function' ? rental.startDate.toDate() : new Date(rental.startDate as any);
+    const end = typeof rental.endDate?.toDate === 'function' ? rental.endDate.toDate() : new Date(rental.endDate as any);
+    const diffTime = Math.abs(end.getTime() - start.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+    const dailyPrice = this.contractVehicle?.dailyPrice || 0;
+    const calculatedBaseRate = diffDays * dailyPrice;
+
     this.contractDetails = {
       contractNumber: '...', // will be filled by observable subscription
       kmOut: undefined, // km uscita non valorizzato inizialmente
@@ -1199,12 +1284,13 @@ export class CalendarTabComponent implements OnInit {
       driverLicenseCountry: 'Italia',
       additionalDriver1Id: '',
       additionalDriver2Id: '',
-      baseRate: 0,
-      extraKmPrice: 0,
+      baseRate: calculatedBaseRate,
+      extraKmPrice: 0.24,
       advance: 0,
       fuelLevel: '12/12',
       franchise: 1350,
-      vehicleFuelType: this.contractVehicle?.fuelType || 'Diesel'
+      vehicleFuelType: this.contractVehicle?.fuelType || 'Diesel',
+      paymentMethod: ''
     };
 
     // Calculate sequential numeric contract number automatically

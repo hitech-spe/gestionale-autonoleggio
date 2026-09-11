@@ -61,7 +61,7 @@ describe('ContractsTabComponent', () => {
         contractNumber: '22345',
         rentalId: 'r2',
         customerId: 'c2',
-        customerName: 'La Dolce Vita S.r.l.',
+        customerName: 'RentSmart S.r.l.',
         vehicleId: 'v2',
         vehiclePlate: 'Alfa Romeo (AA111BB)',
         date: {} as any,

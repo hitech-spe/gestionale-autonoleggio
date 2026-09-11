@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { LoadingService } from '../../../services/loading.service';
 import * as AOS from 'aos';
 
 @Component({
@@ -12,6 +13,17 @@ import * as AOS from 'aos';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private loadingService = inject(LoadingService);
+
+  isScrolled = false;
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50;
+  }
+
   contactData = {
     name: '',
     email: '',
@@ -21,12 +33,40 @@ export class LandingPageComponent implements OnInit {
 
   formSubmitted = false;
 
+  activePlaygroundTab = 'timeline';
+  bookingStatus = 'attivo';
+  contractStep = 'idle'; // 'idle' | 'generating' | 'ready'
+  pecStep = 'idle'; // 'idle' | 'scanning' | 'ready'
+
+  startContractDemo() {
+    this.contractStep = 'generating';
+    setTimeout(() => {
+      this.contractStep = 'ready';
+    }, 1500);
+  }
+
+  startPecDemo() {
+    this.pecStep = 'scanning';
+    setTimeout(() => {
+      this.pecStep = 'ready';
+    }, 1500);
+  }
+
   ngOnInit() {
     AOS.init({
       duration: 1000,
       easing: 'ease-out-quart',
       once: true,
       offset: 120
+    });
+
+    // Intercepts Stripe redirection queries on the landing page and forwards the user directly to their active SaaS panel.
+    this.route.queryParams.subscribe(params => {
+      if (params['payment'] === 'success') {
+        this.router.navigate(['/app/dashboard'], { queryParams: { payment: 'success' } });
+      } else if (params['payment'] === 'cancel') {
+        this.router.navigate(['/app/dashboard'], { queryParams: { payment: 'cancel' } });
+      }
     });
   }
 
@@ -62,23 +102,45 @@ export class LandingPageComponent implements OnInit {
     this.faqs[index].open = !this.faqs[index].open;
   }
 
-  onSubmitContact() {
-    if (this.contactData.name && this.contactData.email && this.contactData.message) {
-      // In a real application, we would send this to EmailJS or an API endpoint.
-      console.log('Messaggio di contatto inviato:', this.contactData);
-      this.formSubmitted = true;
-      
-      // Reset form
-      this.contactData = {
-        name: '',
-        email: '',
-        company: '',
-        message: ''
-      };
+  onSubmitContact(event: Event) {
+    event.preventDefault();
 
-      setTimeout(() => {
-        this.formSubmitted = false;
-      }, 5000);
+    if (this.contactData.name && this.contactData.email && this.contactData.message) {
+      this.loadingService.show();
+
+      const body = new URLSearchParams();
+      body.set('form-name', 'contact');
+      body.set('name', this.contactData.name);
+      body.set('email', this.contactData.email);
+      body.set('company', this.contactData.company || '');
+      body.set('message', this.contactData.message);
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
+      })
+      .then(() => {
+        this.loadingService.hide();
+        this.formSubmitted = true;
+        
+        // Reset form
+        this.contactData = {
+          name: '',
+          email: '',
+          company: '',
+          message: ''
+        };
+
+        setTimeout(() => {
+          this.formSubmitted = false;
+        }, 5000);
+      })
+      .catch(err => {
+        this.loadingService.hide();
+        console.error('Errore durante l\'invio del form Netlify:', err);
+        alert('Si è verificato un errore durante l\'invio della richiesta. Riprova più tardi.');
+      });
     }
   }
 }

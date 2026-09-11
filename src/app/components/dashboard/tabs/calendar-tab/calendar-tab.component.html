@@ -5,7 +5,7 @@
         Timeline Occupazione Veicoli
         @if (selectedVehicleId) {
           <span style="font-size: 0.78rem; background: #fff5e6; color: #b8962d; border: 1px solid #f4e8cb; padding: 4px 10px; border-radius: 4px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
-            <i class="fa-solid fa-circle-check" style="color: #28a745;"></i> 
+            <i class="fa-solid fa-circle-check" style="color: #28a745;"></i>
             Cella Selezionata (Usa Freccette)
           </span>
         }
@@ -79,7 +79,7 @@
       </div>
     </div>
 
-    <div class="keyboard-helper">
+    <!--div class="keyboard-helper">
       <span class="helper-title"><i class="fa-solid fa-keyboard"></i> Scorciatoie Excel (Tastiera):</span>
       <div class="helper-keys-list">
         <span class="helper-item"><span class="helper-key">Clic Cella</span> Seleziona</span>
@@ -92,18 +92,36 @@
         <span class="helper-item"><span class="helper-key">F</span> Cerca</span>
         <span class="helper-item"><span class="helper-key">ESC</span> Deseleziona / Chiudi</span>
       </div>
-    </div>
+    </div-->
 
-    <div class="legend">
-      <span class="legend-item"><span class="box loc-massafra"></span> Massafra</span>
-      <span class="legend-item"><span class="box loc-mottola"></span> Mottola</span>
-      <span class="legend-item"><span class="box loc-grottaglie"></span> Grottaglie</span>
-      <span class="legend-item"><span class="box maintenance-gray"></span> Manutenzione</span>
-      <span class="legend-item"><span class="box service-rental-purple"></span> Noleggio Servizi</span>
-      <span class="legend-item"><span class="box rental-start-day"></span> Inizio Noleggio (Verde)</span>
-      <span class="legend-item"><span class="box rental-end-day"></span> Rientro Noleggio (Rosso)</span>
-      <span class="legend-item"><span class="box rental-same-day"></span> In Giornata (Arancione)</span>
-      <span class="legend-item"><span class="box sold-red"></span> Venduto</span>
+    <div class="legend" style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; font-size: 0.85rem; color: #475569; background: #ffffff; padding: 1rem; border-radius: 12px; border: 1px solid #e2e8f0;">
+      <!-- Sedi reali aggiunte dall'utente -->
+      @for (loc of locations; track loc; let idx = $index) {
+        <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+          <span class="box" [style.background-color]="getLocationColor(idx)" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> 
+          Sede: {{ loc }}
+        </span>
+      }
+      
+      <!-- Funzioni operative con colori personalizzabili -->
+      <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('maintenance')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> Manutenzione
+      </span>
+      <!--span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('service')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> Noleggio Servizi
+      </span-->
+      <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('start')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> Inizio Noleggio
+      </span>
+      <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('end')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> Rientro Noleggio
+      </span>
+      <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('same')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> In Giornata
+      </span>
+      <span class="legend-item" style="display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;">
+        <span class="box" [style.background-color]="getCalendarColor('sold')" style="width: 14px; height: 14px; border-radius: 4px; display: inline-block;"></span> Venduto
+      </span>
     </div>
   </div>
 
@@ -132,7 +150,7 @@
           <span>{{ selectedDay | date:'EEEE dd MMMM yyyy' }}</span>
         </div>
         <div class="focus-actions-hint">
-          <span class="hint-badge">INVIO</span> Gestisci | 
+          <span class="hint-badge">INVIO</span> Gestisci |
           <span class="hint-badge">◀ ▲ ▼ ▶</span> Sposta
         </div>
       </div>
@@ -174,32 +192,30 @@
               @let status = getDayStatus(item, day.date);
               <td [class.is-today]="day.isToday"
                   [class.is-selected-cell]="isCellSelected(item, day)"
-                  [class.maintenance-gray-bg]="status.type === 'maintenance'"
-                  [class.sold-red-bg]="status.type === 'sold'"
-                  [class.loc-mottola-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Mottola'"
-                  [class.loc-massafra-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Massafra'"
-                  [class.loc-grottaglie-bg]="status.type === 'transfer' && getVehicleLocationAtDate(item, day.date) === 'Grottaglie'"
+                  [style.background-color]="status.type === 'maintenance' ? getAlphaColor(getCalendarColor('maintenance'), 0.15) : (status.type === 'sold' ? getAlphaColor(getCalendarColor('sold'), 0.15) : (status.type === 'transfer' ? getAlphaColor(getVehicleLocationColor(item.vehicle, day.date), 0.15) : ''))"
                   (click)="onCellClick(item, day.date, status)"
                   style="cursor: pointer;">
                 @if (status.type === 'rental') {
-                  <div class="calendar-bar rental-bar" 
-                       [ngClass]="getRentalBarClass(status.data, day.date, item.rentals)" 
+                  <div class="calendar-bar rental-bar"
+                       [style.background-color]="getRentalBarColor(status.data, day.date, item.rentals)"
                        [title]="getFormattedTooltip('rental', status.data)"
                        (click)="$event.stopPropagation(); selectCell(item, day.date); openRentalModal(status.data)">
                     <span class="rental-day-label">{{ getRentalDayLabel(status.data, day.date, item.rentals) }}</span>
                   </div>
                 } @else if (status.type === 'maintenance') {
-                  <div class="calendar-bar maintenance-bar" 
+                  <div class="calendar-bar maintenance-bar"
+                       [style.background-color]="getCalendarColor('maintenance')"
                        title="In Manutenzione"
                        [title]="getFormattedTooltip('maintenance', status.data)">
                   </div>
                 } @else if (status.type === 'transfer') {
-                  <div class="calendar-bar transfer-bar" 
-                       [ngClass]="getLocationClass(status.data.location)"
+                  <div class="calendar-bar transfer-bar"
+                       [style.background-color]="getLocationColor(locations.indexOf(status.data.location))"
                        [title]="getFormattedTooltip('transfer', status.data)">
                   </div>
                 } @else if (status.type === 'sold') {
                   <div class="calendar-bar sold-bar"
+                       [style.background-color]="getCalendarColor('sold')"
                        [title]="getFormattedTooltip('sold', status.data)">
                   </div>
                 } @else {
@@ -212,7 +228,8 @@
       </tbody>
     </table>
   </div>
-  
+</div>
+
   <!-- Modal Nuovo Noleggio (Copiata e adattata da rentals-tab) -->
   @if (isRentalModalOpen) {
     <div class="modal-overlay" (click)="closeModals()">
@@ -245,7 +262,7 @@
               </div>
               <div class="form-group">
                 <label>Indirizzo di Residenza</label>
-                <input type="text" [(ngModel)]="quickCustomer.address" name="quickAddress" placeholder="Es. Via Roma 10, Mottola">
+                <input type="text" [(ngModel)]="quickCustomer.address" name="quickAddress" placeholder="Es. Via Roma 10">
               </div>
             } @else {
               <div class="form-group">
@@ -256,17 +273,17 @@
             <div class="form-group">
               <label>Sede Ritiro</label>
               <select [(ngModel)]="newRental.location" name="location">
-                <option value="Mottola">Mottola</option>
-                <option value="Massafra">Massafra</option>
-                <option value="Grottaglie">Grottaglie</option>
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ loc }}</option>
+                }
               </select>
             </div>
             <div class="form-group">
               <label>Sede Rientro</label>
               <select [(ngModel)]="newRental.returnLocation" name="returnLocation">
-                <option value="Mottola">Mottola</option>
-                <option value="Massafra">Massafra</option>
-                <option value="Grottaglie">Grottaglie</option>
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ loc }}</option>
+                }
               </select>
             </div>
             <div class="form-group">
@@ -295,13 +312,13 @@
                 <option value="Sera">Sera</option>
               </select>
             </div>
-            <div class="form-group full-width">
+            <!--div class="form-group full-width">
               <label>Tipo Noleggio</label>
               <select [(ngModel)]="newRental.isServiceRental" name="isServiceRental">
                 <option [ngValue]="false">Noleggio Standard</option>
                 <option [ngValue]="true">Noleggio per Servizi (Caselle Viola)</option>
               </select>
-            </div>
+            </div-->
             <div class="form-group full-width">
               <label>Note</label>
               <textarea [(ngModel)]="newRental.notes" name="notes" rows="2"></textarea>
@@ -377,9 +394,9 @@
             <div class="form-group">
               <label>Nuova Sede (Temporanea)</label>
               <select [(ngModel)]="newTransfer.location" name="location" required>
-                <option value="Mottola">Mottola</option>
-                <option value="Massafra">Massafra</option>
-                <option value="Grottaglie">Grottaglie</option>
+                @for (loc of locations; track loc) {
+                  <option [value]="loc">{{ loc }}</option>
+                }
               </select>
             </div>
             <div class="form-group">
@@ -427,7 +444,7 @@
               <p class="warning-text">L'operazione annullerà la vendita di questo veicolo, riattivandolo sul mercato.</p>
             } @else {
               <div class="detail-row">
-                <strong>Tipo:</strong> 
+                <strong>Tipo:</strong>
                 <span>{{ selectedStatusForAction.type === 'rental' ? 'Noleggio' : (selectedStatusForAction.type === 'maintenance' ? 'Manutenzione' : 'Trasferimento') }}</span>
               </div>
               <div class="detail-row" *ngIf="selectedStatusForAction.type === 'rental'">
@@ -453,7 +470,7 @@
                   <h4 style="font-size: 0.95rem; color: #444; margin: 0 0 10px 0; display: flex; align-items: center; gap: 6px; font-weight: bold;">
                     <i class="fa-solid fa-file-invoice"></i> Scheda Lavori Manutenzione
                   </h4>
-                  
+
                   @let jobs = getAssociatedJobs();
                   @if (jobs.length === 0) {
                     <div style="background: #fdfdfd; border: 1px dashed #ddd; border-radius: 6px; padding: 15px; text-align: center; color: #777; font-size: 0.85rem;">
@@ -652,7 +669,7 @@
                     </button>
                   }
                 </div>
-                
+
                 @if (isCompanyDropdownOpen && filteredCompanies.length > 0) {
                   <div class="company-dropdown-panel">
                     @for (comp of filteredCompanies; track comp.id) {
@@ -711,7 +728,7 @@
               <div class="form-grid">
                 <div class="form-group">
                   <label>Luogo di Nascita *</label>
-                  <input type="text" [(ngModel)]="contractDetails.driverBirthPlace" name="driverBirthPlace" placeholder="Es. Mottola (TA)" required>
+                  <input type="text" [(ngModel)]="contractDetails.driverBirthPlace" name="driverBirthPlace" placeholder="Es. Roma (RM)" required>
                 </div>
                 <div class="form-group">
                   <label>Data di Nascita *</label>
@@ -731,7 +748,7 @@
                 </div>
                 <div class="form-group">
                   <label>Comune Rilascio Patente *</label>
-                  <input type="text" [(ngModel)]="contractDetails.driverLicenseReleasedBy" name="driverLicenseReleasedBy" placeholder="Es. Mottola o Taranto" required>
+                  <input type="text" [(ngModel)]="contractDetails.driverLicenseReleasedBy" name="driverLicenseReleasedBy" placeholder="Es. Roma o Milano" required>
                 </div>
                 <div class="form-group">
                   <label>Paese Rilascio Patente *</label>
@@ -744,14 +761,14 @@
           <!-- Additional Drivers (Both options are available) -->
           <div style="background: #f8fafc; padding: 1.2rem; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
             <h5 style="margin: 0; font-size: 0.9rem; color: #1e293b; font-weight: 700;"><i class="fa-solid fa-users"></i> Conducenti Aggiuntivi (Opzionali)</h5>
-            
+
             <div class="form-grid" style="margin-bottom: 0;">
               <!-- Conducente Aggiuntivo 1 -->
               <div class="form-group">
                 <label>Conducente Aggiuntivo 1</label>
                 <app-customer-select [(customerId)]="contractDetails.additionalDriver1Id" (customerIdChange)="onAdditionalDriver1Change()" [customers]="availableCustomers" placeholder="Cerca secondo conducente..."></app-customer-select>
               </div>
-              
+
               <!-- Conducente Aggiuntivo 2 -->
               <div class="form-group">
                 <label>Conducente Aggiuntivo 2</label>
@@ -797,6 +814,34 @@
             </div>
           </div>
 
+          <!-- SECTION 4: PARTE ECONOMICA E TARIFFE -->
+          <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; border-left: 3px solid var(--accent); padding-left: 8px; margin-top: 1.5rem; margin-bottom: 1rem;">Parte Economica e Tariffe</h4>
+          <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group">
+              <label>Tariffa Base Totale (€) *</label>
+              <input type="number" [(ngModel)]="contractDetails.baseRate" name="baseRate" min="0" required>
+            </div>
+            <div class="form-group">
+              <label>Acconto / Anticipo (€)</label>
+              <input type="number" [(ngModel)]="contractDetails.advance" name="advance" min="0" placeholder="Es. 100">
+            </div>
+            <div class="form-group">
+              <label>Prezzo per Km Extra (€/km)</label>
+              <input type="number" [(ngModel)]="contractDetails.extraKmPrice" name="extraKmPrice" step="0.01" min="0">
+            </div>
+            <div class="form-group">
+              <label>Metodo di Pagamento Tariffa</label>
+              <select [(ngModel)]="contractDetails.paymentMethod" name="paymentMethod">
+                <option value="">-- Seleziona --</option>
+                <option value="Contanti">Contanti</option>
+                <option value="Carta di Credito">Carta di Credito</option>
+                <option value="POS">POS (Bancomat)</option>
+                <option value="Bonifico">Bonifico</option>
+                <option value="Altro">Altro</option>
+              </select>
+            </div>
+          </div>
+
 
 
           <!-- SUBMIT ACTIONS -->
@@ -814,4 +859,3 @@
       </div>
     </div>
   }
-</div>

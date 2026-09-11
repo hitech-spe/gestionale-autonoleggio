@@ -744,3 +744,180 @@ h1, h2, h3, h4, h5, h6 {
     grid-template-columns: 1fr !important;
   }
 }
+
+/* ==============================================
+   PREMIUM SaaS UTILITIES (Stripe & Linear Inspired)
+   =============================================== */
+
+/* Glass Card Global Template */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+
+  &:hover {
+    box-shadow: 0 20px 40px -5px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.03) !important;
+    transform: translateY(-2px);
+  }
+}
+
+/* Premium radial backdrop gradients */
+.premium-bg {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(37, 99, 235, 0.04) 0%, #f8fafc 60%, #f1f5f9 100%) !important;
+}
+
+/* Smooth Premium Scrollbar Custom Utilities */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 99px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+
+  &:hover {
+    background: #94a3b8;
+    border-radius: 99px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+/* Premium input states focus glow */
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12) !important;
+  outline: none !important;
+}
+
+/* Premium Auth Styles (Google Login & Dividers) */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 1.5rem 0;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &::before, &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  &:not(:empty)::before {
+    margin-right: .75em;
+  }
+
+  &:not(:empty)::after {
+    margin-left: .75em;
+  }
+}
+
+.btn-google-login {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  height: 44px;
+  background: white;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .google-icon {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+    color: #0f172a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Google Onboarding Modal Styles */
+.onboarding-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 10005;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.onboarding-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  max-width: 520px;
+  width: 100%;
+  padding: 3rem;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  .onboarding-header {
+    margin-bottom: 2rem;
+
+    i {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--accent, #2563eb) 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      font-size: 0.92rem;
+      color: #64748b;
+      line-height: 1.5;
+      margin: 0;
+    }
+  }
+}

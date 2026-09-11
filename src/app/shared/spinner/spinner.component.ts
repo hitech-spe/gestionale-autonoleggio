@@ -44,7 +44,7 @@ import { LoadingService } from '../../services/loading.service';
       width: 100%;
       height: 100%;
       border: 4px solid transparent;
-      border-top-color: #00e5ff;
+      border-top-color: var(--accent, #2563eb);
       border-radius: 50%;
       animation: spin 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     }

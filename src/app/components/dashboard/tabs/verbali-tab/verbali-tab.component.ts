@@ -420,7 +420,7 @@ Si allegano alla presente:
 Si richiede pertanto di voler procedere alla rinotifica del verbale in oggetto direttamente nei confronti del trasgressore sopra identificato, liberando la scrivente società da ogni responsabilità solidale.
 
 Distinti saluti,
-La Dolce Vita SRL`;
+RentSmart SRL`;
     } else {
       this.emailDraft.body = `Spett.le ${this.newVerbale.authorityName || '[ENTE ACCERTATORE]'},
 
@@ -435,7 +435,7 @@ Si allegano alla presente:
 Si richiede pertanto di voler procedere alla rinotifica del verbale in oggetto direttamente nei confronti del trasgressore sopra identificato.
 
 Distinti saluti,
-La Dolce Vita SRL`;
+RentSmart SRL`;
     }
   }
 

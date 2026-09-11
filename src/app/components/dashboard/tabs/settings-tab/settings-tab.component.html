@@ -1,197 +1,455 @@
 <div class="settings-tab fade-in">
+  <!-- Premium Tab Header -->
   <div class="tab-header-section">
-    <h2>Impostazioni Gestionale</h2>
+    <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+      <span class="settings-header-badge">⚙️ CONFIGURAZIONE GESTIONALE</span>
+    </div>
+    <h2>Impostazioni di Sistema</h2>
     <p class="subtitle">Personalizza il brand dell'interfaccia, gestisci le intestazioni dei contratti e configura le credenziali delle integrazioni esterne.</p>
   </div>
 
-  <form (ngSubmit)="saveSettings()" #settingsForm="ngForm" class="settings-grid">
+  <form (ngSubmit)="saveSettings()" #settingsForm="ngForm" class="settings-layout-wrapper">
     
-    <!-- LEFT COLUMN: Profilo & Brand -->
-    <div class="settings-col flex-col gap-6">
+    <!-- LEFT SIDE: Vertical Sub-tabs Navigation -->
+    <aside class="settings-sub-sidebar">
+      <button type="button" class="sub-tab-link" [class.active]="activeSettingsSubTab === 'profile'" (click)="activeSettingsSubTab = 'profile'">
+        <i class="fa-solid fa-briefcase"></i>
+        <div class="sub-tab-label">
+          <strong>Profilo & Sedi</strong>
+          <span>Ragione sociale e sedi</span>
+        </div>
+      </button>
+
+      <button type="button" class="sub-tab-link" [class.active]="activeSettingsSubTab === 'branding'" (click)="activeSettingsSubTab = 'branding'">
+        <i class="fa-solid fa-palette"></i>
+        <div class="sub-tab-label">
+          <strong>Branding & Colori</strong>
+          <span>Logo e colori sociali</span>
+        </div>
+      </button>
+
+      <button type="button" class="sub-tab-link" [class.active]="activeSettingsSubTab === 'integrations'" (click)="activeSettingsSubTab = 'integrations'">
+        <i class="fa-solid fa-shield-halved"></i>
+        <div class="sub-tab-label">
+          <strong>Integrazioni Web</strong>
+          <span>Questura e verbali PEC</span>
+        </div>
+      </button>
+
+      <button type="button" class="sub-tab-link" [class.active]="activeSettingsSubTab === 'billing'" (click)="activeSettingsSubTab = 'billing'">
+        <i class="fa-solid fa-gem"></i>
+        <div class="sub-tab-label">
+          <strong>Abbonamento & Fatture</strong>
+          <span>Stato piano e Stripe</span>
+        </div>
+      </button>
+    </aside>
+
+    <!-- RIGHT SIDE: Active Card Content Area -->
+    <div class="settings-content-pane">
       
-      <!-- Profilo e Intestazione Contratti -->
-      <div class="glass-card settings-card">
-        <div class="card-title">
-          <i class="fa-solid fa-briefcase text-accent"></i>
-          <h3>Profilo e Intestazione Contratti</h3>
+      <!-- SUB-TAB 1: Profile & Sedi -->
+      @if (activeSettingsSubTab === 'profile') {
+        <div class="settings-pane-wrapper fade-in">
+          <!-- Profilo e Intestazione -->
+          <div class="glass-card settings-card">
+            <div class="card-title">
+              <i class="fa-solid fa-briefcase text-accent"></i>
+              <h3>Profilo e Intestazione Contratti</h3>
+            </div>
+            <p class="card-desc">Questi dati verranno stampati automaticamente come intestazione in alto a destra su tutti i contratti di noleggio PDF generati dal sistema.</p>
+
+            <div class="form-grid mt-4">
+              <div class="form-group span-2">
+                <label for="compName">Ragione Sociale / Nome Azienda</label>
+                <input type="text" id="compName" name="compName" [(ngModel)]="settings.name" required placeholder="Es. RentSmart S.r.l.">
+              </div>
+
+              <div class="form-group">
+                <label for="piva">Partita IVA / VAT</label>
+                <input type="text" id="piva" name="piva" [(ngModel)]="settings.piva" placeholder="Es. IT01234567890">
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Telefono Contatto</label>
+                <input type="text" id="phone" name="phone" [(ngModel)]="settings.contactPhone" placeholder="Es. +39 342 831 5325">
+              </div>
+
+              <div class="form-group span-2">
+                <label for="email">Email Contatto</label>
+                <input type="email" id="email" name="email" [(ngModel)]="settings.contactEmail" placeholder="Es. info@miazienda.com">
+              </div>
+
+              <div class="form-group span-2">
+                <label for="address">Indirizzo Sede Legale</label>
+                <input type="text" id="address" name="address" [(ngModel)]="settings.contactAddress" placeholder="Es. Via Roma, 10 - Milano (MI)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Sedi Operative -->
+          <div class="glass-card settings-card mt-4">
+            <div class="card-title">
+              <i class="fa-solid fa-map-location-dot text-accent"></i>
+              <h3>Gestione Sedi Operative</h3>
+            </div>
+            <p class="card-desc">Aggiungi o rimuovi le sedi fisiche della tua attività. I filtri della dashboard e i campi di noleggio si aggiorneranno automaticamente.</p>
+
+            <div class="location-management-box mt-4">
+              <div class="add-location-form">
+                <input type="text" [(ngModel)]="newLocationName" name="newLoc" placeholder="Es. Milano, Roma, Sede Centrale...">
+                <button type="button" class="btn btn-accent" (click)="addLocation()">Aggiungi</button>
+              </div>
+
+              <div class="locations-list mt-3">
+                @for (loc of settings.locations; track loc) {
+                  <div class="location-badge-item">
+                    <span>{{ loc }}</span>
+                    <button type="button" class="btn-delete-badge" (click)="removeLocation(loc)" title="Elimina sede">
+                      <i class="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                } @empty {
+                  <p class="empty-locations-text text-muted"><i class="fa-solid fa-circle-info"></i> Nessuna sede configurata. Aggiungi la tua prima sede qui sopra per iniziare.</p>
+                }
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="card-desc">Questi dati verranno stampati automaticamente come intestazione in alto a destra su tutti i contratti di noleggio PDF generati.</p>
-        
-        <div class="form-grid mt-4">
-          <div class="form-group span-2">
-            <label for="compName">Ragione Sociale / Nome Azienda</label>
-            <input type="text" id="compName" name="compName" [(ngModel)]="settings.name" required placeholder="Es. Dolce Vita Rent S.r.l.">
-          </div>
+      }
 
-          <div class="form-group">
-            <label for="piva">Partita IVA / VAT</label>
-            <input type="text" id="piva" name="piva" [(ngModel)]="settings.piva" placeholder="Es. IT01234567890">
-          </div>
+      <!-- SUB-TAB 2: Branding & Colori -->
+      @if (activeSettingsSubTab === 'branding') {
+        <div class="settings-pane-wrapper fade-in">
+          <!-- Logo & White-Labeling -->
+          <div class="glass-card settings-card">
+            <div class="card-title">
+              <i class="fa-solid fa-palette text-accent"></i>
+              <h3>Logo e Branding Grafico</h3>
+            </div>
+            <p class="card-desc">Carica il tuo logo aziendale in formato leggero per la barra di navigazione e i contratti PDF stampabili.</p>
 
-          <div class="form-group">
-            <label for="phone">Telefono Contatto</label>
-            <input type="text" id="phone" name="phone" [(ngModel)]="settings.contactPhone" placeholder="Es. +39 342 831 5325">
-          </div>
-
-          <div class="form-group span-2">
-            <label for="email">Email Contatto</label>
-            <input type="email" id="email" name="email" [(ngModel)]="settings.contactEmail" placeholder="Es. info@ladolcevitarent.com">
-          </div>
-
-          <div class="form-group span-2">
-            <label for="address">Indirizzo Sede Legale</label>
-            <input type="text" id="address" name="address" [(ngModel)]="settings.contactAddress" placeholder="Es. Via Salvador Allende, 3 - Mottola (TA)">
-          </div>
-        </div>
-      </div>
-
-      <!-- Personalizzazione Grafica (White-Labeling) -->
-      <div class="glass-card settings-card">
-        <div class="card-title">
-          <i class="fa-solid fa-palette text-accent"></i>
-          <h3>Personalizzazione Grafica (White-Label)</h3>
-        </div>
-        <p class="card-desc">Carica il tuo logo aziendale e scegli i colori sociali. La dashboard applicherà i colori in tempo reale.</p>
-
-        <div class="branding-settings-box mt-4">
-          <!-- Logo Uploader -->
-          <div class="logo-upload-section">
-            <label class="section-label">Logo Aziendale</label>
-            <div class="logo-uploader-box">
-              @if (logoPreview) {
-                <div class="logo-preview-container">
-                  <img [src]="logoPreview" alt="Anteprima Logo" class="uploaded-logo-preview">
-                  <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Rimuovi Logo">
-                    <i class="fa-solid fa-trash-can"></i>
-                  </button>
+            <div class="branding-settings-box mt-4">
+              <!-- Logo Uploader -->
+              <div class="logo-upload-section">
+                <label class="section-label">Logo Aziendale</label>
+                <div class="logo-uploader-box">
+                  @if (logoPreview) {
+                    <div class="logo-preview-container">
+                      <img [src]="logoPreview" alt="Anteprima Logo" class="uploaded-logo-preview">
+                      <button type="button" class="btn-remove-logo" (click)="removeLogo()" title="Rimuovi Logo">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="logo-placeholder-box" (click)="logoInput.click()">
+                      <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
+                      <span>Trascina o clicca per caricare</span>
+                      <span class="file-limits">PNG, JPG o WEBP (Max 300KB)</span>
+                    </div>
+                  }
+                  <input type="file" #logoInput accept="image/png, image/jpeg, image/webp" (change)="onLogoSelected($event)" style="display: none;">
                 </div>
-              } @else {
-                <div class="logo-placeholder-box" (click)="logoInput.click()">
-                  <i class="fa-solid fa-cloud-arrow-up text-accent"></i>
-                  <span>Trascina o clicca per caricare</span>
-                  <span class="file-limits">PNG, JPG o WEBP (Max 300KB)</span>
-                </div>
-              }
-              <input type="file" #logoInput accept="image/png, image/jpeg, image/webp" (change)="onLogoSelected($event)" style="display: none;">
+              </div>
             </div>
           </div>
 
-          <!-- Color Pickers -->
-          <div class="color-pickers-section">
-            <label class="section-label">Colori dell'interfaccia</label>
-            <div class="color-picker-grid">
-              <div class="color-picker-item">
-                <div class="picker-wrapper">
-                  <input type="color" id="primaryColor" name="primaryColor" [(ngModel)]="settings.primaryColor">
-                  <label for="primaryColor">Colore Principale</label>
+          <!-- Condizioni Generali di Contratto (PDF) -->
+          <div class="glass-card settings-card mt-4">
+            <div class="card-title">
+              <i class="fa-solid fa-file-pdf text-accent"></i>
+              <h3>Condizioni Generali di Contratto</h3>
+            </div>
+            <p class="card-desc">Carica il tuo file PDF contenente i termini e le condizioni generali di noleggio. Questo documento verrà allegato automaticamente dal backend al contratto finale generato in fase di stipula.</p>
+
+            <div class="branding-settings-box mt-4">
+              <div class="logo-upload-section">
+                <label class="section-label">Documento PDF Termini & Condizioni</label>
+                <div class="logo-uploader-box" style="min-height: 120px;">
+                  @if (termsPdfPreview) {
+                    <div class="logo-preview-container" style="display: flex; flex-direction: row; align-items: center; justify-content: space-between; width: 100%; padding: 0.75rem 1rem; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+                      <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <i class="fa-solid fa-file-pdf text-danger" style="font-size: 1.75rem;"></i>
+                        <div style="text-align: left;">
+                          <strong style="display: block; font-size: 0.85rem; color: #166534;">Condizioni_Generali_Noleggio.pdf</strong>
+                          <span style="font-size: 0.75rem; color: #15803d; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Caricato e Attivo</span>
+                        </div>
+                      </div>
+                      <button type="button" class="btn-remove-logo" (click)="removeTermsPdf()" title="Rimuovi Documento" style="margin: 0; background: #fee2e2; border-color: #fca5a5; color: #ef4444; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid; cursor: pointer;">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="logo-placeholder-box" (click)="termsPdfInput.click()">
+                      <i class="fa-solid fa-file-arrow-up text-accent"></i>
+                      <span>Trascina o clicca per caricare</span>
+                      <span class="file-limits">Solo file in formato PDF (Max 500KB)</span>
+                    </div>
+                  }
+                  <input type="file" #termsPdfInput accept="application/pdf" (change)="onTermsPdfSelected($event)" style="display: none;">
                 </div>
-                <span class="color-hex-val">{{ settings.primaryColor }}</span>
-              </div>
-              <div class="color-picker-item">
-                <div class="picker-wrapper">
-                  <input type="color" id="secondaryColor" name="secondaryColor" [(ngModel)]="settings.secondaryColor">
-                  <label for="secondaryColor">Colore di Hover</label>
-                </div>
-                <span class="color-hex-val">{{ settings.secondaryColor }}</span>
               </div>
             </div>
-            <p class="color-help mt-3"><i class="fa-solid fa-circle-info"></i> I colori scelti verranno applicati istantaneamente a pulsanti, menu attivi, allarmi visivi e dettagli grafici del tuo spazio di lavoro.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Gestione Sedi Operative -->
-      <div class="glass-card settings-card">
-        <div class="card-title">
-          <i class="fa-solid fa-map-location-dot text-accent"></i>
-          <h3>Gestione Sedi Operative</h3>
-        </div>
-        <p class="card-desc">Aggiungi o rimuovi le sedi fisiche della tua attività. I filtri della dashboard e i campi di noleggio si aggiorneranno automaticamente.</p>
-        
-        <div class="location-management-box mt-4">
-          <div class="add-location-form" style="display: flex; gap: 0.5rem; align-items: center;">
-            <input type="text" [(ngModel)]="newLocationName" name="newLoc" placeholder="Es. Milano, Roma, Sede Centrale..." style="flex-grow: 1; padding: 0.5rem 0.75rem; border-radius: 8px; border: 1px solid #e2e8f0; font-size: 0.9rem;">
-            <button type="button" class="btn btn-accent btn-sm" (click)="addLocation()" style="padding: 0.5rem 1rem; border-radius: 8px;">Aggiungi</button>
           </div>
 
-          <div class="locations-list mt-3" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            @for (loc of settings.locations; track loc) {
-              <div class="location-badge-item" style="display: inline-flex; align-items: center; gap: 0.5rem; background: rgba(var(--accent-rgb), 0.08); border: 1px solid rgba(var(--accent-rgb), 0.15); padding: 0.35rem 0.75rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; color: var(--accent);">
-                <span>{{ loc }}</span>
-                <button type="button" class="btn-delete-badge" (click)="removeLocation(loc)" title="Elimina sede" style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; padding: 0;">
-                  <i class="fa-solid fa-xmark"></i>
+          <!-- Colori Calendario -->
+          <div class="glass-card settings-card mt-4">
+            <div class="card-title">
+              <i class="fa-solid fa-calendar-days text-accent"></i>
+              <h3>Personalizzazione Colori Calendario</h3>
+            </div>
+            <p class="card-desc">Scegli i colori identificativi con cui visualizzare le diverse funzioni sul calendario del tuo gestionale.</p>
+
+            <div class="form-grid mt-4">
+              <div class="form-group color-picker-group">
+                <label>Inizio Noleggio</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorStart" [(ngModel)]="settings.colorStart">
+                  <span class="color-hex">{{ settings.colorStart }}</span>
+                </div>
+              </div>
+
+              <div class="form-group color-picker-group">
+                <label>Rientro Noleggio</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorEnd" [(ngModel)]="settings.colorEnd">
+                  <span class="color-hex">{{ settings.colorEnd }}</span>
+                </div>
+              </div>
+
+              <div class="form-group color-picker-group">
+                <label>In Giornata</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorSameDay" [(ngModel)]="settings.colorSameDay">
+                  <span class="color-hex">{{ settings.colorSameDay }}</span>
+                </div>
+              </div>
+
+              <div class="form-group color-picker-group">
+                <label>Manutenzione</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorMaintenance" [(ngModel)]="settings.colorMaintenance">
+                  <span class="color-hex">{{ settings.colorMaintenance }}</span>
+                </div>
+              </div>
+
+              <div class="form-group color-picker-group">
+                <label>Noleggio Servizi</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorService" [(ngModel)]="settings.colorService">
+                  <span class="color-hex">{{ settings.colorService }}</span>
+                </div>
+              </div>
+
+              <div class="form-group color-picker-group">
+                <label>Veicolo Venduto</label>
+                <div class="picker-input-row">
+                  <input type="color" name="colorSold" [(ngModel)]="settings.colorSold">
+                  <span class="color-hex">{{ settings.colorSold }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- SUB-TAB 3: Integrazioni -->
+      @if (activeSettingsSubTab === 'integrations') {
+        <div class="settings-pane-wrapper fade-in">
+          <!-- Cargos Polizia -->
+          <div class="glass-card settings-card">
+            <div class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-shield-halved text-accent"></i>
+                <h3>Questura / Polizia di Stato (Cargos)</h3>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="activation-label" [class.active]="settings.enableCargos">
+                  {{ settings.enableCargos ? 'Abilitato' : 'Disabilitato' }}
+                </span>
+                <input type="checkbox" name="enableCargos" [(ngModel)]="settings.enableCargos" class="switch-checkbox">
+              </div>
+            </div>
+            <p class="card-desc">Consente la trasmissione automatica o l'invio in 1-click dei dati anagrafici dei conducenti direttamente al Web Service ministeriale.</p>
+
+            @if (settings.enableCargos) {
+              <div class="form-grid mt-4">
+                <div class="form-group span-2">
+                  <label for="cUsername">Nome Utente (Username Cargos)</label>
+                  <input type="text" id="cUsername" name="cUsername" [(ngModel)]="settings.cargosUsername" placeholder="Es. TAW_TA00123">
+                </div>
+
+                <div class="form-group span-2">
+                  <label for="cPassword">Password Web Service</label>
+                  <input type="password" id="cPassword" name="cPassword" [(ngModel)]="settings.cargosPassword" placeholder="Inserisci per aggiornare la password">
+                </div>
+
+                <div class="form-group span-2">
+                  <label for="cApiKey">Chiave API Privata (API Key)</label>
+                  <input type="text" id="cApiKey" name="cApiKey" [(ngModel)]="settings.cargosApiKey" placeholder="Es. key_prod_987654321abc">
+                </div>
+              </div>
+            }
+
+            <div class="status-badge-wrapper mt-4">
+              <div class="status-badge" [class.enabled]="settings.enableCargos && settings.cargosUsername && settings.cargosApiKey">
+                <span class="status-dot"></span>
+                <span>{{ (settings.enableCargos && settings.cargosUsername && settings.cargosApiKey) ? 'Integrazione Attiva e Configurata' : 'Integrazione Non Configurata' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Verbali PEC -->
+          <div class="glass-card settings-card mt-4">
+            <div class="card-title" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fa-solid fa-envelope-open-text text-accent"></i>
+                <h3>Integrazione Gestione Verbali (PEC)</h3>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="activation-label" [class.active]="settings.enableVerbaliPec">
+                  {{ settings.enableVerbaliPec ? 'Abilitato' : 'Disabilitato' }}
+                </span>
+                <input type="checkbox" name="enableVerbaliPec" [(ngModel)]="settings.enableVerbaliPec" class="switch-checkbox">
+              </div>
+            </div>
+            <p class="card-desc">Abilita il controllo orario in background della casella PEC aziendale per l'analisi immediata tramite OCR delle multe ricevute, con abbinamento automatico del conducente.</p>
+
+            @if (settings.enableVerbaliPec) {
+              <div class="form-grid mt-4">
+                <div class="form-group span-2">
+                  <label for="pecEmail">Indirizzo Email PEC Aziendale</label>
+                  <input type="email" id="pecEmail" name="pecEmail" [(ngModel)]="settings.pecEmail" placeholder="Es. pec@pec.nomedominio.com">
+                </div>
+
+                <div class="form-group span-2">
+                  <label for="pecPassword">Password di Sicurezza PEC (App Password)</label>
+                  <input type="password" id="pecPassword" name="pecPassword" [(ngModel)]="settings.pecPassword" placeholder="Inserisci per aggiornare la password PEC">
+                </div>
+              </div>
+            }
+
+            <div class="status-badge-wrapper mt-4">
+              <div class="status-badge" [class.enabled]="settings.enableVerbaliPec && settings.pecEmail">
+                <span class="status-dot"></span>
+                <span>{{ (settings.enableVerbaliPec && settings.pecEmail) ? 'Monitoraggio Automultazione PEC Attivo' : 'Modulo Non Configurato' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- SUB-TAB 4: Fatturazione & SaaS -->
+      @if (activeSettingsSubTab === 'billing') {
+        <div class="settings-pane-wrapper fade-in">
+          <!-- Gestione Abbonamento -->
+          <div class="glass-card settings-card">
+            <div class="card-title">
+              <i class="fa-solid fa-gem text-accent"></i>
+              <h3>Abbonamento e Licenza SaaS</h3>
+            </div>
+            <p class="card-desc">Visualizza i dettagli della tua licenza RentSmart, verifica i giorni di prova rimanenti o esegui l'upgrade di abbonamento.</p>
+
+            <div class="subscription-status-box mt-4">
+              <div class="billing-row">
+                <span class="label">Piano Attivo:</span>
+                <span class="value-badge">{{ companyPlan }}</span>
+              </div>
+
+              <div class="billing-row">
+                <span class="label">Stato Servizio:</span>
+                @if (companyStatus === 'trial') {
+                  <span class="value-text success">
+                    <i class="fa-solid fa-clock"></i> Prova Gratuita ({{ daysLeftInTrial }} {{ daysLeftInTrial === 1 ? 'giorno rimasto' : 'giorni rimasti' }})
+                  </span>
+                } @else if (companyStatus === 'active') {
+                  <span class="value-text success">
+                    <i class="fa-solid fa-circle-check"></i> Attivo e Pagato con Stripe
+                  </span>
+                } @else {
+                  <span class="value-text danger">
+                    <i class="fa-solid fa-circle-exclamation"></i> Sospeso / Non Pagato
+                  </span>
+                }
+              </div>
+            </div>
+
+            @if (companyStatus === 'trial' || companyStatus === 'suspended') {
+              <div class="pricing-toggle-box mt-4">
+                <label class="section-label">Seleziona e Attiva un Piano Premium:</label>
+                <div class="pricing-grid-mini">
+                  <div class="plan-btn-card" (click)="createCheckoutSession('starter')">
+                    <strong class="plan-name">Starter</strong>
+                    <span class="plan-price">29€/mese</span>
+                    <span class="plan-lim">Fino a 5 auto</span>
+                    <button type="button" class="btn btn-accent">Attiva</button>
+                  </div>
+                  <div class="plan-btn-card active" (click)="createCheckoutSession('pro')">
+                    <strong class="plan-name">Pro</strong>
+                    <span class="plan-price">59€/mese</span>
+                    <span class="plan-lim">Fino a 20 auto</span>
+                    <button type="button" class="btn btn-accent">Attiva</button>
+                  </div>
+                  <div class="plan-btn-card" (click)="createCheckoutSession('enterprise')">
+                    <strong class="plan-name">Enterprise</strong>
+                    <span class="plan-price">129€/mese</span>
+                    <span class="plan-lim">Auto Illimitate</span>
+                    <button type="button" class="btn btn-accent">Attiva</button>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @if (companyStatus === 'active') {
+              <div class="billing-portal-card mt-4">
+                <div class="billing-portal-content">
+                  <div class="billing-portal-icon-wrapper">
+                    <i class="fa-solid fa-credit-card"></i>
+                  </div>
+                  <div class="billing-portal-text">
+                    <h4>Gestione Abbonamento & Fatture</h4>
+                    <p>Visualizza lo storico dei pagamenti, scarica le fatture in formato PDF o aggiorna i dettagli della tua carta di credito in sicurezza su Stripe.</p>
+                  </div>
+                </div>
+                <button type="button" class="btn-billing-portal" (click)="openCustomerPortal()">
+                  <span>Apri Portale Stripe</span>
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </button>
               </div>
-            } @empty {
-              <p class="empty-locations-text text-muted" style="font-size: 0.8rem; margin: 0;"><i class="fa-solid fa-circle-info"></i> Nessuna sede configurata. Verranno usate le sedi di default.</p>
             }
           </div>
         </div>
+      }
+
+      <!-- Bottom Action Save Bar -->
+      <div class="glass-card settings-card action-card mt-4">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+          <div style="text-align: left; max-width: 500px;">
+            <h4 style="margin: 0; font-size: 1rem; font-weight: 700; color: #0f172a;">Salvataggio Impostazioni</h4>
+            <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: #64748b;">Per applicare il nuovo brand e i colori aggiornati alla piattaforma in tempo reale, assicurati di fare clic su Salva.</p>
+          </div>
+          <div class="save-action-group">
+            @if (saveSuccess) {
+              <div class="settings-alert success fade-in" style="margin-bottom: 0;">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Configurazione salvata con successo!</span>
+              </div>
+            }
+
+            @if (saveError) {
+              <div class="settings-alert error fade-in" style="margin-bottom: 0;">
+                <i class="fa-solid fa-circle-xmark"></i>
+                <span>{{ saveError }}</span>
+              </div>
+            }
+
+            <button type="submit" class="btn btn-accent" style="height: 48px; border-radius: 8px; font-weight: 700; padding: 0 2rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+              <i class="fa-solid fa-floppy-disk"></i> Salva Impostazioni
+            </button>
+          </div>
+        </div>
       </div>
+
     </div>
-
-    <!-- RIGHT COLUMN: Integrazioni & Azioni -->
-    <div class="settings-col flex-col gap-6">
-      
-      <!-- Integrazione Polizia di Stato Cargos -->
-      <div class="glass-card settings-card">
-        <div class="card-title">
-          <i class="fa-solid fa-shield-halved text-accent"></i>
-          <h3>Integrazione Polizia di Stato (Cargos)</h3>
-        </div>
-        <p class="card-desc">Inserisci le credenziali fornite dalla Questura per abilitare la trasmissione automatica e l'invio in 1-click delle schede alloggiati degli autisti.</p>
-
-        <div class="form-grid mt-4">
-          <div class="form-group span-2">
-            <label for="cUsername">Nome Utente (Username Cargos)</label>
-            <input type="text" id="cUsername" name="cUsername" [(ngModel)]="settings.cargosUsername" placeholder="Es. TAW_TA00123">
-          </div>
-
-          <div class="form-group span-2">
-            <label for="cPassword">Password Web Service</label>
-            <input type="password" id="cPassword" name="cPassword" [(ngModel)]="settings.cargosPassword" placeholder="Inserisci per aggiornare la password">
-          </div>
-
-          <div class="form-group span-2">
-            <label for="cApiKey">Chiave API Privata (API Key)</label>
-            <input type="text" id="cApiKey" name="cApiKey" [(ngModel)]="settings.cargosApiKey" placeholder="Es. key_prod_987654321abc">
-          </div>
-        </div>
-        
-        <div class="cargos-status-info mt-4">
-          <div class="status-badge" [class.enabled]="settings.cargosUsername && settings.cargosApiKey">
-            <span class="status-dot"></span>
-            <span>{{ (settings.cargosUsername && settings.cargosApiKey) ? 'Modulo Integrazione Attivo' : 'Modulo Non Configurato' }}</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Action Panel -->
-      <div class="glass-card settings-card action-card flex-col gap-4">
-        <h3>Salvataggio Configurazione</h3>
-        <p>Assicurati che tutti i dati dell'intestazione siano corretti poiché compariranno nei contratti legali stampati per i clienti.</p>
-
-        @if (saveSuccess) {
-          <div class="settings-alert success fade-in">
-            <i class="fa-solid fa-circle-check"></i>
-            <span>Configurazione salvata ed applicata con successo!</span>
-          </div>
-        }
-
-        @if (saveError) {
-          <div class="settings-alert error fade-in">
-            <i class="fa-solid fa-circle-xmark"></i>
-            <span>{{ saveError }}</span>
-          </div>
-        }
-
-        <div class="action-buttons-box mt-2">
-          <button type="submit" class="btn btn-accent w-100" style="height: 48px; border-radius: 8px;">
-            <i class="fa-solid fa-floppy-disk mr-2"></i> Salva Impostazioni
-          </button>
-        </div>
-      </div>
-    </div>
-
   </form>
 </div>

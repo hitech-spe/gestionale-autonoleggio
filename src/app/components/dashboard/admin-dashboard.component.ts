@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { API_CONFIG } from '../../config/api.config';
 import { FleetTabComponent } from './tabs/fleet-tab/fleet-tab.component';
 import { CustomersTabComponent } from './tabs/customers-tab/customers-tab.component';
 import { InsuranceTabComponent } from './tabs/insurance-tab/insurance-tab.component';
@@ -13,7 +15,8 @@ import { VerbaliTabComponent } from './tabs/verbali-tab/verbali-tab.component';
 import { SettingsTabComponent } from './tabs/settings-tab/settings-tab.component';
 import { RentalService, Reminder } from '../../services/rental.service';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { LoadingService } from '../../services/loading.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { CalendarTabComponent } from './tabs/calendar-tab/calendar-tab.component';
 
@@ -44,20 +47,75 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
+  private loadingService = inject(LoadingService);
 
   company$ = this.authService.currentCompany$;
+
+  // Custom premium modal notification state (no ugly browser alerts!)
+  notificationModal = {
+    show: false,
+    title: '',
+    message: '',
+    type: 'success' as 'success' | 'error' | 'info'
+  };
+
+  showNotification(title: string, message: string, type: 'success' | 'error' | 'info' = 'success') {
+    this.notificationModal = {
+      show: true,
+      title,
+      message,
+      type
+    };
+    this.cdr.detectChanges();
+  }
+
+  closeNotification() {
+    this.notificationModal.show = false;
+    this.cdr.detectChanges();
+  }
 
   isTrialExpired = false;
   isCompanySuspended = false;
   daysLeftInTrial = 14;
 
   currentTab: Tab = 'calendar';
-  locations = ['Tutte', 'Mottola', 'Massafra', 'Grottaglie'];
+  locations: string[] = [];
   selectedLocation$ = new BehaviorSubject<string>('Tutte');
+
+  isSidebarCollapsed = false;
+
+  toggleSidebar() {
+    this.isSidebarCollapsed = !this.isSidebarCollapsed;
+    localStorage.setItem('sidebar_collapsed', JSON.stringify(this.isSidebarCollapsed));
+    this.cdr.detectChanges();
+  }
 
   async logout() {
     await this.authService.logout();
     await this.router.navigate(['/']);
+  }
+
+  async createCheckoutSession(plan: 'starter' | 'pro' | 'enterprise') {
+    try {
+      this.loadingService.show();
+      const response = await firstValueFrom(
+        this.http.post<any>(`${API_CONFIG.baseUrl}/api/subscription/create-checkout-session`, { plan })
+      );
+      this.loadingService.hide();
+      if (response && response.sessionUrl) {
+        window.location.href = response.sessionUrl;
+      }
+    } catch (err: any) {
+      this.loadingService.hide();
+      console.error('Errore creazione sessione Stripe Checkout:', err);
+      this.showNotification(
+        'Errore Pagamento ⚠️',
+        "Si è verificato un errore durante l'avvio della procedura di pagamento con Stripe. Si prega di riprovare più tardi o contattare l'assistenza.",
+        'error'
+      );
+    }
   }
 
   insuranceSearchTerm = '';
@@ -88,56 +146,11 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
   private allInsurances: any[] = [];
   private allInspections: any[] = [];
 
-  ngOnInit() {
-    // Subscribe to company branding updates to apply white-labeling colors dynamically
-    this.companySub = this.company$.subscribe(company => {
-      if (company) {
-        if (company.primaryColor) {
-          document.documentElement.style.setProperty('--accent', company.primaryColor);
-        } else {
-          document.documentElement.style.removeProperty('--accent');
-        }
-        if (company.secondaryColor) {
-          document.documentElement.style.setProperty('--accent-hover', company.secondaryColor);
-        } else {
-          document.documentElement.style.removeProperty('--accent-hover');
-        }
+  private subscriptionsOpened = false;
 
-        // Dynamically load company locations if configured!
-        if (company.locations && company.locations.length > 0) {
-          this.locations = ['Tutte', ...company.locations];
-        } else {
-          this.locations = ['Tutte', 'Mottola', 'Massafra', 'Grottaglie']; // Fallback default locations
-        }
-
-        // Handle subscription & trial checks
-        this.isCompanySuspended = company.status === 'suspended';
-
-        if (company.status === 'trial') {
-          const createdAt = (company.createdAt as any)?.toDate ? (company.createdAt as any).toDate() : new Date();
-          const now = new Date();
-          const differenceInTime = now.getTime() - createdAt.getTime();
-          const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
-          
-          this.daysLeftInTrial = 14 - differenceInDays;
-          if (this.daysLeftInTrial <= 0) {
-            this.daysLeftInTrial = 0;
-            this.isTrialExpired = true;
-          } else {
-            this.isTrialExpired = false;
-          }
-        } else {
-          this.isTrialExpired = false;
-        }
-      } else {
-        document.documentElement.style.removeProperty('--accent');
-        document.documentElement.style.removeProperty('--accent-hover');
-        this.locations = ['Tutte', 'Mottola', 'Massafra', 'Grottaglie'];
-        this.isTrialExpired = false;
-        this.isCompanySuspended = false;
-      }
-      this.cdr.detectChanges();
-    });
+  private openDataSubscriptions() {
+    if (this.subscriptionsOpened) return;
+    this.subscriptionsOpened = true;
 
     // Subscribe to reminders
     this.remindersSub = this.rentalService.getReminders().subscribe(reminders => {
@@ -164,12 +177,96 @@ export class AdminDashboardComponent implements OnInit, OnDestroy {
       this.recalculateExpirations();
       this.cdr.detectChanges();
     });
+  }
+
+  ngOnInit() {
+    const saved = localStorage.getItem('sidebar_collapsed');
+    if (saved !== null) {
+      this.isSidebarCollapsed = JSON.parse(saved);
+    } else {
+      this.isSidebarCollapsed = typeof window !== 'undefined' ? window.innerWidth <= 992 : false;
+    }
+
+    // Subscribe to company branding updates to apply white-labeling colors dynamically
+    this.companySub = this.company$.subscribe(company => {
+      if (company) {
+        // Trigger lazy collection loads only after the companyId has been successfully resolved
+        if (company.id) {
+          this.openDataSubscriptions();
+        }
+
+        if (company.primaryColor) {
+          document.documentElement.style.setProperty('--accent', company.primaryColor);
+        } else {
+          document.documentElement.style.removeProperty('--accent');
+        }
+        if (company.secondaryColor) {
+          document.documentElement.style.setProperty('--accent-hover', company.secondaryColor);
+        } else {
+          document.documentElement.style.removeProperty('--accent-hover');
+        }
+
+        // Dynamically load company locations if configured!
+        if (company.locations && company.locations.length > 0) {
+          this.locations = ['Tutte', ...company.locations];
+        } else {
+          this.locations = []; // Empty by default
+        }
+
+        // Handle subscription & trial checks
+        this.isCompanySuspended = company.status === 'suspended';
+
+        if (company.status === 'trial') {
+          const createdAt = (company.createdAt as any)?.toDate ? (company.createdAt as any).toDate() : new Date();
+          const now = new Date();
+          const differenceInTime = now.getTime() - createdAt.getTime();
+          const differenceInDays = Math.floor(differenceInTime / (1000 * 3600 * 24));
+          
+          this.daysLeftInTrial = 14 - differenceInDays;
+          if (this.daysLeftInTrial <= 0) {
+            this.daysLeftInTrial = 0;
+            this.isTrialExpired = true;
+          } else {
+            this.isTrialExpired = false;
+          }
+        } else {
+          this.isTrialExpired = false;
+        }
+      } else {
+        document.documentElement.style.removeProperty('--accent');
+        document.documentElement.style.removeProperty('--accent-hover');
+        this.locations = [];
+        this.isTrialExpired = false;
+        this.isCompanySuspended = false;
+      }
+      this.cdr.detectChanges();
+    });
 
     // Check periodically (every 10 seconds for ultra-immediate detection) because time advances and alerts can become active
     this.timerId = setInterval(() => {
       this.recalculateAlerts();
       this.cdr.detectChanges();
     }, 10000);
+
+    // Intercetta i parametri di ritorno di Stripe (successo/annullamento pagamento)
+    this.route.queryParams.subscribe(params => {
+      if (params['payment'] === 'success') {
+        this.showNotification(
+          'Abbonamento Attivato! 🎉',
+          'Grazie per aver scelto RentSmart! Il tuo abbonamento è ora attivo. Stiamo sincronizzando il tuo profilo in background.',
+          'success'
+        );
+        // Pulisce i parametri nell'URL senza ricaricare per evitare alert multipli se l'utente ricarica la pagina
+        this.router.navigate([], { queryParams: { payment: null }, queryParamsHandling: 'merge' });
+      } else if (params['payment'] === 'cancel') {
+        this.showNotification(
+          'Pagamento Annullato ❌',
+          'La procedura di pagamento Stripe Checkout è stata annullata. Nessun addebito è stato effettuato sul tuo conto.',
+          'error'
+        );
+        this.router.navigate([], { queryParams: { payment: null }, queryParamsHandling: 'merge' });
+      }
+    });
   }
 
   ngOnDestroy() {

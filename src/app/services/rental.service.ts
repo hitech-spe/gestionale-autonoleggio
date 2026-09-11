@@ -26,7 +26,7 @@ export interface Vehicle {
   brand: string;
   model: string;
   plate: string;
-  location: 'Mottola' | 'Massafra' | 'Grottaglie';
+  location: string;
   category: string; // es. 'Segmento A', 'Furgoni', ecc.
   status: 'Attivo' | 'Manutenzione' | 'Venduto';
   dailyPrice?: number;
@@ -45,8 +45,8 @@ export interface Rental {
   customerPhone?: string;
   startDate: Timestamp;   // Usiamo sempre Timestamp di Firebase
   endDate: Timestamp;
-  location: 'Mottola' | 'Massafra' | 'Grottaglie';
-  returnLocation?: 'Mottola' | 'Massafra' | 'Grottaglie'; // Sede di rientro
+  location: string;
+  returnLocation?: string; // Sede di rientro
   status: 'Prenotato' | 'In Corso' | 'Concluso' | 'Cancellato';
   totalPrice?: number;
   isServiceRental?: boolean;
@@ -62,7 +62,7 @@ export interface TemporaryTransfer {
   vehicleId: string;
   startDate: Timestamp;
   endDate: Timestamp;
-  location: 'Mottola' | 'Massafra' | 'Grottaglie';
+  location: string;
   notes?: string;
   createdAt?: Timestamp;
   companyId?: string;
@@ -180,6 +180,7 @@ export interface ContractDetails {
   fuelLevel?: string;    // default "12/12"
   franchise?: number;    // single customizable franchise
   vehicleFuelType?: string; // e.g. "Diesel", "Benzina", etc.
+  paymentMethod?: string;
 }
 
 export interface ContractDocument {
@@ -223,6 +224,7 @@ export interface Company {
   pec?: string;
   createdAt?: Timestamp;
   companyId?: string;
+  enableCargos?: boolean;
 }
 
 export interface Verbale {
@@ -1028,14 +1030,14 @@ export class RentalService {
       return `${dd}/${mm}/${yyyy}`;
     };
 
-    const branchAddresses: { [key: string]: string } = {
-      'Mottola': 'Via S. Allende 1, Mottola (TA)',
-      'Massafra': 'Viale Marconi, Massafra (TA)',
-      'Grottaglie': 'Via Taranto, Grottaglie (TA)'
-    };
+    const company = this.authService.getCompanyProfile();
+    const defaultLoc = company?.locations && company.locations[0] ? company.locations[0] : 'Sede Centrale';
+    const defaultAddress = company?.contactAddress || 'Via Roma, 10';
+    const defaultPhone = company?.contactPhone || '';
+    const defaultName = company?.name || 'HI-TECH RENT';
 
-    const checkOutAddr = branchAddresses[rental.location] || 'Via S. Allende 1, Mottola (TA)';
-    const checkInAddr = branchAddresses[rental.returnLocation || rental.location] || checkOutAddr;
+    const checkOutAddr = defaultAddress;
+    const checkInAddr = defaultAddress;
 
     const categoryLower = (vehicle.category || '').toLowerCase();
     let veicoloTipoDesc = 'autovetture';
@@ -1068,10 +1070,10 @@ export class RentalService {
     const veicoloTipo = (veicoloTipoDesc === 'furgoni' || veicoloTipoDesc === 'autocarri') ? '1' : '2';
     const licenseNum = details.driverLicenseNumber || customer.licenseNumber || 'PA987654321';
 
-    const checkoutLuogo = rental.location || 'Mottola';
-    const checkinLuogo = rental.returnLocation || rental.location || 'Mottola';
-    const nascitaLuogo = customer.birthPlace || details.driverBirthPlace || 'Mottola';
-    const rilascioLuogo = details.driverLicenseReleasedBy || customer.licenseReleasedBy || customer.birthPlace || details.driverBirthPlace || rental.location || 'Mottola';
+    const checkoutLuogo = rental.location || defaultLoc;
+    const checkinLuogo = rental.returnLocation || rental.location || defaultLoc;
+    const nascitaLuogo = customer.birthPlace || details.driverBirthPlace || 'Roma';
+    const rilascioLuogo = details.driverLicenseReleasedBy || customer.licenseReleasedBy || customer.birthPlace || details.driverBirthPlace || rental.location || defaultLoc;
 
     const patentePaese = details.driverLicenseCountry || customer.licenseCountry || 'Italia';
 
@@ -1087,10 +1089,10 @@ export class RentalService {
       contratto_checkin_indirizzo: checkInAddr,
       operatore_id: "OPERATORE SYSTEM",
       agenzia_id: "AG-0001",
-      agenzia_nome: "HI-TECH RENT",
-      agenzia_luogo: "Mottola",
-      agenzia_indirizzo: "Piazza Duomo 1, Milano",
-      agenzia_recapito_tel: "02123456",
+      agenzia_nome: defaultName.toUpperCase(),
+      agenzia_luogo: checkoutLuogo,
+      agenzia_indirizzo: defaultAddress,
+      agenzia_recapito_tel: defaultPhone,
       veicolo_tipo: veicoloTipo,
       veicolo_tipo_desc: veicoloTipoDesc,
       veicolo_marca: vehicle.brand || 'Fiat',

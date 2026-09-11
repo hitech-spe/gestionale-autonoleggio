@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable, BehaviorSubject, switchMap, tap } from 'rxjs';
 import { Insurance, Inspection, Maintenance, RentalService, Vehicle } from '../../../../services/rental.service';
 import { LoadingService } from '../../../../services/loading.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
@@ -17,6 +18,11 @@ export class FleetTabComponent implements OnInit {
 
   private rentalService = inject(RentalService);
   private loadingService = inject(LoadingService);
+  private authService = inject(AuthService);
+
+  get locations(): string[] {
+    return this.authService.companyLocations;
+  }
 
   searchTerm = '';
   sortOrder: 'newest' | 'oldest' | 'brand' | 'category' = 'newest';
@@ -29,12 +35,14 @@ export class FleetTabComponent implements OnInit {
   ];
 
   vehicles$!: Observable<Vehicle[]>;
+  vehicles: Vehicle[] = [];
+  limitReached = false;
 
   isModalOpen = false;
   isEditMode = false;
   editingVehicleId?: string;
 
-  newVehicle: Partial<Vehicle> = { location: 'Mottola', status: 'Attivo', category: 'A' };
+  newVehicle: Partial<Vehicle> = { location: '', status: 'Attivo', category: 'A' };
   categories: string[] = ['A', 'B', 'C', 'D', 'E', 'F', '7 posti', 'Van 9 posti', 'L1H1', 'L2H1', 'L2H2', 'L3H3', 'L4H3', 'Cassa quadrata', 'Cassone aperto 3 posti', 'Cassone aperto 7 posti', 'Sponda idraulica', 'Refrigerato', 'Ribaltabile', 'ILVA'];
 
   // Dettagli opzionali per nuovo veicolo
@@ -64,7 +72,10 @@ export class FleetTabComponent implements OnInit {
     this.vehicles$ = this.selectedLocation$.pipe(
       switchMap(loc => this.rentalService.getVehicles(loc === 'Tutte' ? undefined : loc)),
       tap({
-        next: () => this.loadingService.hide(),
+        next: (list) => {
+          this.vehicles = list || [];
+          this.loadingService.hide();
+        },
         error: (err) => {
           console.error('Error loading vehicles:', err);
           this.loadingService.hide();
@@ -92,6 +103,7 @@ export class FleetTabComponent implements OnInit {
       this.editingVehicleId = vehicle.id;
       this.newVehicle = { ...vehicle };
       this.updateVehicleMaintenances();
+      this.limitReached = false; // Modifying an existing vehicle doesn't increase flotta count!
 
       // Carica dettagli correlati più recenti
       if (vehicle.id) {
@@ -135,7 +147,7 @@ export class FleetTabComponent implements OnInit {
     } else {
       this.isEditMode = false;
       this.editingVehicleId = undefined;
-      this.newVehicle = { location: 'Mottola', status: 'Attivo', category: 'A' };
+      this.newVehicle = { location: this.locations[0] || '', status: 'Attivo', category: 'A' };
       this.vehicleMaintenances = [];
       this.newInsurance = {};
       this.newInspection = {};
@@ -144,13 +156,24 @@ export class FleetTabComponent implements OnInit {
       this.inspectionExpiryDate = '';
       this.maintenanceDate = '';
       this.inlineMaintenance = { description: '', date: '', cost: null, km: null, workshop: '' };
+
+      // Enforce SaaS pricing plan limits
+      const plan = this.authService.getCompanyPlan();
+      const currentCount = this.vehicles.length;
+      if (plan === 'starter' && currentCount >= 5) {
+        this.limitReached = true;
+      } else if (plan === 'pro' && currentCount >= 20) {
+        this.limitReached = true;
+      } else {
+        this.limitReached = false;
+      }
     }
     this.isModalOpen = true;
   }
 
   closeModal() {
     this.isModalOpen = false;
-    this.newVehicle = { location: 'Mottola', status: 'Attivo', category: 'A' };
+    this.newVehicle = { location: this.locations[0] || '', status: 'Attivo', category: 'A' };
   }
 
   async saveVehicle() {

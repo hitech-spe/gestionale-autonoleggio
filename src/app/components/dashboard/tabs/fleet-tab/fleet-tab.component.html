@@ -126,7 +126,16 @@
     <div class="modal-overlay">
         <div class="modal-card">
             <h3>{{ isEditMode ? 'Modifica Veicolo' : 'Inserisci Nuovo Veicolo' }}</h3>
-            <div class="form-grid">
+            
+            @if (limitReached) {
+                <div class="alert-banner" style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 12px; padding: 1.5rem; text-align: center; margin: 1rem 0;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 2.5rem; color: #d97706; margin-bottom: 0.75rem; display: block;"></i>
+                    <h4 style="margin: 0 0 0.5rem 0; font-size: 1.15rem; font-weight: 800; color: #92400e;">Limite Abbonamento Raggiunto ⚠️</h4>
+                    <p style="margin: 0 0 1.5rem 0; font-size: 0.85rem; color: #b45309; line-height: 1.5;">Hai raggiunto il numero massimo di auto consentito dal tuo piano attuale. Per aggiungere nuove vetture in flotta, effettua l'upgrade dalle Impostazioni.</p>
+                    <button class="btn btn-accent w-100" (click)="closeModal()" style="height: 42px; font-weight: 700; cursor: pointer;">Capito</button>
+                </div>
+            } @else {
+                <div class="form-grid">
                 <div class="form-group"><label>Marca</label><input type="text" [(ngModel)]="newVehicle.brand" placeholder="Es. Fiat"></div>
                 <div class="form-group"><label>Modello</label><input type="text" [(ngModel)]="newVehicle.model" placeholder="Es. 500X"></div>
                 <div class="form-group"><label>Targa</label><input type="text" [(ngModel)]="newVehicle.plate" placeholder="AB123CD"></div>
@@ -145,9 +154,9 @@
                 <div class="form-group">
                     <label>Sede Appartenenza</label>
                     <select [(ngModel)]="newVehicle.location">
-                        <option value="Mottola">Mottola</option>
-                        <option value="Massafra">Massafra</option>
-                        <option value="Grottaglie">Grottaglie</option>
+                        @for (loc of locations; track loc) {
+                            <option [value]="loc">{{ loc }}</option>
+                        }
                     </select>
                 </div>
                 <div class="form-group">
@@ -258,6 +267,7 @@
                 <button class="btn btn-outline" (click)="closeModal()">Annulla</button>
                 <button class="btn btn-accent" (click)="saveVehicle()">{{ isEditMode ? 'Aggiorna' : 'Salva' }} Veicolo</button>
             </div>
+            }
         </div>
     </div>
 }
@@ -268,7 +278,7 @@
             <div id="printable-job-sheet" style="font-family: inherit; color: #333;">
                 <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #d4af37; padding-bottom: 1rem; margin-bottom: 1rem;">
                     <div>
-                        <h2 style="margin: 0; color: #d4af37; font-size: 1.5rem; font-weight: bold; text-transform: uppercase;">Dolce Vita</h2>
+                        <h2 style="margin: 0; color: #d4af37; font-size: 1.5rem; font-weight: bold; text-transform: uppercase;">RentSmart</h2>
                         <span style="font-size: 0.75rem; color: #777; display: block;">Servizio Gestione Flotta</span>
                     </div>
                     <div style="text-align: right;">
@@ -383,7 +393,7 @@
                     </div>
                     <div style="text-align: right; width: 180px;">
                         <span style="display: block; border-bottom: 1px solid #bbb; height: 25px; margin-bottom: 3px;"></span>
-                        <span>Firma Dolce Vita Noleggio</span>
+                        <span>Firma RentSmart Noleggio</span>
                     </div>
                 </div>
             </div>

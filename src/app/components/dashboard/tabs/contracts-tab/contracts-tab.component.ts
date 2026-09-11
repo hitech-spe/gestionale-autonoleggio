@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Observable, tap } from 'rxjs';
 import { RentalService, ContractDocument, Customer, Vehicle, Rental, Company } from '../../../../services/rental.service';
 import { LoadingService } from '../../../../services/loading.service';
+import { AuthService } from '../../../../services/auth.service';
 import { Timestamp } from '@angular/fire/firestore';
 import { API_CONFIG } from '../../../../config/api.config';
 import { CustomerSelectComponent } from "../../../../shared/customer-select/customer-select.component";
@@ -18,6 +19,12 @@ import { CustomerSelectComponent } from "../../../../shared/customer-select/cust
 export class ContractsTabComponent implements OnInit {
   private rentalService = inject(RentalService);
   private loadingService = inject(LoadingService);
+  private authService = inject(AuthService);
+
+  get isCargosActive(): boolean {
+    const comp = this.authService.getCompanyProfile();
+    return !!(comp && comp.plan !== 'starter' && comp.enableCargos);
+  }
 
   contracts$!: Observable<ContractDocument[]>;
   allContracts: ContractDocument[] = [];

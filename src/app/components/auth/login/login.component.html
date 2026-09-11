@@ -7,11 +7,8 @@
       </a>
 
       <div class="auth-header">
-        <div class="logo">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="logo-icon">
-            <path d="M19 15v1a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3v-1H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1zm-1-8h-3v4h3V7zm-5 0H6v4h7V7z" />
-          </svg>
-          <span class="logo-text">Rent<span class="text-gradient">Flow</span></span>
+        <div class="logo" style="display: flex; align-items: center; justify-content: center;">
+          <img src="assets/images/logo.webp" alt="RentSmart Logo" style="height: 64px; width: auto; object-fit: contain; border-radius: 6px;">
         </div>
         <h1>Accedi alla piattaforma</h1>
         <p>Inserisci le tue credenziali per gestire il tuo autonoleggio.</p>
@@ -25,12 +22,12 @@
 
         <div class="form-group">
           <label for="email">Indirizzo Email</label>
-          <input 
-            type="email" 
-            id="email" 
-            name="email" 
-            [(ngModel)]="email" 
-            required 
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="email"
+            required
             placeholder="nome&#64;autonoleggio.it"
             autocomplete="email">
         </div>
@@ -40,18 +37,32 @@
             <label for="password">Password</label>
             <a href="#" class="forgot-password">Password dimenticata?</a>
           </div>
-          <input 
-            type="password" 
-            id="password" 
-            name="password" 
-            [(ngModel)]="password" 
-            required 
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
             placeholder="••••••••"
             autocomplete="current-password">
         </div>
 
         <button type="submit" class="btn btn-accent w-100" [disabled]="isLoading">
           {{ isLoading ? 'Accesso in corso...' : 'Accedi' }}
+        </button>
+
+        <div class="auth-divider">
+          <span>oppure</span>
+        </div>
+
+        <button type="button" class="btn-google-login" (click)="loginWithGoogle()" [disabled]="isLoading">
+          <svg class="google-icon" viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-3.3 3.28-8.16 3.28-13.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"/>
+          </svg>
+          <span>Continua con Google</span>
         </button>
       </form>
 
@@ -66,10 +77,74 @@
         <h2>Un unico pannello per tutta la tua flotta.</h2>
         <p>Registra i noleggi, compila contratti professionali in pochi secondi e ricevi notifiche intelligenti prima che scada un'assicurazione o una revisione.</p>
         <div class="promo-quote">
-          <p>"RentFlow ha ridotto il nostro tempo di back-office del 45% fin dal primo mese."</p>
+          <p>"RentSmart ha ridotto il nostro tempo di back-office del 45% fin dal primo mese."</p>
           <span>— Leonardo G., Titolare Autonoleggio</span>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Google Onboarding Modal -->
+  @if (onboardingUser$ | async; as gUser) {
+    <div class="onboarding-overlay">
+      <div class="onboarding-card animate-scale-up">
+        <div class="onboarding-header">
+          <i class="fa-solid fa-gem text-accent"></i>
+          <h2>Attivazione Azienda</h2>
+          <p>Benvenuto in RentSmart, <strong>{{ gUser.displayName || 'Utente' }}</strong>! Completa la registrazione gratuita inserendo i dettagli della tua attività.</p>
+        </div>
+
+        <form (ngSubmit)="onboardGoogle()" class="onboarding-form">
+          <!-- Form Errors -->
+          <div class="status-message error" *ngIf="error" style="margin-bottom: 1.5rem;">
+            {{ error }}
+          </div>
+
+          <div class="form-group">
+            <label for="oCompName" style="font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.4rem; display: block; text-align: left;">Nome della tua Azienda / Brand</label>
+            <input type="text" id="oCompName" name="oCompName" [(ngModel)]="companyName" required placeholder="Es. Rossi Rent, Smeralda Noleggi..." style="width: 100%; padding: 0.75rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; font-size: 0.95rem;">
+          </div>
+
+          <div class="form-group mt-3" style="margin-top: 1.25rem;">
+            <label style="font-size: 0.82rem; font-weight: 700; color: #475569; text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.4rem; display: block; text-align: left;">Scegli il tuo Piano</label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; width: 100%;">
+              <button type="button" class="btn" [style.background]="selectedPlan === 'starter' ? 'var(--accent, #2563eb)' : '#f8fafc'" [style.color]="selectedPlan === 'starter' ? 'white' : '#475569'" [style.border]="selectedPlan === 'starter' ? '1px solid var(--accent, #2563eb)' : '1px solid #cbd5e1'" (click)="selectedPlan = 'starter'" style="height: 38px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Starter (29€)</button>
+              <button type="button" class="btn" [style.background]="selectedPlan === 'pro' ? 'var(--accent, #2563eb)' : '#f8fafc'" [style.color]="selectedPlan === 'pro' ? 'white' : '#475569'" [style.border]="selectedPlan === 'pro' ? '1px solid var(--accent, #2563eb)' : '1px solid #cbd5e1'" (click)="selectedPlan = 'pro'" style="height: 38px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Pro (59€)</button>
+              <button type="button" class="btn" [style.background]="selectedPlan === 'enterprise' ? 'var(--accent, #2563eb)' : '#f8fafc'" [style.color]="selectedPlan === 'enterprise' ? 'white' : '#475569'" [style.border]="selectedPlan === 'enterprise' ? '1px solid var(--accent, #2563eb)' : '1px solid #cbd5e1'" (click)="selectedPlan = 'enterprise'" style="height: 38px; font-size: 0.8rem; font-weight: 700; border-radius: 6px; cursor: pointer; transition: all 0.2s;">Ent. (129€)</button>
+            </div>
+          </div>
+
+          <!-- Opzioni di Attivazione / Prova Gratuita -->
+          <div class="activation-options mt-4 mb-4" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.25rem; margin-bottom: 1.25rem; text-align: left;">
+            <label style="font-weight: 800; font-size: 0.8rem; color: #475569; text-transform: uppercase; margin-bottom: 0.25rem;">Modalità di Attivazione:</label>
+
+            <!-- Opzione 1: Pagamento Immediato -->
+            <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; font-size: 0.9rem; color: #334155;">
+              <input type="radio" name="subscribeImmediately" [value]="true" [(ngModel)]="subscribeImmediately" style="margin-top: 0.2rem; width: 18px; height: 18px; accent-color: var(--accent, #2563eb);">
+              <div>
+                <strong style="display: block; color: #0f172a; display: flex; align-items: center; gap: 0.35rem;">Attiva Subito l'Abbonamento <span style="background: rgba(37, 99, 235, 0.1); color: var(--accent, #2563eb); font-size: 0.65rem; padding: 0.1rem 0.4rem; border-radius: 50px; font-weight: 800;">Consigliato</span></strong>
+                <span style="font-size: 0.8rem; color: #64748b;">Verrai reindirizzato su Stripe subito dopo l'attivazione.</span>
+              </div>
+            </label>
+
+            <!-- Opzione 2: Prova Gratuita -->
+            <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer; font-size: 0.9rem; color: #334155; border-top: 1px solid #e2e8f0; padding-top: 0.75rem;">
+              <input type="radio" name="subscribeImmediately" [value]="false" [(ngModel)]="subscribeImmediately" style="margin-top: 0.2rem; width: 18px; height: 18px; accent-color: var(--accent, #2563eb);">
+              <div>
+                <strong style="display: block; color: #0f172a;">Inizia con 14 giorni di Prova Gratuita</strong>
+                <span style="font-size: 0.8rem; color: #64748b;">Nessuna carta di credito richiesta. Potrai abbonarti in seguito.</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="onboarding-footer mt-4" style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+            <button type="button" class="btn btn-outline" (click)="cancelOnboarding()" style="height: 44px; padding: 0 1.5rem; border-radius: 8px; font-weight: 700; border: 1px solid #cbd5e1; background: transparent; cursor: pointer; transition: all 0.2s;">Annulla</button>
+            <button type="button" class="btn btn-accent" [disabled]="isLoading || !companyName" (click)="onboardGoogle()" style="height: 44px; padding: 0 2rem; border-radius: 8px; font-weight: 800; background: var(--accent, #2563eb); color: white; border: none; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); transition: all 0.2s;">
+              {{ isLoading ? 'Attivazione...' : (subscribeImmediately ? 'Registrati e Paga con Stripe' : 'Crea e Attiva Prova Gratis') }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
 </div>

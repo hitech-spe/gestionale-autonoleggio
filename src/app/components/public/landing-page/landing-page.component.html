@@ -1,24 +1,10 @@
 <!-- Navbar Sticky -->
-<header class="navbar">
+<header class="navbar" [class.scrolled]="isScrolled">
   <div class="container navbar-content">
     <div class="logo">
-      <!-- Product custom SVG logo -->
-      <svg class="product-logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16" cy="16" r="14" stroke="url(#logo-grad)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="60 30" />
-        <path d="M8 18H24V21C24 21.5 23.5 22 23 22H21C20.5 22 20 21.5 20 21V20.5H12V21C12 21.5 11.5 22 11 22H9C8.5 22 8 21.5 8 21V18Z" fill="url(#logo-grad)" />
-        <path d="M9.5 18L11.5 13.5C11.8 12.6 12.7 12 13.7 12H18.3C19.3 12 20.2 12.6 20.5 13.5L22.5 18H9.5Z" fill="url(#logo-grad)" opacity="0.85" />
-        <circle cx="11.5" cy="19.5" r="1" fill="white" />
-        <circle cx="20.5" cy="19.5" r="1" fill="white" />
-        <defs>
-          <linearGradient id="logo-grad" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#2563eb" />
-            <stop offset="100%" stop-color="#1d4ed8" />
-          </linearGradient>
-        </defs>
-      </svg>
-      <span class="logo-text">Rent<span class="text-gradient">Smart</span></span>
+      <img src="assets/images/logo.webp" alt="RentSmart Logo" class="logo-img">
     </div>
-    
+
     <nav class="nav-links hide-mobile">
       <a href="#features" class="nav-link">Funzionalità</a>
       <a href="#dashboard" class="nav-link">La Piattaforma</a>
@@ -70,6 +56,7 @@
           </div>
           <div class="mockup-search">hi-tech-rent.it/app/dashboard</div>
         </div>
+
         <div class="mockup-body">
           <!-- Sidebar -->
           <div class="mockup-sidebar">
@@ -95,7 +82,7 @@
               <div class="main-title">Pannello di Controllo</div>
               <div class="main-user">HI-TECH S.r.l.s.</div>
             </div>
-            
+
             <!-- Cards Row -->
             <div class="mockup-cards">
               <div class="mini-card">
@@ -134,6 +121,284 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- Trust Partners Bar -->
+    <!--div class="hero-partners" data-aos="fade-up" data-aos-delay="400" style="margin-top: 4rem; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 2.25rem; width: 100%; text-align: center; grid-column: 1 / -1;">
+      <p style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1.5rem;">La scelta dei professionisti dell'autonoleggio in tutta Italia</p>
+      <div class="partners-logos" style="display: flex; justify-content: center; align-items: center; gap: 3rem; flex-wrap: wrap; opacity: 0.55;">
+        <span style="font-family: var(--font-heading), serif; font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Smeralda Rent</span>
+        <span style="font-family: var(--font-heading), serif; font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Rossi Noleggi</span>
+        <span style="font-family: var(--font-heading), serif; font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Apulia Go</span>
+        <span style="font-family: var(--font-heading), serif; font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Smeralda Car</span>
+        <span style="font-family: var(--font-heading), serif; font-size: 1.35rem; font-weight: 800; color: #ffffff; letter-spacing: -0.01em;">Veloce Noleggio</span>
+      </div>
+    </div-->
+  </div>
+</section>
+
+<!-- Interactive Demo Playground -->
+<section class="demo-playground-section" id="interactive-demo">
+  <div class="container">
+    <div class="section-header text-center" data-aos="fade-up">
+      <div class="badge-promo mx-auto">
+        <span class="badge-new">PROVA LIVE</span>
+        <p>Sperimenta la Piattaforma in Tempo Reale</p>
+      </div>
+      <h2>Come semplifichiamo il tuo lavoro in 3 passaggi</h2>
+      <p class="section-subtitle">Clicca sui moduli qui sotto per vedere come RentSmart automatizza le operazioni più complesse del tuo autonoleggio.</p>
+    </div>
+
+    <div class="playground-wrapper" data-aos="zoom-in" data-aos-delay="100">
+      <!-- Tab Triggers -->
+      <div class="playground-tabs">
+        <button class="tab-btn" [class.active]="activePlaygroundTab === 'timeline'" (click)="activePlaygroundTab = 'timeline'">
+          <span class="tab-icon">📅</span>
+          <div class="tab-label">
+            <h4>Timeline Flotta</h4>
+            <p>Pianificazione rapida</p>
+          </div>
+        </button>
+        <button class="tab-btn" [class.active]="activePlaygroundTab === 'contract'" (click)="activePlaygroundTab = 'contract'; startContractDemo()">
+          <span class="tab-icon">📄</span>
+          <div class="tab-label">
+            <h4>Contratto PDF</h4>
+            <p>Generazione in 1-click</p>
+          </div>
+        </button>
+        <button class="tab-btn" [class.active]="activePlaygroundTab === 'pec'" (click)="activePlaygroundTab = 'pec'; startPecDemo()">
+          <span class="tab-icon">⚖️</span>
+          <div class="tab-label">
+            <h4>Risoluzione Multe PEC</h4>
+            <p>Back-office automatico</p>
+          </div>
+        </button>
+      </div>
+
+      <!-- Tab Content Area -->
+      <div class="playground-content-card">
+
+        <!-- Tab 1: Timeline -->
+        @if (activePlaygroundTab === 'timeline') {
+          <div class="playground-pane fade-in">
+            <div class="pane-grid">
+              <div class="pane-text">
+                <h3>Visualizza la tua flotta a colpo d'occhio</h3>
+                <p>Una timeline orizzontale fluida e interattiva per capire subito quali auto sono disponibili, quali in noleggio e quali in officina. Con filtri avanzati per targa e sede.</p>
+                <div class="interactive-controls">
+                  <span class="control-label">Simula azione:</span>
+                  <div class="btn-group">
+                    <button class="btn-group-btn" [class.active]="bookingStatus === 'attivo'" (click)="bookingStatus = 'attivo'">Mostra Noleggi</button>
+                    <button class="btn-group-btn" [class.active]="bookingStatus === 'manutenzione'" (click)="bookingStatus = 'manutenzione'">Mostra Manutenzioni</button>
+                  </div>
+                </div>
+                <div class="benefits-row mt-4">
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Rilevamento automatico sovrapposizioni</div>
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Filtro immediato per sede o targa</div>
+                </div>
+              </div>
+              <div class="pane-visual">
+                <div class="mockup-calendar-premium">
+                  <div class="calendar-header-premium">
+                    <span class="month-title">Settembre 2026</span>
+                    <div class="calendar-nav-arrows">
+                      <span class="nav-arrow">‹</span><span class="nav-arrow">›</span>
+                    </div>
+                  </div>
+                  <div class="calendar-days-premium">
+                    <span>LUN 7</span><span>MAR 8</span><span>MER 9</span><span>GIO 10</span><span>VEN 11</span><span>SAB 12</span><span>DOM 13</span>
+                  </div>
+                  <div class="calendar-timeline-premium">
+                    <div class="timeline-row-premium">
+                      <div class="vehicle-info">
+                        <strong>Fiat Panda</strong>
+                        <span>AA 123 XX</span>
+                      </div>
+                      <div class="timeline-track">
+                        @if (bookingStatus === 'attivo') {
+                          <div class="booking-bar bg-accent-glow pulse-subtle" style="left: 15%; width: 45%;">Noleggio Rossi</div>
+                        } @else {
+                          <div class="booking-bar bg-blue-outline" style="left: 15%; width: 45%; border-style: dashed; background: transparent;">Libera</div>
+                        }
+                      </div>
+                    </div>
+                    <div class="timeline-row-premium">
+                      <div class="vehicle-info">
+                        <strong>Jeep Renegade</strong>
+                        <span>BB 456 YY</span>
+                      </div>
+                      <div class="timeline-track">
+                        @if (bookingStatus === 'attivo') {
+                          <div class="booking-bar bg-green-glow" style="left: 45%; width: 50%;">Noleggio Bianchi</div>
+                        } @else {
+                          <div class="booking-bar bg-blue-outline" style="left: 45%; width: 50%; border-style: dashed; background: transparent;">Libera</div>
+                        }
+                      </div>
+                    </div>
+                    <div class="timeline-row-premium">
+                      <div class="vehicle-info">
+                        <strong>Alfa Romeo</strong>
+                        <span>CC 789 ZZ</span>
+                      </div>
+                      <div class="timeline-track">
+                        <div class="booking-bar bg-yellow-glow" style="left: 0%; width: 35%;">Tagliando Officina</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Tab 2: Contract -->
+        @if (activePlaygroundTab === 'contract') {
+          <div class="playground-pane fade-in">
+            <div class="pane-grid">
+              <div class="pane-text">
+                <h3>Genera contratti PDF blindati in 1 clic</h3>
+                <p>Niente più compilazioni manuali o moduli cartacei. Il nostro generatore estrae i dati dal sistema e produce un PDF professionale, completo di P.IVA, dettagli auto, polizza assicurativa e clausole di firma.</p>
+                <div class="interactive-controls">
+                  <button class="btn btn-accent btn-sm mt-2" [disabled]="contractStep === 'generating'" (click)="startContractDemo()">
+                    @if (contractStep === 'idle') {
+                      <span>⚡ Rigenera Contratto</span>
+                    } @else if (contractStep === 'generating') {
+                      <span>⏳ Compilazione in corso...</span>
+                    } @else {
+                      <span>✓ Contratto PDF Pronto!</span>
+                    }
+                  </button>
+                </div>
+                <div class="benefits-row mt-4">
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Firme digitali pronte per tablet</div>
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Allegati e documenti abbinati</div>
+                </div>
+              </div>
+              <div class="pane-visual">
+                <div class="contract-generator-visual">
+                  <div class="form-preview">
+                    <h4>Dati Noleggio</h4>
+                    <div class="form-row-mini">
+                      <span>Cliente:</span> <strong>Mario Rossi</strong>
+                    </div>
+                    <div class="form-row-mini">
+                      <span>Auto:</span> <strong>Fiat Panda (AA 123 XX)</strong>
+                    </div>
+                    <div class="form-row-mini">
+                      <span>Tariffa:</span> <strong>€ 39.00 /giorno</strong>
+                    </div>
+                  </div>
+                  <div class="pdf-document-preview" [class.generating]="contractStep === 'generating'" [class.ready]="contractStep === 'ready'">
+                    @if (contractStep === 'idle') {
+                      <div class="pdf-placeholder">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <p>Clicca sul pulsante per compilare il PDF</p>
+                      </div>
+                    } @else if (contractStep === 'generating') {
+                      <div class="pdf-loader">
+                        <div class="spinner-mini"></div>
+                        <p>Raccolta dati ed elaborazione PDF...</p>
+                      </div>
+                    } @else {
+                      <div class="pdf-ready-state fade-in">
+                        <div class="pdf-header-bar">
+                          <i class="fa-solid fa-file-pdf text-red-500"></i>
+                          <span>Contratto_Noleggio_Panda.pdf</span>
+                        </div>
+                        <div class="pdf-body-lines">
+                          <div class="pdf-line-title">CONTRATTO DI LOCAZIONE N. 70459</div>
+                          <div class="pdf-line-text">Concesso in locazione a: <strong>Mario Rossi</strong></div>
+                          <div class="pdf-line-text">Veicolo locato: <strong>Fiat Panda (AA 123 XX)</strong></div>
+                          <div class="pdf-line-divider"></div>
+                          <div class="pdf-line-signature">
+                            <span>Firma Conducente</span>
+                            <div class="signature-line-mock">Mario Rossi</div>
+                          </div>
+                        </div>
+                        <div class="pdf-footer-success">
+                          <span>✓ PDF Generato con Successo</span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Tab 3: PEC -->
+        @if (activePlaygroundTab === 'pec') {
+          <div class="playground-pane fade-in">
+            <div class="pane-grid">
+              <div class="pane-text">
+                <h3>Risoluzione Multe PEC in 2 minuti</h3>
+                <p>La funzionalità più innovativa del settore. Quando ricevi una multa via PEC, la carichi nel sistema: RentSmart scansiona la data e la targa dell'infrazione, trova il cliente che aveva in noleggio l'auto in quel momento e compila una mail PEC di rinotifica pronta all'invio.</p>
+                <div class="interactive-controls">
+                  <button class="btn btn-accent btn-sm mt-2" [disabled]="pecStep === 'scanning'" (click)="startPecDemo()">
+                    @if (pecStep === 'idle') {
+                      <span>🔍 Simula scansione PEC</span>
+                    } @else if (pecStep === 'scanning') {
+                      <span>⏳ Scansione verbali in corso...</span>
+                    } @else {
+                      <span>✓ Rinotifica Pronta!</span>
+                    }
+                  </button>
+                </div>
+                <div class="benefits-row mt-4">
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Rintracciamento automatico in 1 secondo</div>
+                  <div class="benefit-tag"><span class="check-dot">✓</span> Liberazione totale da responsabilità in solido</div>
+                </div>
+              </div>
+              <div class="pane-visual">
+                <div class="pec-resolver-visual">
+                  <div class="fine-upload-box" [class.scanning]="pecStep === 'scanning'" [class.scanned]="pecStep === 'ready'">
+                    @if (pecStep === 'idle') {
+                      <div class="upload-placeholder">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Trascina il PDF del Verbale PEC qui</p>
+                        <span class="subtext">Simulazione Verbale_N_12459.pdf</span>
+                      </div>
+                    } @else if (pecStep === 'scanning') {
+                      <div class="scanning-placeholder">
+                        <div class="scan-laser-line"></div>
+                        <i class="fa-solid fa-file-prescription"></i>
+                        <p>Riconoscimento OCR in corso...</p>
+                      </div>
+                    } @else {
+                      <div class="scanned-success fade-in">
+                        <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4>Targa ed Infrazione Rilevate!</h4>
+                        <div class="infraction-details">
+                          <p>Targa: <strong>CC 789 ZZ</strong></p>
+                          <p>Data: <strong>09/09/2026 14:30</strong></p>
+                          <p class="highlight-box">Abbinato a: <strong>Mario Rossi (Contratto 70459)</strong></p>
+                        </div>
+                      </div>
+                    }
+                  </div>
+
+                  @if (pecStep === 'ready') {
+                    <div class="pec-email-draft fade-in">
+                      <div class="email-header">
+                        <span>A: <strong>poliziamunicipale@pec.it</strong></span>
+                        <span>Oggetto: <strong>Rinotifica Verbale N_12459</strong></span>
+                      </div>
+                      <div class="email-body">
+                        Si richiede la rinotifica del verbale in oggetto a carico del conducente locatario: <strong>Mario Rossi</strong>...
+                      </div>
+                      <div class="email-footer-bar">
+                        <span class="btn-send-pec-mock"><i class="fa-solid fa-paper-plane"></i> Invia PEC al Comando</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
       </div>
     </div>
   </div>
@@ -263,6 +528,29 @@
   </div>
 </section>
 
+<!-- Key Metrics / Stats Showcase -->
+<section class="stats-showcase-section">
+  <div class="container">
+    <div class="stats-grid" data-aos="fade-up">
+      <div class="stat-card">
+        <span class="stat-num">+50%</span>
+        <strong class="stat-label">Efficienza Operativa</strong>
+        <p class="stat-desc">Tempo risparmiato sul back-office fin dalla prima settimana grazie all'automazione dei processi.</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">&lt; 2 Min</span>
+        <strong class="stat-label">Stipula Contratto</strong>
+        <p class="stat-desc">Estrazione istantanea di auto e cliente con compilazione automatica e generazione del contratto in PDF.</p>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">99.9%</span>
+        <strong class="stat-label">Uptime e Sicurezza</strong>
+        <p class="stat-desc">Infrastruttura Enterprise in cloud ad altissima disponibilità con backup automatici cifrati H24.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Preview Dashboard / Interactive Section -->
 <section id="dashboard" class="dashboard-preview-section">
   <div class="container grid-2">
@@ -270,7 +558,7 @@
       <h2>Semplifica l'operatività quotidiana con il controllo multi-sede</h2>
       <div class="divider-left"></div>
       <p>Che tu abbia un unico ufficio o molteplici sedi dislocate sul territorio (es. Milano, Roma, Torino, Bari), il sistema sincronizza in tempo reale ogni movimento e disponibilità.</p>
-      
+
       <ul class="preview-bullets">
         <li>
           <span class="bullet-check">✓</span>
@@ -292,8 +580,25 @@
         </li>
       </ul>
     </div>
-    
+
     <div class="preview-image-container" data-aos="fade-left" data-aos-delay="200">
+      <!-- Real Screenshot Image (visible if file exists inside public/assets/images/screenshot/promemoria.png) -->
+      <div class="promemoria-screenshot-wrapper" style="display: none;">
+        <div class="mockup-frame">
+          <div class="mockup-header">
+            <div class="window-dots">
+              <span class="dot red"></span>
+              <span class="dot yellow"></span>
+              <span class="dot green"></span>
+            </div>
+            <div class="mockup-search">hi-tech-rent.it/app/promemoria</div>
+          </div>
+          <div style="height: 340px; overflow: hidden; background: #ffffff; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
+            <img src="assets/images/screenshot/promemoria.png" alt="RentSmart Promemoria" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block;" onload="this.parentElement.parentElement.parentElement.style.display='block'; this.parentElement.parentElement.parentElement.nextElementSibling.style.display='none';">
+          </div>
+        </div>
+      </div>
+
       <div class="postit-wall">
         <!-- Post-it promemoria interattivo -->
         <div class="postit-mock yellow">
@@ -329,7 +634,7 @@
           <span class="period">/mese</span>
         </div>
         <p class="card-desc">Perfetto per piccole agenzie o parchi auto emergenti.</p>
-        
+
         <div class="plan-limits border-t border-b py-4 my-4">
           <strong>Fino a 5 auto gestite</strong>
         </div>
@@ -431,7 +736,7 @@
     <div class="contact-info" data-aos="fade-right">
       <h2>Pronto a semplificare il tuo lavoro?</h2>
       <p>I nostri tecnici esperti e programmatori di <strong>HI-TECH srls</strong> sono a tua completa disposizione per mostrarti una demo personalizzata o guidarti nella scelta del pacchetto migliore.</p>
-      
+
       <div class="contact-details-box">
         <div class="detail-item">
           <span class="icon">✉</span>
@@ -444,16 +749,22 @@
           <span class="icon">📞</span>
           <div>
             <strong>Supporto Clienti (Lun-Ven 9:00 - 18:00)</strong>
-            <p>+39 080 1234567</p>
+            <p>+39 3456425468</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="contact-form-container" data-aos="fade-left" data-aos-delay="200">
-      <form class="contact-form" (ngSubmit)="onSubmitContact()">
+      <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" (ngSubmit)="onSubmitContact($event)">
+        <!-- Hidden honeypot field for spam prevention -->
+        <p style="display: none;">
+          <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+        </p>
+        <input type="hidden" name="form-name" value="contact" />
+
         <h3>Richiedi Informazioni</h3>
-        
+
         <div class="status-message success" *ngIf="formSubmitted">
           Grazie! Un consulente HI-TECH srls ti risponderà entro 2 ore lavorative.
         </div>
@@ -489,21 +800,7 @@
   <div class="container footer-grid">
     <div class="footer-brand">
       <div class="logo footer-logo-margin">
-        <!-- Product custom SVG logo -->
-        <svg class="product-logo-svg" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height: 38px; width: auto;">
-          <circle cx="16" cy="16" r="14" stroke="url(#logo-grad-footer)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="60 30" />
-          <path d="M8 18H24V21C24 21.5 23.5 22 23 22H21C20.5 22 20 21.5 20 21V20.5H12V21C12 21.5 11.5 22 11 22H9C8.5 22 8 21.5 8 21V18Z" fill="url(#logo-grad-footer)" />
-          <path d="M9.5 18L11.5 13.5C11.8 12.6 12.7 12 13.7 12H18.3C19.3 12 20.2 12.6 20.5 13.5L22.5 18H9.5Z" fill="url(#logo-grad-footer)" opacity="0.85" />
-          <circle cx="11.5" cy="19.5" r="1" fill="white" />
-          <circle cx="20.5" cy="19.5" r="1" fill="white" />
-          <defs>
-            <linearGradient id="logo-grad-footer" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#2563eb" />
-              <stop offset="100%" stop-color="#1d4ed8" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <span class="logo-text">Rent<span class="text-gradient">Smart</span></span>
+        <img src="assets/images/logo.webp" alt="RentSmart Logo" class="logo-img footer-logo-img">
       </div>
       <p class="footer-desc-text">La piattaforma SaaS all-in-one per il noleggio moderno.</p>
     </div>
@@ -514,16 +811,16 @@
       <a href="#pricing">Prezzi</a>
     </div>
     <div class="footer-company-logo-section">
-      <h4>Sviluppato con orgoglio da</h4>
-      <div class="footer-company-card dark-theme-card">
-        <img src="/assets/images/logo-trasp.png" alt="HI-TECH srls Logo" class="footer-company-img white-logo">
-        <div class="footer-company-info">
+      <h4>Sviluppato da</h4>
+      <a href="https://hitechsrls.com/" target="_blank" class="footer-company-minimal-link">
+        <img src="/assets/images/logo-trasp.png" alt="HI-TECH srls Logo" class="footer-company-minimal-logo">
+        <div class="footer-company-info-minimal">
           <strong>HI-TECH srls</strong>
-          <span class="company-subtext white-text">Sviluppo Software Premium</span>
-          <span class="company-subtext white-text">C.da Marinara n.12, Mottola (TA)</span>
-          <span class="company-subtext white-text">P.IVA 03483000737</span>
+          <span class="company-subtext-minimal">Sviluppo Software Premium</span>
+          <span class="company-subtext-minimal">C.da Marinara n.12, Mottola (TA)</span>
+          <span class="company-subtext-minimal">P.IVA 03483000737</span>
         </div>
-      </div>
+      </a>
     </div>
   </div>
   <div class="container footer-bottom">

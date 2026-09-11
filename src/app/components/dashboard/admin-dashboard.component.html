@@ -1,24 +1,71 @@
-<div class="admin-dashboard fade-in">
+<div class="admin-dashboard-layout">
+    <!-- Floating Menu Trigger (visible only when sidebar is closed) -->
+    @if (isSidebarCollapsed) {
+        <button class="floating-sidebar-trigger" (click)="toggleSidebar()" title="Apri Menu">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    }
 
-    <header class="dashboard-header glass-card">
-        <div class="header-content">
-            <div style="display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
-                <div>
-                    <h1>Gestionale Operativo</h1>
-                    <p class="subtitle">Amministrazione {{ (company$ | async)?.name || 'RentFlow' }}</p>
-                </div>
+    <!-- Left Sidebar Menu (Premium Enterprise SaaS style) -->
+    <aside class="dashboard-sidebar" [class.collapsed]="isSidebarCollapsed">
+        <!-- Sidebar Brand/Logo -->
+        <div class="sidebar-brand">
+            <img src="assets/images/logo.webp" alt="RentSmart Logo" class="sidebar-logo white-logo">
+            <!-- Sidebar Close Button -->
+            <button class="sidebar-close-btn" (click)="toggleSidebar()" title="Chiudi Menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
 
-                @if (activeAlertsCount > 0 || expiringInsurances.length > 0 || expiringInspections.length > 0) {
-                    <div class="global-alert-badge animate-pulse" (click)="onTabChange('reminders')" title="Ci sono promemoria urgenti o scadenze imminenti dei veicoli! Clicca per visualizzare i dettagli.">
-                        <i class="fa-solid fa-bell fa-bounce"></i>
-                        <span class="badge-count">{{ activeAlertsCount + expiringInsurances.length + expiringInspections.length }}</span>
-                        <span class="badge-text hide-mobile">Avvisi Attivi!</span>
-                    </div>
-                }
+        <!-- User Info block -->
+        <div class="sidebar-user">
+            <div class="user-avatar-mini">
+                <i class="fa-solid fa-user-tie"></i>
             </div>
+            <div class="user-meta">
+                <strong>Admin RentSmart</strong>
+                <span>{{ (company$ | async)?.name || 'Gestione Flotta' }}</span>
+            </div>
+        </div>
 
-            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
-                <div class="filter-group" style="margin-bottom: 0;">
+        <!-- Vertical Sidebar Menu Navigation Links -->
+        <nav class="sidebar-menu">
+            <button class="menu-item" [class.active]="currentTab === 'calendar'" (click)="onTabChange('calendar')">
+                <i class="fa-solid fa-calendar-check"></i> <span>Calendario</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'fleet'" (click)="onTabChange('fleet')">
+                <i class="fa-solid fa-car"></i> <span>Veicoli</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'customers'" (click)="onTabChange('customers')">
+                <i class="fa-solid fa-users"></i> <span>Clienti</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'insurance'" (click)="onTabChange('insurance')">
+                <i class="fa-solid fa-shield-halved"></i> <span>Assicurazioni</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'inspection'" (click)="onTabChange('inspection')">
+                <i class="fa-solid fa-clipboard-check"></i> <span>Revisioni</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'maintenance'" (click)="onTabChange('maintenance')">
+                <i class="fa-solid fa-wrench"></i> <span>Manutenzione</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'reminders'" (class.has-alert)="activeAlertsCount > 0" [class.active]="currentTab === 'reminders'" (click)="onTabChange('reminders')">
+                <i class="fa-solid fa-note-sticky"></i> <span>Promemoria</span>
+                @if (activeAlertsCount > 0) {
+                    <span class="sidebar-alert-dot"></span>
+                }
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'contracts'" (click)="onTabChange('contracts')">
+                <i class="fa-solid fa-file-contract"></i> <span>Contratti</span>
+            </button>
+            <button class="menu-item" [class.active]="currentTab === 'settings'" (click)="onTabChange('settings')">
+                <i class="fa-solid fa-gears"></i> <span>Impostazioni</span>
+            </button>
+        </nav>
+
+        <!-- Sidebar Footer Actions (e.g. Sede / Location Select & Logout) -->
+        <div class="sidebar-footer">
+            @if (locations.length > 0) {
+                <div class="sidebar-location">
                     <label>Sede Attiva:</label>
                     <select [ngModel]="selectedLocation$ | async" (ngModelChange)="changeLocationFilter($event)">
                         @for (loc of locations; track loc) {
@@ -26,121 +73,127 @@
                         }
                     </select>
                 </div>
-                
-                <button (click)="logout()" class="btn btn-outline" style="padding: 0.5rem 1rem; text-transform: none; display: flex; align-items: center; gap: 0.5rem; height: 38px; font-size: 0.85rem;" title="Disconnetti ed esci">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" style="width: 16px; height: 16px;">
-                        <path fill-rule="evenodd" d="M16.5 3.75a.75.75 0 0 1 .75.75v14.5a.75.75 0 0 1-1.5 0V4.5a.75.75 0 0 1 .75-.75ZM2.22 11.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1-1.06 1.06L3.81 13.5H12a.75.75 0 0 1 0 1.5H3.81l2.66 2.66a.75.75 0 0 1-1.06 1.06l-4.25-4.25a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
-                    </svg>
-                    <span>Esci</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="tabs">
-            <button [class.active]="currentTab === 'calendar'" (click)="onTabChange('calendar')">
-                <i class="fa-solid fa-calendar-check"></i> Calendario
-            </button>
-            <button [class.active]="currentTab === 'fleet'" (click)="onTabChange('fleet')">
-                <i class="fa-solid fa-car"></i> Veicoli
-            </button>
-            <button [class.active]="currentTab === 'customers'" (click)="onTabChange('customers')">
-                <i class="fa-solid fa-users"></i> Clienti
-            </button>
-            <button [class.active]="currentTab === 'insurance'" (click)="onTabChange('insurance')">
-                <i class="fa-solid fa-shield-halved"></i> Assicurazioni
-            </button>
-            <button [class.active]="currentTab === 'inspection'" (click)="onTabChange('inspection')">
-                <i class="fa-solid fa-clipboard-check"></i> Revisioni
-            </button>
-            <button [class.active]="currentTab === 'maintenance'" (click)="onTabChange('maintenance')">
-                <i class="fa-solid fa-wrench"></i> Manutenzione
-            </button>
-            <button [class.active]="currentTab === 'reminders'" (click)="onTabChange('reminders')">
-                <i class="fa-solid fa-note-sticky"></i> Promemoria
-            </button>
-            <button [class.active]="currentTab === 'contracts'" (click)="onTabChange('contracts')">
-                <i class="fa-solid fa-file-contract"></i> Contratti
-            </button>
-            <button [class.active]="currentTab === 'settings'" (click)="onTabChange('settings')">
-                <i class="fa-solid fa-gears"></i> Impostazioni
-            </button>
-            <!--button [class.active]="currentTab === 'verbali'" (click)="onTabChange('verbali')">
-                <i class="fa-solid fa-file-invoice"></i> Verbali
-            </button-->
-        </div>
-    </header>
-
-    @if (expiringInsurances.length > 0 || expiringInspections.length > 0) {
-        <div class="scadenze-alert-banner glass-card">
-            <div class="alert-banner-header" (click)="showScadenzeDetails = !showScadenzeDetails">
-                <div class="header-left">
-                    <i class="fa-solid fa-triangle-exclamation alert-warn-icon"></i>
-                    <span><strong>Attenzione!</strong> Ci sono <strong>{{ expiringInsurances.length + expiringInspections.length }}</strong> scadenze imminenti (entro 30 giorni) o già superate:</span>
-                </div>
-                <button class="btn-toggle-scadenze">
-                    {{ showScadenzeDetails ? 'Nascondi' : 'Mostra Dettagli' }}
-                    <i class="fa-solid" [class.fa-chevron-up]="showScadenzeDetails" [class.fa-chevron-down]="!showScadenzeDetails"></i>
-                </button>
-            </div>
-            @if (showScadenzeDetails) {
-                <div class="alert-banner-body">
-                    <div class="scadenze-grid">
-                        @for (ins of expiringInsurances; track ins.id) {
-                            <div class="scadenza-item insurance" (click)="navigateToInsurance(ins)" title="Vai alla scheda Assicurazioni">
-                                <span class="badge badge-ins">Assicurazione</span>
-                                <span class="vehicle-name">{{ ins.vehiclePlate }}</span>
-                                <span class="expiry-date" [class.expired]="isPastDate(ins.expiryDate)">
-                                    Scade il: {{ formatDate(ins.expiryDate) }} 
-                                    <strong class="days-remaining">({{ getDaysLeftText(ins.expiryDate) }})</strong>
-                                </span>
-                            </div>
-                        }
-                        @for (insp of expiringInspections; track insp.id) {
-                            <div class="scadenza-item inspection" (click)="navigateToInspection(insp)" title="Vai alla scheda Revisioni">
-                                <span class="badge badge-insp">Revisione</span>
-                                <span class="vehicle-name">{{ insp.vehiclePlate }}</span>
-                                <span class="expiry-date" [class.expired]="isPastDate(insp.expiryDate)">
-                                    Scade il: {{ formatDate(insp.expiryDate) }} 
-                                    <strong class="days-remaining">({{ getDaysLeftText(insp.expiryDate) }})</strong>
-                                </span>
-                            </div>
-                        }
-                    </div>
-                </div>
             }
+
+            <button (click)="logout()" class="btn-sidebar-logout" title="Disconnetti ed esci">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <span>Disconnetti</span>
+            </button>
         </div>
+    </aside>
+
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    @if (!isSidebarCollapsed) {
+        <div class="sidebar-mobile-backdrop" (click)="toggleSidebar()"></div>
     }
 
-    <main class="dashboard-content">
-        @if (currentTab === 'calendar') {
-            <app-calendar-tab [selectedLocation$]="selectedLocation$" />
+    <!-- Right Main Content Panel -->
+    <main class="dashboard-main-content fade-in" [class.sidebar-collapsed]="isSidebarCollapsed">
+
+        <!-- Premium Top Bar -->
+        <header class="main-top-bar glass-card">
+            <div class="top-bar-left">
+                <h1>Gestionale Operativo</h1>
+                <div class="top-bar-meta">
+                    <p class="subtitle">Amministrazione {{ (company$ | async)?.name || 'RentSmart' }}</p>
+                    @if ((company$ | async)?.status === 'trial' && daysLeftInTrial > 0) {
+                        <span class="trial-badge-premium" title="Il tuo periodo di prova di 14 giorni è attivo.">
+                            <i class="fa-solid fa-clock"></i> Prova Gratuita: {{ daysLeftInTrial }} {{ daysLeftInTrial === 1 ? 'giorno rimasto' : 'giorni rimasti' }}
+                        </span>
+                    }
+                </div>
+            </div>
+
+            @if (activeAlertsCount > 0 || expiringInsurances.length > 0 || expiringInspections.length > 0) {
+                <div class="global-alert-badge animate-pulse" (click)="onTabChange('reminders')" title="Ci sono promemoria urgenti o scadenze imminenti dei veicoli! Clicca per visualizzare i dettagli.">
+                    <i class="fa-solid fa-bell fa-bounce"></i>
+                    <span class="badge-count">{{ activeAlertsCount + expiringInsurances.length + expiringInspections.length }}</span>
+                    <span class="badge-text">Avvisi Attivi!</span>
+                </div>
+            }
+        </header>
+
+        <!-- Scadenze Alert Banner (Imminent Expirations within 30 days) -->
+        @if (expiringInsurances.length > 0 || expiringInspections.length > 0) {
+            <div class="scadenze-alert-banner glass-card">
+                <div class="alert-banner-header" (click)="showScadenzeDetails = !showScadenzeDetails">
+                    <div class="header-left">
+                        <i class="fa-solid fa-triangle-exclamation alert-warn-icon"></i>
+                        <span><strong>Attenzione!</strong> Ci sono <strong>{{ expiringInsurances.length + expiringInspections.length }}</strong> scadenze imminenti (entro 30 giorni) o già superate:</span>
+                    </div>
+                    <button class="btn-toggle-scadenze">
+                        {{ showScadenzeDetails ? 'Nascondi' : 'Mostra Dettagli' }}
+                        <i class="fa-solid" [class.fa-chevron-up]="showScadenzeDetails" [class.fa-chevron-down]="!showScadenzeDetails"></i>
+                    </button>
+                </div>
+                @if (showScadenzeDetails) {
+                    <div class="alert-banner-body">
+                        <div class="scadenze-grid">
+                            @for (ins of expiringInsurances; track ins.id) {
+                                <div class="scadenza-item insurance" (click)="navigateToInsurance(ins)" title="Vai alla scheda Assicurazioni">
+                                    <span class="badge badge-ins">Assicurazione</span>
+                                    <span class="vehicle-name">{{ ins.vehiclePlate }}</span>
+                                    <span class="expiry-date" [class.expired]="isPastDate(ins.expiryDate)">
+                                        Scade il: {{ formatDate(ins.expiryDate) }}
+                                        <strong class="days-remaining">({{ getDaysLeftText(ins.expiryDate) }})</strong>
+                                    </span>
+                                </div>
+                            }
+                            @for (insp of expiringInspections; track insp.id) {
+                                <div class="scadenza-item inspection" (click)="navigateToInspection(insp)" title="Vai alla scheda Revisioni">
+                                    <span class="badge badge-insp">Revisione</span>
+                                    <span class="vehicle-name">{{ insp.vehiclePlate }}</span>
+                                    <span class="expiry-date" [class.expired]="isPastDate(insp.expiryDate)">
+                                        Scade il: {{ formatDate(insp.expiryDate) }}
+                                        <strong class="days-remaining">({{ getDaysLeftText(insp.expiryDate) }})</strong>
+                                    </span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
         }
-        @if (currentTab === 'fleet') {
-            <app-fleet-tab [selectedLocation$]="selectedLocation$" />
-        }
-        @if (currentTab === 'customers') {
-            <app-customers-tab />
-        }
-        @if (currentTab === 'insurance') {
-            <app-insurance-tab [searchTerm]="insuranceSearchTerm" [highlightedId]="insuranceHighlightedId" />
-        }
-        @if (currentTab === 'inspection') {
-            <app-inspection-tab [searchTerm]="inspectionSearchTerm" [highlightedId]="inspectionHighlightedId" />
-        }
-        @if (currentTab === 'maintenance') {
-            <app-maintenance-tab />
-        }
-        @if (currentTab === 'reminders') {
-            <app-reminders-tab />
-        }
-        @if (currentTab === 'contracts') {
-            <app-contracts-tab />
-        }
-        @if (currentTab === 'verbali') {
-            <app-verbali-tab />
-        }
-        @if (currentTab === 'settings') {
-            <app-settings-tab />
+
+        <!-- Active Tab Dynamic Component Render -->
+        @if (company$ | async; as company) {
+            <div class="dashboard-content-area">
+                @if (currentTab === 'calendar') {
+                    <app-calendar-tab [selectedLocation$]="selectedLocation$" />
+                }
+                @if (currentTab === 'fleet') {
+                    <app-fleet-tab [selectedLocation$]="selectedLocation$" />
+                }
+                @if (currentTab === 'customers') {
+                    <app-customers-tab />
+                }
+                @if (currentTab === 'insurance') {
+                    <app-insurance-tab [searchTerm]="insuranceSearchTerm" [highlightedId]="insuranceHighlightedId" />
+                }
+                @if (currentTab === 'inspection') {
+                    <app-inspection-tab [searchTerm]="inspectionSearchTerm" [highlightedId]="inspectionHighlightedId" />
+                }
+                @if (currentTab === 'maintenance') {
+                    <app-maintenance-tab />
+                }
+                @if (currentTab === 'reminders') {
+                    <app-reminders-tab />
+                }
+                @if (currentTab === 'contracts') {
+                    <app-contracts-tab />
+                }
+                @if (currentTab === 'verbali') {
+                    <app-verbali-tab />
+                }
+                @if (currentTab === 'settings') {
+                    <app-settings-tab />
+                }
+            </div>
+        } @else {
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 1.5rem; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(4px); border-radius: 16px; margin: 1.5rem; box-shadow: var(--shadow-sm); border: 1px solid rgba(0,0,0,0.05);">
+                <div style="width: 44px; height: 44px; border: 4px solid rgba(0,0,0,0.06); border-left-color: var(--accent, #2563eb); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                <p style="color: #475569; font-size: 0.95rem; font-weight: 500; letter-spacing: -0.01em;">Sincronizzazione in corso...</p>
+            </div>
         }
     </main>
 
@@ -173,52 +226,105 @@
 
     <!-- Blocco Abbonamento Scaduto / Sospeso (SaaS Paywall Modal) -->
     @if (isTrialExpired || isCompanySuspended) {
-        <div class="paywall-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
-            <div class="paywall-card animate-scale-up" style="background: white; max-width: 750px; width: 100%; padding: 3rem; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.4); text-align: center;">
-                <div class="paywall-header">
-                    <div class="paywall-icon-badge" style="width: 80px; height: 80px; background: rgba(37, 99, 235, 0.08); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;">
-                        <i class="fa-solid fa-gem text-accent" style="font-size: 2.5rem;"></i>
+        <div class="paywall-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(8, 15, 30, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; overflow-y: auto;">
+            <div class="paywall-card animate-scale-up" style="background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); max-width: 900px; width: 100%; padding: 3.5rem; border-radius: 24px; box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.7); text-align: center; position: relative;">
+
+                <div class="paywall-header" style="margin-bottom: 2.5rem;">
+                    <div class="paywall-icon-badge" style="width: 84px; height: 84px; background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(29, 78, 216, 0.05) 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto; box-shadow: inset 0 2px 4px rgba(37, 99, 235, 0.1);">
+                        <i class="fa-solid fa-gem text-accent animate-pulse" style="font-size: 2.75rem; background: linear-gradient(135deg, var(--accent, #2563eb) 0%, var(--accent-hover, #1d4ed8) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></i>
                     </div>
                     @if (isCompanySuspended) {
-                        <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">ABBONAMENTO SOSPESO</h2>
-                        <p class="paywall-desc" style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">Il tuo account è stato sospeso a causa del mancato rinnovo o di un pagamento rifiutato su Stripe. Riattiva subito il servizio selezionando un piano per continuare ad accedere ai tuoi dati.</p>
+                        <h2 style="font-size: 2.2rem; font-weight: 900; color: #0f172a; margin-bottom: 0.75rem; letter-spacing: -0.025em; text-transform: uppercase;">ABBONAMENTO SOSPESO</h2>
+                        <p class="paywall-desc" style="color: #64748b; font-size: 1rem; line-height: 1.6; max-width: 650px; margin: 0 auto;">Il tuo account è stato momentaneamente sospeso a causa di un rinnovo fallito o di un pagamento rifiutato su Stripe. Riattiva subito il servizio selezionando uno dei piani sottostanti per riprendere ad accedere a tutti i tuoi dati.</p>
                     } @else {
-                        <h2 style="font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.75rem;">PERIODO DI PROVA TERMINATO</h2>
-                        <p class="paywall-desc" style="color: #64748b; font-size: 0.95rem; line-height: 1.6; margin-bottom: 2rem;">I tuoi 14 giorni di prova gratuita su <strong>RentSmart</strong> sono scaduti. La tua flotta e i contratti salvati sono al sicuro, ma per continuare a operare devi selezionare un piano di abbonamento attivo.</p>
+                        <h2 style="font-size: 2.2rem; font-weight: 900; color: #0f172a; margin-bottom: 0.75rem; letter-spacing: -0.025em; text-transform: uppercase;">PROVA GRATUITA TERMINATA</h2>
+                        <p class="paywall-desc" style="color: #64748b; font-size: 1rem; line-height: 1.6; max-width: 650px; margin: 0 auto;">I tuoi 14 giorni di prova gratuita su <strong>RentSmart</strong> sono scaduti. La tua flotta e tutti i tuoi contratti sono al sicuro, ma per continuare a operare devi attivare un piano di abbonamento attivo.</p>
                     }
                 </div>
 
-                <div class="paywall-pricing-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 2rem;">
+                <div class="paywall-pricing-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2.5rem; text-align: left;">
                     <!-- Starter Plan -->
-                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: #f8fafc;">
-                        <h4 style="font-size: 1rem; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">Starter</h4>
-                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€29<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
-                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Fino a 5 auto</span>
-                        <a routerLink="/auth/login" class="btn btn-outline w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 2rem 1.5rem; display: flex; flex-direction: column; background: #ffffff; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                        <h4 style="font-size: 1.15rem; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 0.05em;">Starter</h4>
+                        <div class="plan-price" style="font-size: 2.25rem; font-weight: 900; color: #0f172a; display: flex; align-items: baseline; gap: 0.15rem;">
+                            €29<span style="font-size: 0.95rem; color: #64748b; font-weight: 500;">/mese</span>
+                        </div>
+                        <span class="plan-limits" style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-top: 0.25rem; display: block; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">Per piccole agenzie</span>
+
+                        <ul style="list-style: none; padding: 0; margin: 1.25rem 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: #475569; flex-grow: 1;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> <strong>Fino a 5 auto</strong> in flotta</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> Contratti e preventivi illimitati</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> Assistenza ticket standard</li>
+                        </ul>
+
+                        <button (click)="createCheckoutSession('starter')" class="btn btn-outline w-100" style="font-size: 0.8rem; font-weight: 700; padding: 0.75rem; text-transform: uppercase; cursor: pointer; border-radius: 8px; margin-top: auto;">Attiva Starter</button>
                     </div>
 
                     <!-- Pro Plan -->
-                    <div class="paywall-plan-card popular" style="border: 2px solid var(--accent); border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: white; position: relative; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1);">
-                        <span class="ribbon" style="position: absolute; top: -10px; background: var(--accent); color: white; font-size: 0.65rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em;">Scelto</span>
-                        <h4 style="font-size: 1rem; color: var(--accent); text-transform: uppercase; margin-bottom: 0.5rem; margin-top: 0.25rem;">Pro</h4>
-                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€59<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
-                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Fino a 20 auto</span>
-                        <a routerLink="/auth/login" class="btn btn-accent w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    <div class="paywall-plan-card popular" style="border: 2px solid var(--accent, #2563eb); border-radius: 16px; padding: 2rem 1.5rem; display: flex; flex-direction: column; background: #ffffff; position: relative; box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.15); transition: all 0.3s ease;">
+                        <span class="ribbon" style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, var(--accent, #2563eb) 0%, var(--accent-hover, #1d4ed8) 100%); color: white; font-size: 0.7rem; font-weight: 800; padding: 0.3rem 0.9rem; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.05em; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);">CONSIGLIATO</span>
+                        <h4 style="font-size: 1.15rem; font-weight: 800; color: var(--accent, #2563eb); text-transform: uppercase; margin-bottom: 0.75rem; margin-top: 0.25rem; letter-spacing: 0.05em;">Pro</h4>
+                        <div class="plan-price" style="font-size: 2.25rem; font-weight: 900; color: #0f172a; display: flex; align-items: baseline; gap: 0.15rem;">
+                            €59<span style="font-size: 0.95rem; color: #64748b; font-weight: 500;">/mese</span>
+                        </div>
+                        <span class="plan-limits" style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-top: 0.25rem; display: block; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">Per agenzie in crescita</span>
+
+                        <ul style="list-style: none; padding: 0; margin: 1.25rem 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: #475569; flex-grow: 1;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Fino a 20 auto</strong> in flotta</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Integrazione Cargos (Polizia)</strong></li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> <strong>Integrazione Monitoraggio PEC</strong></li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Assistenza prioritaria H24</li>
+                        </ul>
+
+                        <button (click)="createCheckoutSession('pro')" class="btn btn-accent w-100" style="font-size: 0.8rem; font-weight: 800; padding: 0.75rem; text-transform: uppercase; cursor: pointer; border-radius: 8px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2), inset 0 2px 0 rgba(255, 255, 255, 0.2); margin-top: auto;">Attiva Pro</button>
                     </div>
 
                     <!-- Enterprise Plan -->
-                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; background: #f8fafc;">
-                        <h4 style="font-size: 1rem; color: #475569; text-transform: uppercase; margin-bottom: 0.5rem;">Enterprise</h4>
-                        <div class="plan-price" style="font-size: 1.75rem; font-weight: 800; color: #0f172a;">€129<span style="font-size: 0.85rem; color: #64748b; font-weight: 500;">/mese</span></div>
-                        <span class="plan-limits" style="font-size: 0.8rem; color: #64748b; margin-top: 0.25rem;">Auto Illimitate</span>
-                        <a routerLink="/auth/login" class="btn btn-outline w-100 mt-3" style="font-size: 0.75rem; padding: 0.5rem; text-transform: uppercase;">Abbonati</a>
+                    <div class="paywall-plan-card" style="border: 1px solid #e2e8f0; border-radius: 16px; padding: 2rem 1.5rem; display: flex; flex-direction: column; background: #ffffff; transition: all 0.3s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                        <h4 style="font-size: 1.15rem; font-weight: 800; color: #475569; text-transform: uppercase; margin-bottom: 0.75rem; letter-spacing: 0.05em;">Enterprise</h4>
+                        <div class="plan-price" style="font-size: 2.25rem; font-weight: 900; color: #0f172a; display: flex; align-items: baseline; gap: 0.15rem;">
+                            €129<span style="font-size: 0.95rem; color: #64748b; font-weight: 500;">/mese</span>
+                        </div>
+                        <span class="plan-limits" style="font-size: 0.85rem; font-weight: 600; color: #64748b; margin-top: 0.25rem; display: block; border-bottom: 1px solid #f1f5f9; padding-bottom: 1rem;">Per grandi flotte</span>
+
+                        <ul style="list-style: none; padding: 0; margin: 1.25rem 0; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; color: #475569; flex-grow: 1;">
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> <strong>Auto illimitate</strong></li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> Backup automatico orario cloud</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> Account Manager dedicato</li>
+                            <li style="display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-circle-check text-accent" style="color: var(--accent, #2563eb);"></i> Tutte le future integrazioni incluse</li>
+                        </ul>
+
+                        <button (click)="createCheckoutSession('enterprise')" class="btn btn-outline w-100" style="font-size: 0.8rem; font-weight: 700; padding: 0.75rem; text-transform: uppercase; cursor: pointer; border-radius: 8px; margin-top: auto;">Attiva Enterprise</button>
                     </div>
                 </div>
 
-                <div class="paywall-footer" style="border-top: 1px solid #e2e8f0; padding-top: 1.5rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div class="paywall-footer" style="border-top: 1px solid #e2e8f0; padding-top: 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                     <p class="developed-by" style="font-size: 0.85rem; color: #64748b; margin: 0;">Gestionale cloud ospitato e supportato con orgoglio da <strong>HI-TECH srls</strong>.</p>
-                    <button (click)="logout()" class="btn btn-outline" style="padding: 0.5rem 1.25rem; font-size: 0.8rem; text-transform: none; display: flex; align-items: center; gap: 0.5rem; height: 36px; margin-top: 0.5rem;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Esci dall'Account</button>
+                    <button (click)="logout()" class="btn btn-outline" style="padding: 0.5rem 1.5rem; font-size: 0.85rem; text-transform: none; display: flex; align-items: center; gap: 0.5rem; height: 38px; margin-top: 0.5rem; border-radius: 8px; font-weight: 600; cursor: pointer;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Esci dall'Account</button>
                 </div>
+            </div>
+        </div>
+    }
+
+    <!-- Modal di Notifica Custom (Sostituto di Alert) -->
+    @if (notificationModal.show) {
+        <div class="paywall-overlay" style="position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 10002; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
+            <div class="modal-card" style="background: white; max-width: 450px; width: 100%; padding: 2.5rem; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); text-align: center; border: 1px solid rgba(0,0,0,0.05); animation: modalSlideUp 0.3s ease-out; display: flex; flex-direction: column; align-items: center;">
+                <div style="width: 72px; height: 72px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem auto;"
+                     [style.background]="notificationModal.type === 'success' ? '#ecfdf5' : notificationModal.type === 'error' ? '#fef2f2' : '#eff6ff'">
+                    @if (notificationModal.type === 'success') {
+                        <i class="fa-solid fa-circle-check" style="font-size: 2.5rem; color: #10b981;"></i>
+                    } @else if (notificationModal.type === 'error') {
+                        <i class="fa-solid fa-circle-xmark" style="font-size: 2.5rem; color: #ef4444;"></i>
+                    } @else {
+                        <i class="fa-solid fa-circle-info" style="font-size: 2.5rem; color: #3b82f6;"></i>
+                    }
+                </div>
+                <h3 style="font-size: 1.5rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; margin-top: 0; line-height: 1.25;">{{ notificationModal.title }}</h3>
+                <p style="color: #64748b; font-size: 0.95rem; line-height: 1.5; margin-bottom: 1.75rem;">{{ notificationModal.message }}</p>
+                <button (click)="closeNotification()" class="btn btn-accent w-100" style="height: 46px; border-radius: 8px; font-weight: 700; font-size: 0.9rem; cursor: pointer;">
+                    Capito
+                </button>
             </div>
         </div>
     }
