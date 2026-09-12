@@ -213,6 +213,17 @@ export interface ContractDocument {
   conducente_contraente_docide_numero?: string;
   conducente_contraente_docide_luogoril?: string;
   conducente_contraente_docide_luogoril_paese?: string;
+
+  // OTP Signature Fields
+  signatureStatus?: 'PENDING' | 'SIGNED' | 'FAILED';
+  signatureDetails?: {
+    signedAt: Timestamp;
+    phoneNumber: string;
+    ipAddress: string;
+    userAgent: string;
+    otpTransactionId: string;
+  };
+  signedPdfUrl?: string;
 }
 
 export interface Company {
@@ -1132,6 +1143,16 @@ export class RentalService {
   downloadContractPdf(contractNumber: string): Observable<Blob> {
     const url = `${API_CONFIG.baseUrl}/api/v1/contracts/${contractNumber}/pdf`;
     return this.http.get(url, { responseType: 'blob' });
+  }
+
+  sendOtpSignatureRequest(contractId: string, phoneNumber: string): Observable<{ sessionId: string }> {
+    const url = `${API_CONFIG.baseUrl}/api/v1/contracts/${contractId}/otp/send`;
+    return this.http.post<{ sessionId: string }>(url, { phoneNumber });
+  }
+
+  verifyOtpAndSignContract(contractId: string, sessionId: string, otpCode: string): Observable<{ success: boolean, signedPdfUrl: string }> {
+    const url = `${API_CONFIG.baseUrl}/api/v1/contracts/${contractId}/otp/verify`;
+    return this.http.post<{ success: boolean, signedPdfUrl: string }>(url, { sessionId, otpCode });
   }
 
   // ==========================================

@@ -109,6 +109,15 @@
             }
             <td>
               <span class="badge-contract"><i class="fa-solid fa-file-invoice"></i> {{ contract.contractNumber }}</span>
+              @if (contract.signatureStatus === 'SIGNED') {
+                <div class="signature-status-badge signed" style="font-size: 0.75rem; color: #10b981; margin-top: 4px; font-weight: 600; display: flex; align-items: center; gap: 4px;" title="Contratto firmato digitalmente con OTP">
+                  <i class="fa-solid fa-file-signature"></i> FIRMATO OTP
+                </div>
+              } @else if (contract.signatureStatus === 'PENDING') {
+                <div class="signature-status-badge pending" style="font-size: 0.75rem; color: #f59e0b; margin-top: 4px; font-weight: 600; display: flex; align-items: center; gap: 4px;" title="Firma OTP richiesta ma non ancora completata">
+                  <i class="fa-solid fa-clock"></i> OTP INVIATO
+                </div>
+              }
             </td>
             <td>
               <div class="customer-info">
@@ -206,6 +215,23 @@
                       <i class="fa-solid fa-paper-plane"></i>
                     }
                   </button>
+                }
+
+                <!-- OTP Signature Actions -->
+                @if (contract.signatureStatus !== 'SIGNED') {
+                  <button class="btn-sign" 
+                          (click)="openSignatureModal(contract)" 
+                          style="background: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; width: 34px; height: 34px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s;"
+                          title="Firma con OTP">
+                    <i class="fa-solid fa-signature"></i>
+                  </button>
+                } @else if (contract.signedPdfUrl) {
+                  <a [href]="contract.signedPdfUrl" 
+                     target="_blank" 
+                     style="background: #d1fae5; color: #059669; border: 1px solid #a7f3d0; width: 34px; height: 34px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s;"
+                     title="Scarica Contratto Firmato OTP">
+                    <i class="fa-solid fa-file-signature"></i>
+                  </a>
                 }
 
                 <!-- Delete from Archive -->
@@ -464,6 +490,109 @@
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  }
+
+  <!-- OTP Signature Modal -->
+  @if (isOtpModalOpen && selectedContractForSignature) {
+    <div class="modal-overlay" (click)="closeSignatureModal()" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; animation: fadeIn 0.2s ease-out;">
+      <div class="modal-card" (click)="$event.stopPropagation()" style="background: white; border-radius: 16px; width: 90%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #e2e8f0; overflow: hidden; animation: slideUp 0.25s ease-out;">
+        
+        <!-- Header -->
+        <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 1.25rem 1.5rem; background: #f8fafc;">
+          <h3 style="margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem; color: #1e293b; font-weight: 700;">
+            <i class="fa-solid fa-signature" style="color: #0284c7;"></i> Firma Elettronica OTP
+          </h3>
+          <button class="close-btn" (click)="closeSignatureModal()" style="background: none; border: none; font-size: 1.25rem; color: #64748b; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; transition: background 0.2s;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body" style="padding: 1.75rem 1.5rem; text-align: center;">
+          <p style="font-size: 0.95rem; color: #64748b; line-height: 1.5; margin: 0 0 1.5rem 0;">
+            Stai per firmare il contratto di noleggio <strong>N. {{ selectedContractForSignature.contractNumber }}</strong> per il cliente <strong>{{ selectedContractForSignature.customerName }}</strong>.
+          </p>
+
+          <!-- STEP 1: Conferma Numero e Invio OTP -->
+          @if (!otpSessionId) {
+            <div style="display: flex; flex-direction: column; gap: 1rem; align-items: stretch; text-align: left;">
+              <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Numero di cellulare del cliente *</label>
+                <input type="text" 
+                       [(ngModel)]="clientPhoneNumber" 
+                       placeholder="Es. +393331234567" 
+                       style="padding: 0.8rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; width: 100%; box-sizing: border-box; font-family: monospace; font-weight: 600;" />
+              </div>
+              
+              <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 8px; padding: 0.8rem; display: flex; gap: 0.6rem; align-items: flex-start;">
+                <i class="fa-solid fa-triangle-exclamation" style="color: #d97706; font-size: 1rem; margin-top: 2px;"></i>
+                <p style="margin: 0; font-size: 0.8rem; color: #92400e; line-height: 1.4;">
+                  L'SMS contenente il codice OTP con valore legale di firma sarà inviato a questo recapito. Assicurati che sia corretto ed attivo.
+                </p>
+              </div>
+
+              <button class="btn btn-accent" 
+                      (click)="sendOtp()" 
+                      [disabled]="isSendingOtp || !clientPhoneNumber" 
+                      style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.85rem; font-size: 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; background-color: #0284c7; color: white; transition: background-color 0.2s; margin-top: 0.5rem; width: 100%;">
+                @if (isSendingOtp) {
+                  <i class="fa-solid fa-spinner fa-spin"></i> Generazione OTP in corso...
+                } @else {
+                  <i class="fa-solid fa-paper-plane"></i> Genera ed Invia OTP via SMS
+                }
+              </button>
+            </div>
+          }
+
+          <!-- STEP 2: Inserimento OTP per Verifica -->
+          @else {
+            <div style="display: flex; flex-direction: column; gap: 1.25rem; align-items: stretch;">
+              <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 0.8rem 1rem; color: #166534; font-size: 0.85rem; font-weight: 500;">
+                <i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> Codice OTP inviato a <strong>{{ clientPhoneNumber }}</strong>
+              </div>
+
+              <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <label style="font-size: 0.85rem; font-weight: 600; color: #475569;">Inserisci il codice di firma a 6 cifre</label>
+                <input type="text" 
+                       [(ngModel)]="otpCode" 
+                       maxlength="6" 
+                       placeholder="000000" 
+                       style="padding: 0.75rem; border: 2px solid #0284c7; border-radius: 12px; font-size: 1.75rem; text-align: center; letter-spacing: 12px; font-weight: 700; color: #1e293b; width: 100%; box-sizing: border-box; outline: none; background: #faf5ff; font-family: monospace;" />
+              </div>
+
+              <!-- Timer e Scadenza -->
+              <div style="font-size: 0.85rem;">
+                @if (timerCountdown > 0) {
+                  <span style="color: #64748b;">Il codice scade tra: <strong style="color: #0f172a; font-family: monospace;">{{ timerCountdown }} secondi</strong></span>
+                } @else {
+                  <span style="color: #ef4444; font-weight: 600;"><i class="fa-solid fa-circle-exclamation"></i> OTP scaduto. <a (click)="sendOtp()" style="color: #0284c7; text-decoration: underline; cursor: pointer;">Richiedi un altro SMS</a></span>
+                }
+              </div>
+
+              <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                <button class="btn" 
+                        (click)="sendOtp()" 
+                        [disabled]="isSendingOtp || timerCountdown > 0" 
+                        style="flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid #cbd5e1; background: white; color: #475569; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s;">
+                  Reinvia SMS
+                </button>
+                <button class="btn" 
+                        (click)="verifyAndSign()" 
+                        [disabled]="isVerifyingOtp || !otpCode || otpCode.length < 6 || timerCountdown === 0" 
+                        style="flex: 1.5; padding: 0.75rem; border-radius: 8px; border: none; background: #10b981; color: white; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: background 0.2s;">
+                  @if (isVerifyingOtp) {
+                    <i class="fa-solid fa-spinner fa-spin"></i> Sottoscrizione...
+                  } @else {
+                    <i class="fa-solid fa-pen-nib"></i> Conferma e Firma
+                  }
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
       </div>
     </div>
   }

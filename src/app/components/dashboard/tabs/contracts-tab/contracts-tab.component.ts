@@ -56,6 +56,17 @@ export class ContractsTabComponent implements OnInit {
   selectedContractIds = new Set<string>();
   isSendingBulk = false;
 
+  // OTP Signature State
+  isOtpModalOpen = false;
+  selectedContractForSignature: ContractDocument | null = null;
+  clientPhoneNumber = '';
+  otpSessionId = '';
+  otpCode = '';
+  isSendingOtp = false;
+  isVerifyingOtp = false;
+  timerCountdown = 0;
+  timerInterval: any = null;
+
   ngOnInit() {
     this.loadingService.show();
     this.contracts$ = this.rentalService.getContracts().pipe(
@@ -603,5 +614,93 @@ export class ContractsTabComponent implements OnInit {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }
+
+  openSignatureModal(contract: ContractDocument) {
+    this.selectedContractForSignature = contract;
+    
+    // Prova a recuperare il telefono dal mainDriver nei clienti disponibili, o dai dettagli del contratto
+    const driver = this.availableCustomers.find(c => c.id === contract.details.mainDriverId);
+    this.clientPhoneNumber = driver?.phone || contract.details.companyPhone || contract.details.additionalDriver1Phone || '';
+    
+    this.otpCode = '';
+    this.otpSessionId = '';
+    this.isOtpModalOpen = true;
+  }
+
+  closeSignatureModal() {
+    this.isOtpModalOpen = false;
+    this.selectedContractForSignature = null;
+    this.otpCode = '';
+    this.otpSessionId = '';
+    this.stopTimer();
+  }
+
+  startTimer() {
+    this.timerCountdown = 120; // 2 minuti
+    this.stopTimer();
+    this.timerInterval = setInterval(() => {
+      if (this.timerCountdown > 0) {
+        this.timerCountdown--;
+      } else {
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  sendOtp() {
+    if (!this.selectedContractForSignature || !this.clientPhoneNumber) {
+      alert('Numero di telefono non valido o mancante.');
+      return;
+    }
+
+    this.isSendingOtp = true;
+    this.rentalService.sendOtpSignatureRequest(this.selectedContractForSignature.id!, this.clientPhoneNumber).subscribe({
+      next: (res) => {
+        this.otpSessionId = res.sessionId;
+        this.isSendingOtp = false;
+        this.startTimer();
+        alert('Codice OTP inviato con successo via SMS!');
+      },
+      error: (err) => {
+        this.isSendingOtp = false;
+        console.error("Errore invio OTP:", err);
+        alert("Impossibile inviare l'OTP. Verifica il numero di telefono.");
+      }
+    });
+  }
+
+  verifyAndSign() {
+    if (!this.otpCode || this.otpCode.length < 6) {
+      alert('Inserisci un codice OTP valido a 6 cifre.');
+      return;
+    }
+
+    this.isVerifyingOtp = true;
+    this.rentalService.verifyOtpAndSignContract(
+      this.selectedContractForSignature!.id!,
+      this.otpSessionId,
+      this.otpCode
+    ).subscribe({
+      next: (res) => {
+        this.isVerifyingOtp = false;
+        this.stopTimer();
+        alert('Contratto firmato con successo con valore legale!');
+        this.closeSignatureModal();
+        this.contracts$ = this.rentalService.getContracts(); 
+      },
+      error: (err) => {
+        this.isVerifyingOtp = false;
+        console.error("Errore firma contratto:", err);
+        alert("Codice OTP errato o scaduto. Riprova.");
+      }
+    });
   }
 }
